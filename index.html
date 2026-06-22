@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,7 +7,7 @@
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0B111E">
-    <link rel="icon" href="logo.n.png" type="image/png">
+    <link rel="apple-touch-icon" href="logo.n.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,7 +26,7 @@
                         accentRed: '#EF4444',   
                         accentBlue: '#3B82F6',  
                         accentGold: '#F59E0B',
-                        accentCyan: '#06B6D4',  /* اللون الجديد بدل البنفسجي */
+                        accentCyan: '#06B6D4',
                         textGray: '#64748B',    
                         textWhite: '#F8FAFC'    
                     }
@@ -38,18 +38,24 @@
     <style>
         body { 
             background-color: #0B111E; color: #F8FAFC; font-family: 'Cairo', sans-serif; 
-            -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; user-select: none; -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent; 
+            /* منع التحديث عند السحب لأسفل في الجوال */
+            overscroll-behavior-y: contain; 
+            touch-action: pan-y;
+            user-select: none; -webkit-user-select: none;
         }
         input, select, textarea { user-select: auto; -webkit-user-select: auto; }
         input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
         
         .toggle-checkbox:checked { right: 0; border-color: #10B981; }
+        html[dir="ltr"] .toggle-checkbox:checked { left: auto; right: 0; }
         .toggle-checkbox:checked + .toggle-label { background-color: #10B981; }
-        .toggle-checkbox { right: 0; z-index: 1; transition: all 0.3s; border-color: #1E293B; }
+        .toggle-checkbox { z-index: 1; transition: all 0.3s; border-color: #1E293B; }
         .toggle-label { width: 3rem; height: 1.5rem; background-color: #334155; border-radius: 9999px; position: relative; cursor: pointer; transition: all 0.3s; }
         .toggle-label::after { content: ''; position: absolute; top: 0.125rem; left: 0.125rem; width: 1.25rem; height: 1.25rem; background-color: white; border-radius: 50%; transition: all 0.3s; }
         .toggle-checkbox:checked + .toggle-label::after { transform: translateX(1.5rem); }
+        html[dir="ltr"] .toggle-checkbox:checked + .toggle-label::after { transform: translateX(1.5rem); }
         
         .table-container::-webkit-scrollbar { width: 4px; height: 4px; }
         .table-container::-webkit-scrollbar-track { background: #0B111E; }
@@ -74,12 +80,12 @@
                 </defs>
                 <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-family="'Times New Roman', serif" font-size="70" font-weight="bold" fill="url(#gold)" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">N</text>
             </svg>
-            <h1 class="text-xl font-bold tracking-wider cursor-pointer" id="btnGoHome">إدارة رأس المال</h1>
+            <h1 class="text-xl font-bold tracking-wider cursor-pointer" id="btnGoHome" data-i18n="title">إدارة رأس المال</h1>
         </div>
         <div class="flex gap-2">
             <button id="btnGoChainingHub" class="bg-bgInput border border-accentGold/40 text-accentGold px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 hover:bg-borderColor/30 transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-                <span class="hidden md:inline">المحفظة</span>
+                <span class="hidden md:inline" data-i18n="portfolio">المحفظة</span>
             </button>
             <button id="btnCurrency" class="bg-bgInput border border-borderColor text-accentGold px-4 py-1.5 rounded-lg font-inter font-bold hover:bg-borderColor transition">$</button>
             <button id="btnLang" class="bg-bgInput border border-borderColor text-textGray px-4 py-1.5 rounded-lg font-bold hover:text-textWhite transition">EN</button>
@@ -95,33 +101,31 @@
             <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg">
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="w-full md:w-1/3">
-                        <label class="block text-textGray text-sm font-semibold mb-2">رقم السلسلة (الشهر)</label>
-                        <input type="number" id="inpSeq" class="w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-xl p-3 outline-none focus:border-accentGold text-left" placeholder="1">
+                        <label class="block text-textGray text-sm font-semibold mb-2" data-i18n="seqMonth">رقم السلسلة (الشهر)</label>
+                        <input type="number" id="inpSeq" class="w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-xl p-3 outline-none focus:border-accentGold text-left ltr:text-left rtl:text-right" placeholder="1" value="1">
                     </div>
                     <div class="w-full md:w-2/3">
-                        <label class="block text-textGray text-sm font-semibold mb-2">اسم الجدول التلقائي</label>
-                        <input type="text" id="inpName" readonly class="w-full bg-bgInput border border-borderColor text-accentGold font-bold rounded-xl p-3 outline-none" placeholder="خطة التداول: الشهر 1">
+                        <label class="block text-textGray text-sm font-semibold mb-2" data-i18n="autoName">اسم الجدول التلقائي</label>
+                        <input type="text" id="inpName" readonly class="w-full bg-bgInput border border-borderColor text-accentGold font-bold rounded-xl p-3 outline-none ltr:text-left rtl:text-right" value="خطة التداول: الشهر 1">
                     </div>
                 </div>
             </div>
 
             <!-- الفوركس -->
             <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg relative overflow-hidden">
-                <div class="absolute right-0 top-0 bottom-0 w-1 bg-accentBlue"></div>
+                <div class="absolute right-0 ltr:right-auto ltr:left-0 top-0 bottom-0 w-1 bg-accentBlue"></div>
                 <div class="flex flex-wrap justify-between items-center mb-5 border-b border-borderColor pb-3 gap-3">
-                    <h2 class="text-lg font-bold text-textWhite">نظام الفوركس</h2>
+                    <h2 class="text-lg font-bold text-textWhite" data-i18n="forexSys">نظام الفوركس</h2>
                     <div class="flex items-center gap-4">
-                        <!-- مفتاح تفعيل الطوارئ -->
                         <div class="flex items-center gap-1.5 bg-bgInput p-1.5 rounded-lg border border-borderColor">
-                            <span class="text-xs font-semibold text-accentRed">الطوارئ</span>
+                            <span class="text-xs font-semibold text-accentRed" data-i18n="emergency">الطوارئ</span>
                             <div class="relative inline-block w-8 align-middle">
                                 <input type="checkbox" id="chkMasterEmergency" class="toggle-checkbox absolute block w-4 h-4 rounded-full bg-white border-2 border-bgCard appearance-none cursor-pointer" checked/>
                                 <label for="chkMasterEmergency" class="toggle-label block overflow-hidden h-4 rounded-full cursor-pointer w-8"></label>
                             </div>
                         </div>
-                        <!-- مفتاح التراكمي -->
                         <div class="flex items-center gap-1.5 bg-bgInput p-1.5 rounded-lg border border-borderColor">
-                            <span class="text-xs font-semibold text-textGray" id="lblCompound">تراكمي</span>
+                            <span class="text-xs font-semibold text-textGray" data-i18n="compound">تراكمي</span>
                             <div class="relative inline-block w-8 align-middle">
                                 <input type="checkbox" id="chkCompound" class="toggle-checkbox absolute block w-4 h-4 rounded-full bg-white border-2 border-bgCard appearance-none cursor-pointer" checked/>
                                 <label for="chkCompound" class="toggle-label block overflow-hidden h-4 rounded-full cursor-pointer w-8"></label>
@@ -132,44 +136,44 @@
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 border-b border-borderColor pb-4">
                     <div class="col-span-2">
-                        <label class="block text-textGray text-xs font-semibold mb-1">رأس المال المبدئي</label>
-                        <input type="number" id="inpCapital" class="w-full bg-bgInput border border-borderColor text-accentBlue font-inter font-bold rounded-lg p-2 outline-none focus:border-accentBlue text-left" placeholder="0">
+                        <label class="block text-textGray text-xs font-semibold mb-1" data-i18n="initCapital">رأس المال المبدئي</label>
+                        <input type="number" id="inpCapital" class="w-full bg-bgInput border border-borderColor text-accentBlue font-inter font-bold rounded-lg p-2 outline-none focus:border-accentBlue text-left ltr:text-left rtl:text-right" placeholder="0">
                     </div>
                     <div class="col-span-2">
-                        <label class="block text-textGray text-xs font-semibold mb-1">الأيام المستهدفة</label>
-                        <input type="number" id="inpDays" class="w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg p-2 outline-none focus:border-accentBlue text-left" placeholder="0">
+                        <label class="block text-textGray text-xs font-semibold mb-1" data-i18n="targetDays">الأيام المستهدفة</label>
+                        <input type="number" id="inpDays" class="w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg p-2 outline-none focus:border-accentBlue text-left ltr:text-left rtl:text-right" placeholder="0">
                     </div>
                     
                     <div class="col-span-2 md:col-span-1">
-                        <label class="block text-textGray text-xs font-semibold mb-1">الهدف اليومي</label>
-                        <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentGreen">
+                        <label class="block text-textGray text-xs font-semibold mb-1" data-i18n="dailyGoal">الهدف اليومي</label>
+                        <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentGreen ltr:flex-row-reverse">
                             <button class="unit-toggle text-accentGreen font-bold px-2 py-1">%</button>
-                            <input type="number" id="inpGoal" class="w-full bg-transparent text-accentGreen font-bold outline-none px-1 text-left" placeholder="0">
+                            <input type="number" id="inpGoal" class="w-full bg-transparent text-accentGreen font-bold outline-none px-1 text-left ltr:text-right rtl:text-left" placeholder="0">
                         </div>
                     </div>
                     <div class="col-span-2 md:col-span-1">
-                        <label class="block text-textGray text-xs font-semibold mb-1">مبلغ طوارئ (وقف خسارة)</label>
-                        <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentRed">
+                        <label class="block text-textGray text-xs font-semibold mb-1" data-i18n="safeAmount">مبلغ طوارئ (وقف خسارة)</label>
+                        <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentRed ltr:flex-row-reverse">
                             <button class="unit-toggle text-accentRed font-bold px-2 py-1">%</button>
-                            <input type="number" id="inpSafety" class="w-full bg-transparent text-accentRed font-bold outline-none px-1 text-left" placeholder="0">
+                            <input type="number" id="inpSafety" class="w-full bg-transparent text-accentRed font-bold outline-none px-1 text-left ltr:text-right rtl:text-left" placeholder="0">
                         </div>
                     </div>
                     <div class="col-span-2 md:col-span-1">
-                        <label class="block text-textGray text-xs font-semibold mb-1">وقف الربح الكلي</label>
-                        <input type="number" id="inpStopProfit" class="w-full bg-bgInput border border-borderColor text-accentGreen font-inter font-bold rounded-lg p-2 outline-none text-left" placeholder="مفتوح">
+                        <label class="block text-textGray text-xs font-semibold mb-1" data-i18n="stopProfit">وقف الربح الكلي</label>
+                        <input type="number" id="inpStopProfit" class="w-full bg-bgInput border border-borderColor text-accentGreen font-inter font-bold rounded-lg p-2 outline-none text-left ltr:text-left rtl:text-right" placeholder="مفتوح">
                     </div>
                     <div class="col-span-2 md:col-span-1">
-                        <label class="block text-textGray text-xs font-semibold mb-1">وقف الخسارة الكلي</label>
-                        <input type="number" id="inpStopLoss" class="w-full bg-bgInput border border-borderColor text-accentRed font-inter font-bold rounded-lg p-2 outline-none text-left" placeholder="مفتوح">
+                        <label class="block text-textGray text-xs font-semibold mb-1" data-i18n="stopLoss">وقف الخسارة الكلي</label>
+                        <input type="number" id="inpStopLoss" class="w-full bg-bgInput border border-borderColor text-accentRed font-inter font-bold rounded-lg p-2 outline-none text-left ltr:text-left rtl:text-right" placeholder="مفتوح">
                     </div>
                 </div>
             </div>
 
             <!-- الثنائية -->
             <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300" id="cardBinary">
-                <div class="absolute right-0 top-0 bottom-0 w-1 bg-accentGold"></div>
+                <div class="absolute right-0 ltr:right-auto ltr:left-0 top-0 bottom-0 w-1 bg-accentGold"></div>
                 <div class="flex justify-between items-center mb-5 border-b border-borderColor pb-3">
-                    <h2 class="text-lg font-bold text-textWhite">الخيارات الثنائية</h2>
+                    <h2 class="text-lg font-bold text-textWhite" data-i18n="binarySys">الخيارات الثنائية</h2>
                     <div class="relative inline-block w-12 align-middle">
                         <input type="checkbox" id="chkBinary" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-bgCard appearance-none cursor-pointer" checked/>
                         <label for="chkBinary" class="toggle-label block overflow-hidden h-6 rounded-full cursor-pointer"></label>
@@ -179,49 +183,48 @@
                 <div class="space-y-4" id="binaryFields">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div class="col-span-2">
-                            <label class="block text-textGray text-xs font-semibold mb-1">محفظة الثنائية (تُسحب من الإجمالي)</label>
-                            <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentGold">
+                            <label class="block text-textGray text-xs font-semibold mb-1" data-i18n="binWallet">محفظة الثنائية (تُسحب من الإجمالي)</label>
+                            <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentGold ltr:flex-row-reverse">
                                 <button class="unit-toggle text-accentGold font-bold px-2 py-1">%</button>
-                                <input type="number" id="inpBinaryAlloc" class="w-full bg-transparent text-accentGold font-bold outline-none px-1 text-left" placeholder="0">
+                                <input type="number" id="inpBinaryAlloc" class="w-full bg-transparent text-accentGold font-bold outline-none px-1 text-left ltr:text-right rtl:text-left" placeholder="0">
                             </div>
                         </div>
                         <div class="col-span-2">
-                            <label class="block text-textGray text-xs font-semibold mb-1">حجم دخول الصفقة (من محفظة الثنائية)</label>
-                            <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentGold">
+                            <label class="block text-textGray text-xs font-semibold mb-1" data-i18n="binEntry">حجم دخول الصفقة (من محفظة الثنائية)</label>
+                            <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentGold ltr:flex-row-reverse">
                                 <button class="unit-toggle text-accentGold font-bold px-2 py-1">%</button>
-                                <input type="number" id="inpBinaryTradeSize" class="w-full bg-transparent text-accentGold font-bold outline-none px-1 text-left" placeholder="50">
+                                <input type="number" id="inpBinaryTradeSize" class="w-full bg-transparent text-accentGold font-bold outline-none px-1 text-left ltr:text-right rtl:text-left" placeholder="50">
                             </div>
                         </div>
                         <div class="col-span-1">
-                            <label class="block text-textGray text-xs font-semibold mb-1">ربح الصفقة</label>
-                            <input type="number" id="inpBinaryProfit" class="w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg p-2 outline-none text-left" placeholder="84">
+                            <label class="block text-textGray text-xs font-semibold mb-1" data-i18n="binProfit">ربح الصفقة</label>
+                            <input type="number" id="inpBinaryProfit" class="w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg p-2 outline-none text-left ltr:text-left rtl:text-right" placeholder="84">
                         </div>
                         <div class="col-span-1">
-                            <label class="block text-textGray text-xs font-semibold mb-1">عدد الأيام</label>
-                            <input type="number" id="inpBinaryDays" class="w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg p-2 outline-none text-left" placeholder="10">
+                            <label class="block text-textGray text-xs font-semibold mb-1" data-i18n="binDays">عدد الأيام</label>
+                            <input type="number" id="inpBinaryDays" class="w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg p-2 outline-none text-left ltr:text-left rtl:text-right" placeholder="10">
                         </div>
                     </div>
 
-                    <!-- شرط التفعيل الموسع -->
                     <div class="bg-bgInput p-3 rounded-xl border border-accentGold/30">
-                        <label class="block text-textWhite text-sm font-bold mb-2">متى تتفعل الثنائية ويُسحب مبلغها؟</label>
+                        <label class="block text-textWhite text-sm font-bold mb-2" data-i18n="binTriggerTitle">متى تتفعل الثنائية ويُسحب مبلغها؟</label>
                         <div class="flex flex-col md:flex-row gap-3 items-center w-full">
                             <select id="selBinaryTrigger" class="w-full bg-bgCard border border-borderColor text-textWhite rounded-lg p-2.5 outline-none">
-                                <option value="immediate">فوراً مع بداية الشهر</option>
-                                <option value="target">عندما يصل رأس مال الفوركس لهدف معين</option>
+                                <option value="immediate" data-i18n="binTrigImmed">فوراً مع بداية الشهر</option>
+                                <option value="target" data-i18n="binTrigTarget">عندما يصل رأس مال الفوركس لهدف معين</option>
                             </select>
-                            <input type="number" id="inpBinaryTriggerTarget" class="hidden w-full md:w-1/3 bg-bgCard border border-borderColor text-accentGold font-bold rounded-lg p-2.5 outline-none text-left" placeholder="أدخل مبلغ الفوركس">
+                            <input type="number" id="inpBinaryTriggerTarget" class="hidden w-full md:w-1/3 bg-bgCard border border-borderColor text-accentGold font-bold rounded-lg p-2.5 outline-none text-left ltr:text-left rtl:text-right" placeholder="المبلغ المستهدف">
                         </div>
                     </div>
 
                     <div class="flex justify-between items-center text-sm pt-2">
-                        <span class="font-bold text-textWhite">تراكمي الصفقات (داخل اليوم)</span>
+                        <span class="font-bold text-textWhite" data-i18n="binIntraCompound">تراكمي الصفقات (داخل اليوم)</span>
                         <input type="checkbox" id="chkIntraCompound" class="w-5 h-5 accent-accentGold cursor-pointer" checked>
                     </div>
                 </div>
             </div>
 
-            <button id="btnGenerate" class="w-full bg-gradient-to-r from-accentGold to-yellow-600 text-bgMain font-extrabold text-xl py-4 rounded-xl shadow-lg transition-all">
+            <button id="btnGenerate" class="w-full bg-gradient-to-r from-accentGold to-yellow-600 text-bgMain font-extrabold text-xl py-4 rounded-xl shadow-lg transition-all hover:scale-[1.02]" data-i18n="btnGenerate">
                 توليد الخطة وبدء التداول 🚀
             </button>
         </div>
@@ -232,31 +235,31 @@
             
             <div class="bg-bgCard border border-borderColor rounded-2xl p-4 shadow-lg mb-4 sticky top-16 z-40">
                 <div class="flex justify-between items-center mb-3">
-                    <button id="btnBackToSetup" class="bg-bgInput p-2 rounded-lg border border-borderColor">
-                        <svg class="w-5 h-5 rotate-180 text-textWhite" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    <button id="btnBackToSetup" class="bg-bgInput p-2 rounded-lg border border-borderColor hover:bg-borderColor transition">
+                        <svg class="w-5 h-5 rtl:rotate-180 ltr:rotate-0 text-textWhite" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </button>
                     
                     <div class="flex bg-bgInput rounded-lg p-1 border border-borderColor">
-                        <button id="tabForex" class="px-5 py-1.5 rounded-md font-bold text-sm bg-borderColor text-accentBlue transition-colors">الفوركس</button>
-                        <button id="tabBinary" class="px-5 py-1.5 rounded-md font-bold text-sm text-textGray hover:text-textWhite transition-colors">الثنائية</button>
+                        <button id="tabForex" class="px-5 py-1.5 rounded-md font-bold text-sm bg-borderColor text-accentBlue transition-colors" data-i18n="tabForex">الفوركس</button>
+                        <button id="tabBinary" class="px-5 py-1.5 rounded-md font-bold text-sm text-textGray hover:text-textWhite transition-colors" data-i18n="tabBinary">الثنائية</button>
                     </div>
 
-                    <button id="btnUndo" class="bg-bgInput p-2 rounded-lg border border-borderColor disabled:opacity-30" disabled>
+                    <button id="btnUndo" class="bg-bgInput p-2 rounded-lg border border-borderColor disabled:opacity-30 transition" disabled>
                         <svg class="w-5 h-5 text-textWhite" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
                     </button>
                 </div>
 
                 <div class="flex justify-between items-center bg-bgInput rounded-xl p-2 border border-borderColor/50">
-                    <div class="text-[10px] md:text-xs text-center flex-1 border-l border-borderColor/50 px-1">
-                        <div class="text-textGray">تمديد الفوركس</div>
+                    <div class="text-[10px] md:text-xs text-center flex-1 rtl:border-l ltr:border-r border-borderColor/50 px-1">
+                        <div class="text-textGray" data-i18n="forexExt">تمديد الفوركس</div>
                         <div id="lblForexExt" class="font-bold text-accentRed">+0</div>
                     </div>
-                    <div class="text-[10px] md:text-xs text-center flex-1 border-l border-borderColor/50 px-1">
-                        <div class="text-textGray">إجمالي التوفير</div>
+                    <div class="text-[10px] md:text-xs text-center flex-1 rtl:border-l ltr:border-r border-borderColor/50 px-1">
+                        <div class="text-textGray" data-i18n="totalSave">إجمالي التوفير</div>
                         <div id="lblTotalEmergency" class="font-bold text-accentCyan">$0.00</div>
                     </div>
-                    <div class="text-[10px] md:text-xs text-center flex-1 cursor-pointer hover:bg-borderColor/30 rounded px-1" id="btnOpenVault">
-                        <div class="text-textGray font-bold mt-1 text-accentGold">إغلاق و راتب 🔒</div>
+                    <div class="text-[10px] md:text-xs text-center flex-1 cursor-pointer hover:bg-borderColor/30 rounded px-1 transition" id="btnOpenVault">
+                        <div class="text-textGray font-bold mt-1 text-accentGold" data-i18n="closeSalary">إغلاق و راتب 🔒</div>
                     </div>
                 </div>
             </div>
@@ -267,15 +270,15 @@
                     <table class="w-full text-[11px] md:text-sm text-center whitespace-nowrap">
                         <thead class="bg-bgInput text-textGray font-semibold sticky top-0 z-10 shadow-sm border-b border-borderColor">
                             <tr>
-                                <th class="p-2 border-l border-borderColor/50">يوم</th>
-                                <th class="p-2 border-l border-borderColor/50">البداية</th>
-                                <th class="p-2 border-l border-borderColor/50 text-accentGreen">الهدف</th>
-                                <th class="p-2 border-l border-borderColor/50 text-accentCyan">توفير/سحب</th>
-                                <th class="p-2 border-l border-borderColor/50 text-accentRed">طوارئ</th>
-                                <th class="p-2 border-l border-borderColor/50 text-accentGold">النهاية</th>
-                                <th class="p-2 border-l border-borderColor/50">صفقات</th>
-                                <th class="p-2 border-l border-borderColor/50" title="تراكمي">تر.</th>
-                                <th class="p-2 min-w-[150px]">الإجراء</th>
+                                <th class="p-2 rtl:border-l ltr:border-r border-borderColor/50" data-i18n="thDay">يوم</th>
+                                <th class="p-2 rtl:border-l ltr:border-r border-borderColor/50" data-i18n="thStart">البداية</th>
+                                <th class="p-2 rtl:border-l ltr:border-r border-borderColor/50 text-accentGreen" data-i18n="thTarget">الهدف</th>
+                                <th class="p-2 rtl:border-l ltr:border-r border-borderColor/50 text-accentCyan" data-i18n="thSave">توفير/سحب</th>
+                                <th class="p-2 rtl:border-l ltr:border-r border-borderColor/50 text-accentRed" data-i18n="thEmergency">طوارئ</th>
+                                <th class="p-2 rtl:border-l ltr:border-r border-borderColor/50 text-accentGold" data-i18n="thEnd">النهاية</th>
+                                <th class="p-2 rtl:border-l ltr:border-r border-borderColor/50" data-i18n="thTrades">صفقات</th>
+                                <th class="p-2 rtl:border-l ltr:border-r border-borderColor/50" data-i18n="thComp" title="تراكمي">تر.</th>
+                                <th class="p-2 min-w-[150px]" data-i18n="thAction">الإجراء</th>
                             </tr>
                         </thead>
                         <tbody id="tbodyForex" class="font-inter"></tbody>
@@ -285,18 +288,18 @@
 
             <!-- جدول الخيارات الثنائية -->
             <div id="tableBinaryContainer" class="hidden bg-bgCard border border-borderColor rounded-2xl shadow-lg overflow-hidden mb-6">
-                <div id="binaryStatusMsg" class="p-4 text-center text-textGray text-sm hidden font-bold">
+                <div id="binaryStatusMsg" class="p-4 text-center text-textGray text-sm hidden font-bold" data-i18n="binWaitMsg">
                     ⏳ في انتظار وصول رأس مال الفوركس للهدف المحدد لبدء الثنائية...
                 </div>
                 <div class="table-container overflow-x-auto max-h-[60vh]" id="binaryTableWrap">
                     <table class="w-full text-sm text-center whitespace-nowrap">
                         <thead class="bg-bgInput text-textGray font-semibold sticky top-0 z-10 shadow-sm border-b border-borderColor">
                             <tr>
-                                <th class="p-2 border-l border-borderColor/50">يوم</th>
-                                <th class="p-2 border-l border-borderColor/50">المحفظة</th>
-                                <th class="p-2 border-l border-borderColor/50 text-accentGold">الدخول</th>
-                                <th class="p-2 min-w-[200px]">حالة (3 محاولات)</th>
-                                <th class="p-2 text-accentGreen">النهاية</th>
+                                <th class="p-2 rtl:border-l ltr:border-r border-borderColor/50" data-i18n="thDay">يوم</th>
+                                <th class="p-2 rtl:border-l ltr:border-r border-borderColor/50" data-i18n="thWallet">المحفظة</th>
+                                <th class="p-2 rtl:border-l ltr:border-r border-borderColor/50 text-accentGold" data-i18n="thEntry">الدخول</th>
+                                <th class="p-2 min-w-[200px]" data-i18n="thStatus">حالة (3 محاولات)</th>
+                                <th class="p-2 text-accentGreen" data-i18n="thEnd">النهاية</th>
                             </tr>
                         </thead>
                         <tbody id="tbodyBinary" class="font-inter"></tbody>
@@ -308,35 +311,30 @@
 
         <!-- ================= الواجهة 3: الخزنة والرواتب ================= -->
         <div id="view-vault" class="hidden-view fade-in absolute inset-0 bg-bgMain/95 backdrop-blur-sm z-50 p-4 pt-10">
-            <div class="max-w-md mx-auto bg-bgCard border border-accentGold/40 rounded-2xl p-6 shadow-2xl relative">
-                <button id="btnCloseVault" class="absolute top-4 right-4 text-textGray hover:text-textWhite bg-bgInput p-2 rounded-lg font-bold">✕</button>
-                <h2 class="text-2xl font-bold text-accentGold mb-6">الخزنة والترحيل</h2>
+            <div class="max-w-md mx-auto bg-bgCard border border-accentGold/40 rounded-2xl p-6 shadow-2xl relative mt-10">
+                <button id="btnCloseVault" class="absolute top-4 rtl:right-4 ltr:left-4 text-textGray hover:text-textWhite bg-bgInput p-2 rounded-lg font-bold transition">✕</button>
+                <h2 class="text-2xl font-bold text-accentGold mb-6 text-center" data-i18n="vaultTitle">الخزنة والترحيل</h2>
 
                 <div class="space-y-4 font-inter text-lg">
                     <div class="flex justify-between border-b border-borderColor pb-2">
-                        <span class="text-textGray font-cairo">الأرباح الفعلية المحققة:</span>
+                        <span class="text-textGray font-cairo" data-i18n="actualProfit">الأرباح الفعلية المحققة:</span>
                         <span id="vTotalProfit" class="text-accentGreen font-bold">$0.00</span>
                     </div>
                     <div class="flex justify-between border-b border-borderColor pb-2">
-                        <span class="text-textGray font-cairo">الراتب المستحق (20%):</span>
+                        <span class="text-textGray font-cairo" data-i18n="salary">الراتب المستحق (20%):</span>
                         <span id="vSalary" class="text-textWhite font-bold">$0.00</span>
                     </div>
                     
                     <div class="bg-bgInput rounded-xl p-4 mt-4 border border-accentGold/20">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-textWhite font-cairo font-bold">مبلغ الأمان الخارجي</span>
-                            <input type="checkbox" id="chkVault" class="w-5 h-5 accent-accentGold" checked>
+                            <span class="text-textWhite font-cairo font-bold" data-i18n="safeAmountTitle">مبلغ الأمان الخارجي</span>
+                            <input type="checkbox" id="chkVault" class="w-5 h-5 accent-accentGold cursor-pointer" checked>
                         </div>
                         <div class="text-2xl font-extrabold text-accentGold text-center" id="vSafeAmount">$0.00</div>
                     </div>
                 </div>
 
-                <div class="mt-8 pt-6 border-t border-borderColor space-y-4">
-                    <label class="block text-textGray text-xs">دمج وسحب مبالغ من شهر سابق</label>
-                    <select id="selPrevMonth" class="w-full bg-bgInput border border-borderColor rounded-xl p-3 text-accentGold font-bold outline-none"></select>
-                </div>
-
-                <button id="btnChainMonth" class="w-full mt-6 bg-accentBlue text-white font-bold py-4 rounded-xl shadow-lg">
+                <button id="btnChainMonth" class="w-full mt-10 bg-accentBlue hover:bg-blue-600 transition-colors text-white font-bold py-4 rounded-xl shadow-lg text-lg" data-i18n="btnChain">
                     ترحيل وبدء الشهر الجديد 🔗
                 </button>
             </div>
@@ -346,6 +344,79 @@
 
     <!-- ================= البرمجة ================= -->
     <script>
+        // --- منع التحديث للسحب باللمس ---
+        document.body.addEventListener('touchmove', function(e) {
+            if (window.scrollY === 0 && e.touches[0].clientY > 50) {
+                // e.preventDefault(); // مفعلة لتجنب السحب، ولكن قد تتعارض مع سكرول الصفحة
+            }
+        }, { passive: false });
+
+        // --- الترجمة ---
+        const dictionary = {
+            'AR': {
+                title: 'إدارة رأس المال', portfolio: 'المحفظة', seqMonth: 'رقم السلسلة (الشهر)', autoName: 'اسم الجدول التلقائي',
+                forexSys: 'نظام الفوركس', emergency: 'الطوارئ', compound: 'تراكمي', initCapital: 'رأس المال المبدئي',
+                targetDays: 'الأيام المستهدفة', dailyGoal: 'الهدف اليومي', safeAmount: 'مبلغ طوارئ (وقف خسارة)',
+                stopProfit: 'وقف الربح الكلي', stopLoss: 'وقف الخسارة الكلي', binarySys: 'الخيارات الثنائية',
+                binWallet: 'محفظة الثنائية (تُسحب من الإجمالي)', binEntry: 'حجم دخول الصفقة', binProfit: 'ربح الصفقة',
+                binDays: 'عدد الأيام', binTriggerTitle: 'متى تتفعل الثنائية ويُسحب مبلغها؟', binTrigImmed: 'فوراً مع بداية الشهر',
+                binTrigTarget: 'عندما يصل رأس مال الفوركس لهدف معين', binIntraCompound: 'تراكمي الصفقات (داخل اليوم)',
+                btnGenerate: 'توليد الخطة وبدء التداول 🚀', tabForex: 'الفوركس', tabBinary: 'الثنائية',
+                forexExt: 'تمديد الفوركس', totalSave: 'إجمالي التوفير', closeSalary: 'إغلاق و راتب 🔒',
+                thDay: 'يوم', thStart: 'البداية', thTarget: 'الهدف', thSave: 'توفير/سحب', thEmergency: 'طوارئ',
+                thEnd: 'النهاية', thTrades: 'صفقات', thComp: 'تر.', thAction: 'الإجراء', thWallet: 'المحفظة',
+                thEntry: 'الدخول', thStatus: 'حالة (3 محاولات)', binWaitMsg: '⏳ في انتظار وصول رأس مال الفوركس للهدف المحد...',
+                vaultTitle: 'الخزنة والترحيل', actualProfit: 'الأرباح الفعلية المحققة:', salary: 'الراتب المستحق (20%):',
+                safeAmountTitle: 'مبلغ الأمان الخارجي', btnChain: 'ترحيل وبدء الشهر الجديد 🔗',
+                actHit: 'تحقيق', actSkip: 'تخطي', actLoss: 'خسارة', actGood: 'جيد', actMed: 'متوسط', actAbad: 'شبه سيء', actBad: 'سيء',
+                done: 'تم', planStr: 'خطة التداول: الشهر '
+            },
+            'EN': {
+                title: 'Capital Management', portfolio: 'Portfolio', seqMonth: 'Sequence (Month)', autoName: 'Auto Table Name',
+                forexSys: 'Forex System', emergency: 'Emergency', compound: 'Compound', initCapital: 'Initial Capital',
+                targetDays: 'Target Days', dailyGoal: 'Daily Goal', safeAmount: 'Emergency (Stop Loss)',
+                stopProfit: 'Total Stop Profit', stopLoss: 'Total Stop Loss', binarySys: 'Binary Options',
+                binWallet: 'Binary Wallet (Deducted from Total)', binEntry: 'Trade Entry Size', binProfit: 'Trade Profit',
+                binDays: 'Number of Days', binTriggerTitle: 'When does Binary activate?', binTrigImmed: 'Immediately at Month Start',
+                binTrigTarget: 'When Forex reaches a target amount', binIntraCompound: 'Intra-day Compound',
+                btnGenerate: 'Generate Plan & Start 🚀', tabForex: 'Forex', tabBinary: 'Binary',
+                forexExt: 'Forex Ext.', totalSave: 'Total Savings', closeSalary: 'Close & Salary 🔒',
+                thDay: 'Day', thStart: 'Start', thTarget: 'Goal', thSave: 'Save/W.Draw', thEmergency: 'Emergency',
+                thEnd: 'End', thTrades: 'Trades', thComp: 'Cmp.', thAction: 'Action', thWallet: 'Wallet',
+                thEntry: 'Entry', thStatus: 'Status (3 Tries)', binWaitMsg: '⏳ Waiting for Forex target to start Binary...',
+                vaultTitle: 'Vault & Rollover', actualProfit: 'Actual Realized Profit:', salary: 'Due Salary (20%):',
+                safeAmountTitle: 'External Safe Amount', btnChain: 'Rollover & Start New Month 🔗',
+                actHit: 'Hit', actSkip: 'Skip', actLoss: 'Loss', actGood: 'Good', actMed: 'Mid', actAbad: 'Poor', actBad: 'Bad',
+                done: 'Done', planStr: 'Trading Plan: Month '
+            }
+        };
+
+        let App = { 
+            lang: 'AR', currency: '$', isBinaryEnabled: true, origDays: 0, 
+            forexData: [], binaryData: [], historyStack: [], settings: {},
+            totalEmergency: 0 
+        };
+
+        function applyLanguage() {
+            document.getElementById('htmlTag').dir = App.lang === 'AR' ? 'rtl' : 'ltr';
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(dictionary[App.lang][key]) el.innerText = dictionary[App.lang][key];
+            });
+            // تحديث اسم الخطة التلقائي
+            let seqNum = document.getElementById('inpSeq').value || 1;
+            document.getElementById('inpName').value = dictionary[App.lang].planStr + seqNum;
+            if(App.forexData.length > 0) renderTables();
+        }
+
+        document.getElementById('btnLang').addEventListener('click', (e) => {
+            App.lang = App.lang === 'AR' ? 'EN' : 'AR';
+            e.target.innerText = App.lang === 'AR' ? 'EN' : 'AR';
+            applyLanguage();
+            saveToLocal();
+        });
+
+        // --- أدوات عامة ---
         function showToast(msg) {
             const toast = document.getElementById('customToast');
             toast.innerText = msg;
@@ -357,29 +428,56 @@
             return Number(num).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         }
 
-        let App = { 
-            lang: 'ar', currency: '$', isBinaryEnabled: true, origDays: 0, 
-            forexData: [], binaryData: [], historyStack: [], settings: {},
-            totalEmergency: 0 
-        };
+        // --- حفظ واسترجاع من الذاكرة (LocalStorage) ---
+        function saveToLocal() {
+            localStorage.setItem('N_System_Data', JSON.stringify(App));
+        }
+
+        function loadFromLocal() {
+            let data = localStorage.getItem('N_System_Data');
+            if(data) {
+                try {
+                    let parsed = JSON.parse(data);
+                    Object.assign(App, parsed);
+                    
+                    document.getElementById('btnLang').innerText = App.lang === 'AR' ? 'EN' : 'AR';
+                    document.getElementById('btnCurrency').innerText = App.currency;
+                    document.querySelectorAll('.unit-toggle').forEach(btn => { if(btn.innerText !== '%') btn.innerText = App.currency; });
+                    applyLanguage();
+                    
+                    if(App.forexData && App.forexData.length > 0) {
+                        vSetup.classList.add('hidden-view');
+                        vActive.classList.remove('hidden-view');
+                        recalculateEngine();
+                    }
+                } catch(e) { console.error("Error parsing local data", e); }
+            }
+        }
 
         const vSetup = document.getElementById('view-setup'), vActive = document.getElementById('view-active'), vVault = document.getElementById('view-vault');
 
         // أحداث الواجهة الأساسية
+        document.getElementById('inpSeq').addEventListener('input', (e) => {
+            document.getElementById('inpName').value = dictionary[App.lang].planStr + (e.target.value || 1);
+        });
+
         document.getElementById('selBinaryTrigger').addEventListener('change', (e) => {
             document.getElementById('inpBinaryTriggerTarget').style.display = e.target.value === 'target' ? 'block' : 'none';
         });
 
         document.querySelectorAll('.unit-toggle').forEach(btn => {
-            btn.addEventListener('click', function() { this.innerText = this.innerText === '%' ? App.currency : '%'; });
+            btn.addEventListener('click', function() { 
+                this.innerText = this.innerText === '%' ? App.currency : '%'; 
+                saveToLocal();
+            });
         });
 
         document.getElementById('btnCurrency').addEventListener('click', (e) => {
             App.currency = App.currency === '$' ? 'ر.س' : '$';
             e.target.innerText = App.currency;
-            document.querySelectorAll('.lblCurrSymbol').forEach(el => el.innerText = App.currency);
             document.querySelectorAll('.unit-toggle').forEach(btn => { if(btn.innerText !== '%') btn.innerText = App.currency; });
             renderTables();
+            saveToLocal();
         });
 
         document.getElementById('chkBinary').addEventListener('change', (e) => {
@@ -394,12 +492,12 @@
 
         tabFx.addEventListener('click', () => {
             tabFx.className = "px-5 py-1.5 rounded-md font-bold text-sm bg-borderColor text-accentBlue";
-            tabBi.className = "px-5 py-1.5 rounded-md font-bold text-sm text-textGray";
+            tabBi.className = "px-5 py-1.5 rounded-md font-bold text-sm text-textGray hover:text-textWhite";
             conFx.classList.remove('hidden'); conBi.classList.add('hidden');
         });
         tabBi.addEventListener('click', () => {
             tabBi.className = "px-5 py-1.5 rounded-md font-bold text-sm bg-borderColor text-accentGold";
-            tabFx.className = "px-5 py-1.5 rounded-md font-bold text-sm text-textGray";
+            tabFx.className = "px-5 py-1.5 rounded-md font-bold text-sm text-textGray hover:text-textWhite";
             conBi.classList.remove('hidden'); conFx.classList.add('hidden');
         });
 
@@ -492,8 +590,8 @@
                 }
             }
 
-            if (currentFx >= s.stopProfit && currentFx !== App.forexData[0]?.start) showToast('🎉 مبروك! وصلت لحد وقف الربح الكلي.');
-            if (currentFx <= s.stopLoss && currentFx > 0) showToast('⚠️ انتبه! وصلت لحد وقف الخسارة الكلي.');
+            if (currentFx >= s.stopProfit && currentFx !== App.forexData[0]?.start) showToast(App.lang === 'AR' ? '🎉 مبروك! وصلت لحد وقف الربح الكلي.' : '🎉 Congrats! Reached stop profit.');
+            if (currentFx <= s.stopLoss && currentFx > 0) showToast(App.lang === 'AR' ? '⚠️ انتبه! وصلت لحد وقف الخسارة الكلي.' : '⚠️ Warning! Reached stop loss.');
 
             document.getElementById('lblTotalEmergency').innerText = `${App.currency}${formatMoney(App.totalEmergency)}`;
 
@@ -551,38 +649,54 @@
 
             document.getElementById('lblForexExt').innerText = `+${App.forexData.length - App.origDays}`;
             renderTables();
+            saveToLocal(); // حفظ التغييرات بعد كل عملية حساب
         }
 
         // ================= الدالة السحرية للتراكم الخطي الرياضي =================
-        function applyCascade(dataArray, key, startIndex, initialValue, isCompoundKey, isPercentKey) {
-            let val = initialValue;
-            for (let i = startIndex; i < dataArray.length; i++) {
-                dataArray[i][key] = val;
-                // إذا كان التراكم مفعلاً، وكان الرقم ثابتاً ($)، نقوم بزيادته خطياً (Arithmetic Progression)
-                if (dataArray[i][isCompoundKey] && !dataArray[i][isPercentKey]) {
-                    val += initialValue; 
-                }
-            }
-        }
-
         window.updateRowGoal = function(index, value) {
             saveState();
-            let step = parseFloat(value) || 0;
-            applyCascade(App.forexData, 'goalVal', index, step, 'isCompound', 'isGoalPercent');
+            let newValue = parseFloat(value) || 0;
+            App.forexData[index].goalVal = newValue;
+            
+            // حساب مقدار الزيادة (الفرق بين اليوم والمبلغ السابق)
+            let step = 0;
+            if (index > 0) {
+                step = newValue - App.forexData[index - 1].goalVal;
+            } else {
+                step = newValue; 
+            }
+
+            let currentVal = newValue;
+            // تطبيق الزيادة على الأيام التالية
+            for (let i = index + 1; i < App.forexData.length; i++) {
+                if (App.forexData[i].isCompound && !App.forexData[i].isGoalPercent) {
+                    currentVal += step;
+                }
+                App.forexData[i].goalVal = currentVal;
+            }
             recalculateEngine();
         };
 
         window.updateRowSafety = function(index, value) { 
             saveState(); 
-            let step = parseFloat(value) || 0; 
-            applyCascade(App.forexData, 'safetyVal', index, step, 'isCompound', 'isSafetyPercent');
+            let newValue = parseFloat(value) || 0;
+            App.forexData[index].safetyVal = newValue;
+            
+            let step = 0;
+            if (index > 0) step = newValue - App.forexData[index - 1].safetyVal;
+            else step = newValue;
+
+            let currentVal = newValue;
+            for (let i = index + 1; i < App.forexData.length; i++) {
+                if (App.forexData[i].isCompound && !App.forexData[i].isSafetyPercent) currentVal += step;
+                App.forexData[i].safetyVal = currentVal;
+            }
             recalculateEngine(); 
         };
 
         window.updateRowSavings = function(index, value) { 
             saveState(); 
             let step = parseFloat(value) || 0; 
-            // التوفير دائما مبلغ ثابت، سنفترض أنه لا يملك نسبة مئوية حالياً
             let val = step;
             for (let i = index; i < App.forexData.length; i++) {
                 App.forexData[i].savingsVal = val;
@@ -597,13 +711,13 @@
             let val = step;
             for (let i = index; i < App.forexData.length; i++) {
                 App.forexData[i].trades = val;
-                // عدد الصفقات قد يتضاعف أو يثبت
                 if (App.forexData[i].isCompound) val += step;
             }
-            recalculateEngine(); // إعادة رسم
+            recalculateEngine(); 
         };
 
         function renderTables() {
+            let dict = dictionary[App.lang];
             let tbFx = document.getElementById('tbodyForex'); tbFx.innerHTML = '';
             App.forexData.forEach((row, i) => {
                 let goal = row.isGoalPercent ? (row.start * (row.goalVal / 100)) : row.goalVal;
@@ -620,13 +734,13 @@
                     <td class="p-1 text-accentRed"><input type="number" class="w-12 bg-transparent border-b border-transparent focus:border-accentRed text-center outline-none text-accentRed font-bold" value="${row.safetyVal}" onchange="updateRowSafety(${i}, this.value)" ${row.status !== 'pending' || !App.settings.isMasterEmergency ? 'disabled' : ''}></td>
                     <td class="p-1 text-accentGold font-bold">${formatMoney(displayEnd)}</td>
                     <td class="p-1"><input type="number" class="w-8 bg-bgInput border border-borderColor rounded text-center outline-none text-textWhite" value="${row.trades}" onchange="updateRowTrades(${i}, this.value)" ${row.status !== 'pending' ? 'disabled' : ''}></td>
-                    <td class="p-1"><input type="checkbox" ${row.isCompound?'checked':''} onchange="setFxComp(${i}, this.checked)" ${row.status!=='pending'?'disabled':''} class="accent-accentBlue w-4 h-4"></td>
+                    <td class="p-1"><input type="checkbox" ${row.isCompound?'checked':''} onchange="setFxComp(${i}, this.checked)" ${row.status!=='pending'?'disabled':''} class="accent-accentBlue w-4 h-4 cursor-pointer"></td>
                     <td class="p-1">
                         ${row.status === 'pending' ? `
-                            <button onclick="actFx(${i}, 'hit')" class="bg-accentGreen/20 text-accentGreen px-2 py-0.5 rounded text-[10px] font-bold">تحقيق</button>
-                            <button onclick="actFx(${i}, 'skip')" class="bg-borderColor text-textWhite px-2 py-0.5 rounded text-[10px]">تخطي</button>
-                            <button onclick="actFx(${i}, 'loss')" class="bg-accentRed/20 text-accentRed px-2 py-0.5 rounded text-[10px] font-bold" ${!App.settings.isMasterEmergency ? 'disabled style="opacity:0.2;"' : ''}>خسارة</button>
-                        ` : `<span class="text-[10px] font-bold">${row.status==='hit'?'تم':row.status==='loss'?'خسارة':'تخطي'}</span>`}
+                            <button onclick="actFx(${i}, 'hit')" class="bg-accentGreen/20 hover:bg-accentGreen/30 transition text-accentGreen px-2 py-0.5 rounded text-[10px] font-bold">${dict.actHit}</button>
+                            <button onclick="actFx(${i}, 'skip')" class="bg-borderColor hover:bg-borderColor/80 transition text-textWhite px-2 py-0.5 rounded text-[10px] mx-1">${dict.actSkip}</button>
+                            <button onclick="actFx(${i}, 'loss')" class="bg-accentRed/20 hover:bg-accentRed/30 transition text-accentRed px-2 py-0.5 rounded text-[10px] font-bold" ${!App.settings.isMasterEmergency ? 'disabled style="opacity:0.2;"' : ''}>${dict.actLoss}</button>
+                        ` : `<span class="text-[10px] font-bold">${row.status==='hit'?dict.done:row.status==='loss'?dict.actLoss:dict.actSkip}</span>`}
                     </td>`;
                 tbFx.appendChild(tr);
             });
@@ -646,11 +760,11 @@
                         <td class="p-2 text-accentGold">${formatMoney(tradeAmt)}</td>
                         <td class="p-2">
                             ${row.status === 'pending' ? `
-                                <button onclick="actBi(${i}, 'good')" class="bg-accentGreen/20 text-accentGreen px-2 py-1 rounded text-xs">جيد</button>
-                                <button onclick="actBi(${i}, 'med')" class="bg-accentGold/20 text-accentGold px-2 py-1 rounded text-xs">متوسط</button>
-                                <button onclick="actBi(${i}, 'abad')" class="bg-orange-500/20 text-orange-500 px-2 py-1 rounded text-xs">شبه سيء</button>
-                                <button onclick="actBi(${i}, 'bad')" class="bg-accentRed/20 text-accentRed px-2 py-1 rounded text-xs">سيء</button>
-                            ` : `<span class="text-xs font-bold">${row.status}</span>`}
+                                <button onclick="actBi(${i}, 'good')" class="bg-accentGreen/20 hover:bg-accentGreen/30 text-accentGreen px-2 py-1 rounded text-xs mx-0.5 transition">${dict.actGood}</button>
+                                <button onclick="actBi(${i}, 'med')" class="bg-accentGold/20 hover:bg-accentGold/30 text-accentGold px-2 py-1 rounded text-xs mx-0.5 transition">${dict.actMed}</button>
+                                <button onclick="actBi(${i}, 'abad')" class="bg-orange-500/20 hover:bg-orange-500/30 text-orange-500 px-2 py-1 rounded text-xs mx-0.5 transition">${dict.actAbad}</button>
+                                <button onclick="actBi(${i}, 'bad')" class="bg-accentRed/20 hover:bg-accentRed/30 text-accentRed px-2 py-1 rounded text-xs mx-0.5 transition">${dict.actBad}</button>
+                            ` : `<span class="text-xs font-bold">${dict['act' + row.status.charAt(0).toUpperCase() + row.status.slice(1)] || row.status}</span>`}
                         </td>
                         <td class="p-2 text-accentGreen font-bold">${formatMoney(displayEndBi)}</td>`;
                     tbBi.appendChild(tr);
@@ -659,7 +773,7 @@
         }
 
         function saveState() { App.historyStack.push({ fx: JSON.parse(JSON.stringify(App.forexData)), bi: JSON.parse(JSON.stringify(App.binaryData)) }); document.getElementById('btnUndo').disabled = false; }
-        window.setFxComp = function(idx, val) { saveState(); App.forexData[idx].isCompound = val; updateRowGoal(idx, App.forexData[idx].goalVal); }; // نعيد الحساب بالتراكم الجديد
+        window.setFxComp = function(idx, val) { saveState(); App.forexData[idx].isCompound = val; updateRowGoal(idx, App.forexData[idx].goalVal); };
 
         window.actFx = function(idx, action) {
             saveState(); let row = App.forexData[idx]; row.status = action;
@@ -707,9 +821,52 @@
             document.getElementById('vTotalProfit').innerText = `${App.currency}${formatMoney(netProfit)}`;
             document.getElementById('vSalary').innerText = `${App.currency}${formatMoney(salary)}`;
             document.getElementById('vSafeAmount').innerText = `${App.currency}${formatMoney(vaultAmount + App.totalEmergency)}`;
+            
+            // تحديث المبلغ عند تغيير خيار "مبلغ الأمان"
+            document.getElementById('chkVault').onchange = (e) => {
+                vaultAmount = e.target.checked ? (netProfit - salary) : 0;
+                document.getElementById('vSafeAmount').innerText = `${App.currency}${formatMoney(vaultAmount + App.totalEmergency)}`;
+            };
         });
 
         document.getElementById('btnCloseVault').addEventListener('click', () => { vVault.classList.add('hidden-view'); vActive.classList.remove('hidden-view'); });
+
+        // --- ترحيل وبدء الشهر الجديد ---
+        document.getElementById('btnChainMonth').addEventListener('click', () => {
+            // أخذ الرصيد من الخزنة
+            let safeText = document.getElementById('vSafeAmount').innerText;
+            let newCapital = parseFloat(safeText.replace(/[^0-9.-]+/g,"")) || 0;
+            
+            // تحديث الإعدادات
+            document.getElementById('inpCapital').value = newCapital;
+            let currentMonth = parseInt(document.getElementById('inpSeq').value) || 1;
+            document.getElementById('inpSeq').value = currentMonth + 1;
+            document.getElementById('inpName').value = dictionary[App.lang].planStr + (currentMonth + 1);
+            
+            // تصفير الجداول
+            App.forexData = [];
+            App.binaryData = [];
+            App.historyStack = [];
+            saveToLocal();
+            
+            // العودة للإعدادات
+            vVault.classList.add('hidden-view');
+            vActive.classList.add('hidden-view');
+            vSetup.classList.remove('hidden-view');
+            
+            showToast(App.lang === 'AR' ? 'تم ترحيل المبلغ وبدء شهر جديد بنجاح! 🎉' : 'Rollover successful! 🎉');
+        });
+
+        // تشغيل Service Worker للحفظ على الهاتف (PWA)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+            .then(() => console.log('Service Worker Registered'))
+            .catch(err => console.log('Service Worker Failed', err));
+        }
+
+        // استرجاع البيانات عند الفتح
+        window.addEventListener('DOMContentLoaded', loadFromLocal);
+
     </script>
 </body>
 </html>
