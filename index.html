@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>S&A Capital - N System</title>
+    
+    <!-- الخطوط -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- إعدادات الألوان (ستايل الحاسبة المظلم) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { cairo: ['Cairo', 'sans-serif'], inter: ['Inter', 'sans-serif'] },
+                    colors: {
+                        bgMain: '#0B111E',      
+                        bgCard: '#151C2C',      
+                        bgInput: '#0D131F',     
+                        borderColor: '#1E293B', 
+                        accentGreen: '#10B981', 
+                        accentRed: '#EF4444',   
+                        accentBlue: '#3B82F6',  
+                        accentGold: '#F59E0B',  
+                        textGray: '#64748B',    
+                        textWhite: '#F8FAFC'    
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #0B111E; color: #F8FAFC; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
+
+        .toggle-checkbox:checked { right: 0; border-color: #10B981; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #10B981; }
+        .toggle-checkbox { right: 0; z-index: 1; transition: all 0.3s; border-color: #1E293B; }
+        .toggle-label { width: 3rem; height: 1.5rem; background-color: #334155; border-radius: 9999px; position: relative; cursor: pointer; transition: all 0.3s; }
+        .toggle-label::after { content: ''; position: absolute; top: 0.125rem; left: 0.125rem; width: 1.25rem; height: 1.25rem; background-color: white; border-radius: 50%; transition: all 0.3s; }
+        .toggle-checkbox:checked + .toggle-label::after { transform: translateX(1.5rem); }
+
+        .table-container::-webkit-scrollbar { width: 4px; height: 4px; }
+        .table-container::-webkit-scrollbar-track { background: #0B111E; }
+        .table-container::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 4px; }
+
+        .hidden-view { display: none !important; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-bgCard border-b border-borderColor px-4 py-3 flex justify-between items-center sticky top-0 z-50 shadow-md">
+        <div class="flex items-center gap-3">
+            <!-- الشعار الذهبي N -->
+            <svg viewBox="0 0 100 100" class="w-10 h-10">
+                <defs>
+                    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FDE047;stop-opacity:1" />
+                        <stop offset="50%" style="stop-color:#F59E0B;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#B45309;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-family="'Times New Roman', serif" font-size="70" font-weight="bold" fill="url(#gold)" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">N</text>
+            </svg>
+            <h1 class="text-xl font-bold tracking-wider" id="lblAppTitle">إدارة رأس المال</h1>
+        </div>
+        <div class="flex gap-2">
+            <button id="btnCurrency" class="bg-bgInput border border-borderColor text-accentGold px-4 py-1.5 rounded-lg font-inter font-bold hover:bg-borderColor transition">$</button>
+            <button id="btnLang" class="bg-bgInput border border-borderColor text-textGray px-4 py-1.5 rounded-lg font-bold hover:text-textWhite transition">EN</button>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-6 max-w-4xl relative">
+
+        <!-- ================= الواجهة 1: لوحة التحكم والإعدادات ================= -->
+        <div id="view-setup" class="space-y-6 fade-in">
+            
+            <!-- التسمية والتسلسل -->
+            <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="w-full md:w-1/3">
+                        <label class="block text-textGray text-sm font-semibold mb-2" data-ar="رقم السلسلة (الشهر)" data-en="Sequence Number">رقم السلسلة (الشهر)</label>
+                        <div class="flex bg-bgInput border border-borderColor rounded-xl p-3 focus-within:border-accentGold transition-colors">
+                            <input type="number" id="inpSeq" class="bg-transparent text-textWhite font-inter font-bold w-full outline-none text-left" value="1">
+                        </div>
+                    </div>
+                    <div class="w-full md:w-2/3">
+                        <label class="block text-textGray text-sm font-semibold mb-2" data-ar="اسم الجدول التلقائي" data-en="Auto Plan Name">اسم الجدول التلقائي</label>
+                        <input type="text" id="inpName" readonly class="w-full bg-bgInput border border-borderColor text-accentGold font-bold rounded-xl p-3 outline-none" value="خطة التداول: الشهر 1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- إعدادات الفوركس -->
+            <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg relative overflow-hidden">
+                <div class="absolute right-0 top-0 bottom-0 w-1 bg-accentBlue"></div>
+                <div class="flex justify-between items-center mb-5 border-b border-borderColor pb-3">
+                    <h2 class="text-lg font-bold text-textWhite" data-ar="نظام الفوركس" data-en="Forex System">نظام الفوركس</h2>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-semibold text-textGray" id="lblCompound" data-ar="تراكمي" data-en="Compound">تراكمي</span>
+                        <div class="relative inline-block w-12 align-middle select-none">
+                            <input type="checkbox" id="chkCompound" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-bgCard appearance-none cursor-pointer" checked/>
+                            <label for="chkCompound" class="toggle-label block overflow-hidden h-6 rounded-full cursor-pointer"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-textGray text-sm font-semibold mb-2" data-ar="رأس المال المبدئي" data-en="Starting Capital">رأس المال المبدئي</label>
+                        <div class="flex bg-bgInput border border-borderColor rounded-xl p-3 focus-within:border-accentBlue transition-colors">
+                            <span class="text-textGray ml-2 font-inter lblCurrSymbol">$</span>
+                            <input type="number" id="inpCapital" class="bg-transparent text-accentBlue font-inter font-bold w-full outline-none text-left" value="300000">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-textGray text-sm font-semibold mb-2" data-ar="عدد الأيام المستهدفة" data-en="Target Days">عدد الأيام المستهدفة</label>
+                        <div class="flex bg-bgInput border border-borderColor rounded-xl p-3 focus-within:border-accentBlue transition-colors">
+                            <input type="number" id="inpDays" class="bg-transparent text-textWhite font-inter font-bold w-full outline-none text-left" value="20">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-textGray text-sm font-semibold mb-2" data-ar="الهدف اليومي" data-en="Daily Target">الهدف اليومي</label>
+                        <div class="flex items-center bg-bgInput border border-borderColor rounded-xl p-1 focus-within:border-accentGreen transition-colors">
+                            <button class="unit-toggle bg-bgCard text-accentGreen font-inter font-bold px-3 py-2 rounded-lg border border-borderColor hover:bg-borderColor transition">%</button>
+                            <input type="number" id="inpGoal" class="bg-transparent text-accentGreen font-inter font-bold w-full outline-none text-left px-2" value="2">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-textGray text-sm font-semibold mb-2" data-ar="مبلغ الأمان (خسارة)" data-en="Safety (Stop Loss)">مبلغ الأمان (خسارة)</label>
+                        <div class="flex items-center bg-bgInput border border-borderColor rounded-xl p-1 focus-within:border-accentRed transition-colors">
+                            <button class="unit-toggle bg-bgCard text-accentRed font-inter font-bold px-3 py-2 rounded-lg border border-borderColor hover:bg-borderColor transition">%</button>
+                            <input type="number" id="inpSafety" class="bg-transparent text-accentRed font-inter font-bold w-full outline-none text-left px-2" value="4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- إعدادات الخيارات الثنائية -->
+            <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300" id="cardBinary">
+                <div class="absolute right-0 top-0 bottom-0 w-1 bg-accentGold"></div>
+                <div class="flex justify-between items-center mb-5 border-b border-borderColor pb-3">
+                    <h2 class="text-lg font-bold text-textWhite" data-ar="الخيارات الثنائية" data-en="Binary Options">الخيارات الثنائية</h2>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-semibold text-accentGold" id="lblBinaryEnable" data-ar="مفعل" data-en="Enabled">مفعل</span>
+                        <div class="relative inline-block w-12 align-middle select-none">
+                            <input type="checkbox" id="chkBinary" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-bgCard appearance-none cursor-pointer" checked/>
+                            <label for="chkBinary" class="toggle-label block overflow-hidden h-6 rounded-full cursor-pointer"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="binaryFields">
+                    <div>
+                        <label class="block text-textGray text-sm font-semibold mb-2" data-ar="المبلغ المخصص (من الإجمالي)" data-en="Allocated Amount">المبلغ المخصص (من الإجمالي)</label>
+                        <div class="flex items-center bg-bgInput border border-borderColor rounded-xl p-1 focus-within:border-accentGold transition-colors">
+                            <button class="unit-toggle bg-bgCard text-accentGold font-inter font-bold px-3 py-2 rounded-lg border border-borderColor hover:bg-borderColor transition">%</button>
+                            <input type="number" id="inpBinaryAlloc" class="bg-transparent text-accentGold font-inter font-bold w-full outline-none text-left px-2" value="50">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-textGray text-sm font-semibold mb-2" data-ar="نسبة الربح الافتراضية للوقت" data-en="Default Payout %">نسبة الربح الافتراضية</label>
+                        <div class="flex bg-bgInput border border-borderColor rounded-xl p-3 focus-within:border-accentGold transition-colors">
+                            <span class="text-textGray ml-2 font-inter">%</span>
+                            <input type="number" id="inpBinaryProfit" class="bg-transparent text-textWhite font-inter font-bold w-full outline-none text-left" value="84">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="btnGenerate" class="w-full bg-gradient-to-r from-accentGold to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-bgMain font-extrabold text-xl py-4 rounded-xl shadow-lg transition-all duration-300" data-ar="توليد الخطة وبدء التداول 🚀" data-en="Generate Plan & Start 🚀">
+                توليد الخطة وبدء التداول 🚀
+            </button>
+        </div>
+
+
+        <!-- ================= الواجهة 2: التتبع والجداول النشطة ================= -->
+        <div id="view-active" class="hidden-view fade-in">
+            
+            <!-- الهيدر التفاعلي والتبديل -->
+            <div class="bg-bgCard border border-borderColor rounded-2xl p-4 shadow-lg mb-4 sticky top-16 z-40">
+                <div class="flex justify-between items-center mb-4">
+                    <button id="btnBackToSetup" class="bg-bgInput hover:bg-borderColor p-2 rounded-lg transition-colors border border-borderColor">
+                        <svg class="w-6 h-6 rotate-180 text-textWhite" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                    
+                    <!-- مبدل الأقسام (فوركس / ثنائية) -->
+                    <div class="flex bg-bgInput rounded-lg p-1 border border-borderColor">
+                        <button id="tabForex" class="px-6 py-2 rounded-md font-bold text-sm bg-borderColor text-accentBlue transition-colors" data-ar="الفوركس" data-en="Forex">الفوركس</button>
+                        <button id="tabBinary" class="px-6 py-2 rounded-md font-bold text-sm text-textGray hover:text-textWhite transition-colors" data-ar="الثنائية" data-en="Binary">الثنائية</button>
+                    </div>
+
+                    <button id="btnUndo" class="bg-bgInput hover:bg-borderColor p-2 rounded-lg transition-colors border border-borderColor disabled:opacity-30 text-textWhite" disabled title="تراجع">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                    </button>
+                </div>
+
+                <!-- إحصائيات المقاصة والتعويض -->
+                <div id="compensationAlert" class="hidden bg-accentGreen/10 border border-accentGreen/30 rounded-lg p-2 mb-3 text-center text-sm font-bold text-accentGreen animate-pulse">
+                    💡 تم تعويض انحراف الفوركس بواسطة أرباح الثنائية!
+                </div>
+
+                <div class="flex justify-between items-center text-sm">
+                    <div>
+                        <span class="text-textGray" data-ar="تمديد الفوركس:" data-en="Forex Extension:">تمديد الفوركس:</span>
+                        <span id="lblForexExt" class="font-bold text-accentRed font-inter ml-1">+0</span>
+                    </div>
+                    <button id="btnOpenVault" class="bg-gradient-to-r from-accentGold to-yellow-600 text-bgMain px-4 py-1.5 rounded-lg font-bold hover:opacity-90 transition shadow-md flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        <span data-ar="الخزنة والرواتب" data-en="Vault & Salary">الخزنة والرواتب</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- جدول الفوركس -->
+            <div id="tableForexContainer" class="bg-bgCard border border-borderColor rounded-2xl shadow-lg overflow-hidden mb-6">
+                <div class="table-container overflow-x-auto max-h-[60vh]">
+                    <table class="w-full text-sm text-center whitespace-nowrap">
+                        <thead class="bg-bgInput text-textGray font-semibold sticky top-0 z-10 shadow-sm border-b border-borderColor">
+                            <tr>
+                                <th class="py-3 px-2 border-l border-borderColor/50" data-ar="يوم" data-en="Day">يوم</th>
+                                <th class="py-3 px-3 border-l border-borderColor/50" data-ar="البداية" data-en="Start">البداية</th>
+                                <th class="py-3 px-3 border-l border-borderColor/50 text-accentGreen" data-ar="الهدف" data-en="Goal">الهدف</th>
+                                <th class="py-3 px-3 border-l border-borderColor/50 text-accentRed" data-ar="الخسارة" data-en="Loss">الخسارة</th>
+                                <th class="py-3 px-2 border-l border-borderColor/50" data-ar="تراكمي" data-en="Comp.">تراكمي</th>
+                                <th class="py-3 px-3 min-w-[200px]" data-ar="الإجراء" data-en="Action">الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyForex" class="font-inter"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- جدول الخيارات الثنائية -->
+            <div id="tableBinaryContainer" class="hidden bg-bgCard border border-borderColor rounded-2xl shadow-lg overflow-hidden mb-6">
+                <div class="table-container overflow-x-auto max-h-[60vh]">
+                    <table class="w-full text-sm text-center whitespace-nowrap">
+                        <thead class="bg-bgInput text-textGray font-semibold sticky top-0 z-10 shadow-sm border-b border-borderColor">
+                            <tr>
+                                <th class="py-3 px-2 border-l border-borderColor/50" data-ar="يوم" data-en="Day">يوم</th>
+                                <th class="py-3 px-3 border-l border-borderColor/50" data-ar="المحفظة" data-en="Wallet">المحفظة</th>
+                                <th class="py-3 px-3 border-l border-borderColor/50 text-accentGold" data-ar="دخول الصفقة" data-en="Trade Amt">دخول الصفقة</th>
+                                <th class="py-3 px-3 min-w-[280px]" data-ar="حالة اليوم (3 محاولات)" data-en="Daily Status (3 Tries)">حالة اليوم (3 محاولات)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyBinary" class="font-inter"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- ================= الواجهة 3: الخزنة والرواتب ================= -->
+        <div id="view-vault" class="hidden-view fade-in absolute inset-0 bg-bgMain/95 backdrop-blur-sm z-50 p-4 pt-10">
+            <div class="max-w-md mx-auto bg-bgCard border border-accentGold/30 rounded-2xl p-6 shadow-2xl relative">
+                <button id="btnCloseVault" class="absolute top-4 right-4 text-textGray hover:text-textWhite bg-bgInput p-2 rounded-lg">✕</button>
+                
+                <h2 class="text-2xl font-bold text-accentGold mb-6 flex items-center gap-2">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    الخزنة المركزية
+                </h2>
+
+                <div class="space-y-4 font-inter text-lg">
+                    <div class="flex justify-between border-b border-borderColor pb-2">
+                        <span class="text-textGray font-cairo">إجمالي الأرباح الصافية:</span>
+                        <span id="vTotalProfit" class="text-accentGreen font-bold">$0.00</span>
+                    </div>
+                    <div class="flex justify-between border-b border-borderColor pb-2">
+                        <span class="text-textGray font-cairo">الراتب المستحق (20%):</span>
+                        <span id="vSalary" class="text-textWhite font-bold">$0.00</span>
+                    </div>
+                    
+                    <div class="bg-bgInput rounded-xl p-4 mt-4 border border-accentGold/20">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-textWhite font-cairo font-bold">مبلغ الأمان الخارجي</span>
+                            <div class="relative inline-block w-10 align-middle select-none">
+                                <input type="checkbox" id="chkVault" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 border-bgInput appearance-none cursor-pointer" checked/>
+                                <label for="chkVault" class="toggle-label block overflow-hidden h-5 rounded-full cursor-pointer"></label>
+                            </div>
+                        </div>
+                        <p class="text-xs text-textGray font-cairo mb-3">حفظ الفائض من رأس المال لحماية الخطة القادمة.</p>
+                        <div class="text-3xl font-extrabold text-accentGold text-center" id="vSafeAmount">$0.00</div>
+                    </div>
+                </div>
+
+                <button id="btnChainMonth" class="w-full mt-6 bg-accentBlue hover:bg-blue-600 text-white font-bold font-cairo py-3 rounded-xl transition">
+                    ربط وبدء الشهر التالي 🔗
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ================= البرمجة (المنطق الديناميكي الكامل) ================= -->
+    <script>
+        // --- 1. حالة التطبيق (State Management) ---
+        let App = {
+            lang: 'ar',
+            currency: '$',
+            isBinaryEnabled: true,
+            origDays: 0,
+            forexData: [],
+            binaryData: [],
+            historyStack: [],
+            settings: {}
+        };
+
+        const dict = {
+            ar: { hit: "تحقيق", skip: "تخطي", loss: "خسارة", good: "جيد🟢", med: "متوسط🟡", aBad: "شبه سيء🟠", bad: "سيء🔴", done: "مكتمل", ext: "تمديد", btnExt: "الفوركس", btnBin: "الثنائية" },
+            en: { hit: "Hit", skip: "Skip", loss: "Loss", good: "Good🟢", med: "Med🟡", aBad: "A.Bad🟠", bad: "Bad🔴", done: "Done", ext: "Ext.", btnExt: "Forex", btnBin: "Binary" }
+        };
+
+        // --- 2. التفاعلات الأساسية للواجهة ---
+        const vSetup = document.getElementById('view-setup');
+        const vActive = document.getElementById('view-active');
+        const vVault = document.getElementById('view-vault');
+
+        // تبديل اللغة
+        document.getElementById('btnLang').addEventListener('click', (e) => {
+            App.lang = App.lang === 'ar' ? 'en' : 'ar';
+            e.target.innerText = App.lang === 'ar' ? 'EN' : 'عربي';
+            document.documentElement.lang = App.lang;
+            document.documentElement.dir = App.lang === 'ar' ? 'rtl' : 'ltr';
+            document.querySelectorAll('[data-ar]').forEach(el => el.innerText = el.getAttribute(`data-${App.lang}`));
+            renderTables();
+        });
+
+        // تبديل العملة
+        document.getElementById('btnCurrency').addEventListener('click', (e) => {
+            App.currency = App.currency === '$' ? 'ر.س' : '$';
+            e.target.innerText = App.currency;
+            document.querySelectorAll('.lblCurrSymbol').forEach(el => el.innerText = App.currency);
+            document.querySelectorAll('.unit-toggle').forEach(btn => { if(btn.innerText !== '%') btn.innerText = App.currency; });
+            renderTables();
+        });
+
+        // أزرار الوحدات
+        document.querySelectorAll('.unit-toggle').forEach(btn => {
+            btn.addEventListener('click', function() { this.innerText = this.innerText === '%' ? App.currency : '%'; });
+        });
+
+        // تفعيل الثنائية
+        document.getElementById('chkBinary').addEventListener('change', (e) => {
+            App.isBinaryEnabled = e.target.checked;
+            document.getElementById('lblBinaryEnable').innerText = App.isBinaryEnabled ? (App.lang==='ar'?'مفعل':'On') : (App.lang==='ar'?'معطل':'Off');
+            const card = document.getElementById('cardBinary');
+            if(App.isBinaryEnabled) { card.classList.remove('opacity-50', 'grayscale'); document.getElementById('binaryFields').classList.remove('pointer-events-none'); }
+            else { card.classList.add('opacity-50', 'grayscale'); document.getElementById('binaryFields').classList.add('pointer-events-none'); }
+        });
+
+        // تبديل التاب (فوركس/ثنائية)
+        const tabFx = document.getElementById('tabForex');
+        const tabBi = document.getElementById('tabBinary');
+        const conFx = document.getElementById('tableForexContainer');
+        const conBi = document.getElementById('tableBinaryContainer');
+
+        tabFx.addEventListener('click', () => {
+            tabFx.className = "px-6 py-2 rounded-md font-bold text-sm bg-borderColor text-accentBlue transition-colors";
+            tabBi.className = "px-6 py-2 rounded-md font-bold text-sm text-textGray hover:text-textWhite transition-colors";
+            conFx.classList.remove('hidden'); conBi.classList.add('hidden');
+        });
+        tabBi.addEventListener('click', () => {
+            tabBi.className = "px-6 py-2 rounded-md font-bold text-sm bg-borderColor text-accentGold transition-colors";
+            tabFx.className = "px-6 py-2 rounded-md font-bold text-sm text-textGray hover:text-textWhite transition-colors";
+            conBi.classList.remove('hidden'); conFx.classList.add('hidden');
+        });
+
+        // --- 3. محرك التوليد (Generation Engine) ---
+        document.getElementById('btnGenerate').addEventListener('click', () => {
+            const capital = parseFloat(document.getElementById('inpCapital').value) || 0;
+            App.origDays = parseInt(document.getElementById('inpDays').value) || 0;
+            const isFxCompound = document.getElementById('chkCompound').checked;
+            
+            App.settings = {
+                fxGoal: parseFloat(document.getElementById('inpGoal').value) || 0,
+                fxGoalPct: document.querySelectorAll('.unit-toggle')[0].innerText === '%',
+                fxSafe: parseFloat(document.getElementById('inpSafety').value) || 0,
+                fxSafePct: document.querySelectorAll('.unit-toggle')[1].innerText === '%',
+                binAlloc: parseFloat(document.getElementById('inpBinaryAlloc').value) || 0,
+                binAllocPct: document.querySelectorAll('.unit-toggle')[2].innerText === '%',
+                binProfit: parseFloat(document.getElementById('inpBinaryProfit').value) || 84
+            };
+
+            // توزيع رأس المال
+            let fxCapital = capital;
+            let binCapital = 0;
+            if (App.isBinaryEnabled) {
+                binCapital = App.settings.binAllocPct ? (capital * (App.settings.binAlloc / 100)) : App.settings.binAlloc;
+                fxCapital = capital - binCapital; // الفوركس يأخذ الباقي لضمان السيولة
+            }
+
+            App.forexData = [];
+            App.binaryData = [];
+            App.historyStack = [];
+
+            for (let i = 1; i <= App.origDays; i++) {
+                App.forexData.push({ day: i, start: fxCapital, isCompound: isFxCompound, status: 'pending', end: null });
+                if(App.isBinaryEnabled) {
+                    App.binaryData.push({ day: i, start: binCapital, status: 'pending', end: null });
+                }
+            }
+
+            if(!App.isBinaryEnabled) tabBi.classList.add('hidden'); else tabBi.classList.remove('hidden');
+            tabFx.click();
+            
+            vSetup.classList.add('hidden-view');
+            vActive.classList.remove('hidden-view');
+            
+            recalculateEngine();
+        });
+
+        document.getElementById('btnBackToSetup').addEventListener('click', () => {
+            vActive.classList.add('hidden-view'); vSetup.classList.remove('hidden-view');
+        });
+
+        // --- 4. المحرك الرياضي والمقاصة (Core Recalculation) ---
+        function recalculateEngine() {
+            let s = App.settings;
+            
+            // حساب الفوركس
+            let currentFx = App.forexData[0]?.start || 0;
+            let forexTotalDeficit = 0; // لحساب المقاصة
+            
+            for (let i = 0; i < App.forexData.length; i++) {
+                let row = App.forexData[i];
+                if (i > 0) row.start = App.forexData[i-1].end !== null ? App.forexData[i-1].end : currentFx;
+                currentFx = row.start;
+
+                let goal = s.fxGoalPct ? (row.start * (s.fxGoal / 100)) : s.fxGoal;
+                let loss = s.fxSafePct ? (row.start * (s.fxSafe / 100)) : s.fxSafe;
+
+                if (row.status === 'hit') { row.end = row.start + goal; currentFx = row.end; }
+                else if (row.status === 'loss') { row.end = row.start - loss; currentFx = row.end; forexTotalDeficit += loss; }
+                else if (row.status === 'skip') { row.end = row.start; currentFx = row.end; }
+                else { row.end = null; if (row.isCompound) currentFx = row.start + goal; }
+            }
+
+            // حساب الثنائية
+            let currentBin = App.isBinaryEnabled && App.binaryData.length > 0 ? App.binaryData[0].start : 0;
+            let binaryTotalNetProfit = 0;
+
+            if (App.isBinaryEnabled) {
+                for (let i = 0; i < App.binaryData.length; i++) {
+                    let row = App.binaryData[i];
+                    if (i > 0) row.start = App.binaryData[i-1].end !== null ? App.binaryData[i-1].end : currentBin;
+                    currentBin = row.start;
+
+                    // مبلغ دخول الصفقة (نفترضه نسبة من رأس مال الثنائية لتجنب الإفلاس السريع، أو ثابت)
+                    // هنا سنعتبر أن مبلغ الدخول هو الذي حدده المستخدم في الإعدادات
+                    let tradeAmt = s.binAllocPct ? (row.start * (s.binAlloc / 100)) : s.binAlloc;
+                    // إذا كان مبلغ الدخول أكبر من الرصيد، ندخل بالرصيد المتبقي
+                    if (tradeAmt > row.start) tradeAmt = row.start;
+
+                    let winAmt = tradeAmt * (s.binProfit / 100);
+                    let dailyProfit = 0;
+
+                    if (row.status === 'good') dailyProfit = winAmt * 3;
+                    else if (row.status === 'med') dailyProfit = (winAmt * 2) - tradeAmt;
+                    else if (row.status === 'abad') dailyProfit = winAmt - tradeAmt;
+                    else if (row.status === 'bad') dailyProfit = -tradeAmt;
+
+                    if (row.status !== 'pending') {
+                        row.end = row.start + dailyProfit;
+                        currentBin = row.end;
+                        binaryTotalNetProfit += dailyProfit;
+                    } else {
+                        row.end = null; 
+                    }
+                }
+            }
+
+            // المقاصة (Cross-Compensation)
+            let extraDays = App.forexData.length - App.origDays;
+            const alertComp = document.getElementById('compensationAlert');
+            
+            // إذا كان هناك خسائر في الفوركس وأرباح في الثنائية
+            if (extraDays > 0 && binaryTotalNetProfit > 0) {
+                // نبسط المقاصة: هل أرباح الثنائية تغطي هدف يوم من الفوركس؟
+                let nextFxGoal = s.fxGoalPct ? (currentFx * (s.fxGoal / 100)) : s.fxGoal;
+                if(nextFxGoal > 0) {
+                    let daysRecovered = Math.floor(binaryTotalNetProfit / nextFxGoal);
+                    if (daysRecovered > 0) {
+                        // إزالة الأيام المعلقة الإضافية من نهاية الفوركس
+                        let removed = 0;
+                        for(let i = App.forexData.length - 1; i >= App.origDays; i--) {
+                            if(App.forexData[i].status === 'pending' && removed < daysRecovered) {
+                                App.forexData.splice(i, 1);
+                                removed++;
+                            }
+                        }
+                        if(removed > 0) {
+                            binaryTotalNetProfit -= (removed * nextFxGoal); // خصم الأرباح المستخدمة في المقاصة نظرياً
+                            alertComp.classList.remove('hidden');
+                            setTimeout(()=>alertComp.classList.add('hidden'), 5000);
+                        }
+                    }
+                }
+            }
+
+            // تحديث العرض
+            document.getElementById('lblForexExt').innerText = `+${App.forexData.length - App.origDays}`;
+            renderTables();
+        }
+
+        function renderTables() {
+            let s = App.settings;
+            let l = dict[App.lang];
+
+            // رسم الفوركس
+            let tbFx = document.getElementById('tbodyForex');
+            tbFx.innerHTML = '';
+            App.forexData.forEach((row, i) => {
+                let goal = s.fxGoalPct ? (row.start * (s.fxGoal / 100)) : s.fxGoal;
+                let loss = s.fxSafePct ? (row.start * (s.fxSafe / 100)) : s.fxSafe;
+                
+                let tr = document.createElement('tr');
+                tr.className = `border-b border-borderColor/50 transition-colors hover:bg-bgInput/50 ${row.status==='hit'?'bg-accentGreen/10':row.status==='loss'?'bg-accentRed/10':row.status==='skip'?'opacity-50':''}`;
+                
+                tr.innerHTML = `
+                    <td class="py-2 px-2 font-bold">${row.day}</td>
+                    <td class="py-2 px-2">${App.currency}${row.start.toFixed(2)}</td>
+                    <td class="py-2 px-2 text-accentGreen">+${goal.toFixed(2)}</td>
+                    <td class="py-2 px-2 text-accentRed">-${loss.toFixed(2)}</td>
+                    <td class="py-2 px-2"><input type="checkbox" ${row.isCompound?'checked':''} onchange="setFxComp(${i}, this.checked)" ${row.status!=='pending'?'disabled':''} class="accent-accentBlue w-4 h-4"></td>
+                    <td class="py-2 px-2">
+                        ${row.status === 'pending' ? `
+                            <div class="flex justify-center gap-1">
+                                <button onclick="actFx(${i}, 'hit')" class="bg-accentGreen/20 text-accentGreen hover:bg-accentGreen hover:text-bgMain px-2 py-1 rounded font-bold text-xs">${l.hit}</button>
+                                <button onclick="actFx(${i}, 'skip')" class="bg-borderColor text-textWhite hover:bg-gray-600 px-2 py-1 rounded text-xs">${l.skip}</button>
+                                <button onclick="actFx(${i}, 'loss')" class="bg-accentRed/20 text-accentRed hover:bg-accentRed hover:text-white px-2 py-1 rounded font-bold text-xs">${l.loss}</button>
+                            </div>
+                        ` : `<span class="px-2 py-1 rounded text-xs font-bold bg-bgInput border border-borderColor">${l[row.status]}</span>`}
+                    </td>
+                `;
+                tbFx.appendChild(tr);
+            });
+
+            // رسم الثنائية
+            if(App.isBinaryEnabled) {
+                let tbBi = document.getElementById('tbodyBinary');
+                tbBi.innerHTML = '';
+                App.binaryData.forEach((row, i) => {
+                    let tradeAmt = s.binAllocPct ? (row.start * (s.binAlloc / 100)) : s.binAlloc;
+                    if (tradeAmt > row.start) tradeAmt = row.start;
+
+                    let tr = document.createElement('tr');
+                    tr.className = `border-b border-borderColor/50 transition-colors hover:bg-bgInput/50 ${row.status!=='pending'?'bg-accentGold/10':''}`;
+                    
+                    tr.innerHTML = `
+                        <td class="py-2 px-2 font-bold">${row.day}</td>
+                        <td class="py-2 px-2">${App.currency}${row.start.toFixed(2)}</td>
+                        <td class="py-2 px-2 text-accentGold">${App.currency}${tradeAmt.toFixed(2)}</td>
+                        <td class="py-2 px-2">
+                            ${row.status === 'pending' ? `
+                                <div class="flex justify-center gap-1">
+                                    <button onclick="actBi(${i}, 'good')" class="bg-accentGreen/20 text-accentGreen hover:bg-accentGreen hover:text-bgMain px-2 py-1 rounded font-bold text-xs">${l.good}</button>
+                                    <button onclick="actBi(${i}, 'med')" class="bg-accentGold/20 text-accentGold hover:bg-accentGold hover:text-bgMain px-2 py-1 rounded font-bold text-xs">${l.med}</button>
+                                    <button onclick="actBi(${i}, 'abad')" class="bg-orange-500/20 text-orange-500 hover:bg-orange-500 hover:text-white px-2 py-1 rounded font-bold text-xs">${l.aBad}</button>
+                                    <button onclick="actBi(${i}, 'bad')" class="bg-accentRed/20 text-accentRed hover:bg-accentRed hover:text-white px-2 py-1 rounded font-bold text-xs">${l.bad}</button>
+                                </div>
+                            ` : `<span class="px-2 py-1 rounded text-xs font-bold bg-bgInput border border-borderColor">${l[row.status]}</span>`}
+                        </td>
+                    `;
+                    tbBi.appendChild(tr);
+                });
+            }
+        }
+
+        // --- 5. أفعال الفوركس والثنائية ---
+        function saveState() {
+            App.historyStack.push({ fx: JSON.parse(JSON.stringify(App.forexData)), bi: JSON.parse(JSON.stringify(App.binaryData)) });
+            document.getElementById('btnUndo').disabled = false;
+        }
+
+        window.setFxComp = function(idx, val) { saveState(); App.forexData[idx].isCompound = val; recalculateEngine(); };
+
+        window.actFx = function(idx, action) {
+            saveState();
+            let row = App.forexData[idx];
+            row.status = action;
+
+            if (action === 'skip') {
+                let last = App.forexData[App.forexData.length - 1];
+                App.forexData.push({...last, day: last.day + 1, status: 'pending', end: null});
+            } else if (action === 'loss') {
+                let s = App.settings;
+                let loss = s.fxSafePct ? (row.start * (s.fxSafe / 100)) : s.fxSafe;
+                let nextGoal = s.fxGoalPct ? (row.start * (s.fxGoal / 100)) : s.fxGoal; // تقريبي لليوم التالي
+                
+                let daysNeeded = Math.ceil(loss / nextGoal);
+                if(daysNeeded < 1 || !isFinite(daysNeeded)) daysNeeded = 1;
+
+                let last = App.forexData[App.forexData.length - 1];
+                for(let k=1; k<=daysNeeded; k++) {
+                    App.forexData.push({...last, day: last.day + k, status: 'pending', end: null});
+                }
+            }
+            recalculateEngine();
+        };
+
+        window.actBi = function(idx, action) {
+            saveState();
+            App.binaryData[idx].status = action;
+            recalculateEngine();
+        };
+
+        document.getElementById('btnUndo').addEventListener('click', () => {
+            if(App.historyStack.length > 0) {
+                let state = App.historyStack.pop();
+                App.forexData = state.fx;
+                App.binaryData = state.bi;
+                if(App.historyStack.length === 0) document.getElementById('btnUndo').disabled = true;
+                recalculateEngine();
+            }
+        });
+
+        // --- 6. الخزنة والرواتب (Vault System) ---
+        document.getElementById('btnOpenVault').addEventListener('click', () => {
+            vVault.classList.remove('hidden-view');
+            
+            // حساب الصافي
+            let startCap = parseFloat(document.getElementById('inpCapital').value) || 0;
+            let currentFx = App.forexData.length > 0 ? (App.forexData[App.forexData.length-1].end || App.forexData[App.forexData.length-1].start) : 0;
+            let currentBi = (App.isBinaryEnabled && App.binaryData.length > 0) ? (App.binaryData[App.binaryData.length-1].end || App.binaryData[App.binaryData.length-1].start) : 0;
+            
+            let totalCurrent = currentFx + currentBi;
+            let netProfit = totalCurrent - startCap;
+            if(netProfit < 0) netProfit = 0;
+
+            let salary = netProfit * 0.20; // 20% راتب
+            
+            document.getElementById('vTotalProfit').innerText = `${App.currency}${netProfit.toFixed(2)}`;
+            document.getElementById('vSalary').innerText = `${App.currency}${salary.toFixed(2)}`;
+            
+            // تحديث مبلغ الأمان الخارجي برمجياً
+            let remaining = netProfit - salary;
+            let vaultAmount = document.getElementById('chkVault').checked ? remaining : 0;
+            document.getElementById('vSafeAmount').innerText = `${App.currency}${vaultAmount.toFixed(2)}`;
+
+            document.getElementById('chkVault').onchange = (e) => {
+                vaultAmount = e.target.checked ? remaining : 0;
+                document.getElementById('vSafeAmount').innerText = `${App.currency}${vaultAmount.toFixed(2)}`;
+            };
+        });
+
+        document.getElementById('btnCloseVault').addEventListener('click', () => vVault.classList.add('hidden-view'));
+        
+        document.getElementById('btnChainMonth').addEventListener('click', () => {
+            alert('تم حفظ البيانات. سيتم تجهيز الشهر الجديد قريباً!');
+            vVault.classList.add('hidden-view');
+            document.getElementById('btnBackToSetup').click();
+            document.getElementById('inpSeq').value = parseInt(document.getElementById('inpSeq').value) + 1;
+            document.getElementById('inpSeq').dispatchEvent(new Event('input'));
+        });
+
+    </script>
+</body>
+</html>
