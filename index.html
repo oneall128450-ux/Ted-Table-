@@ -87,7 +87,7 @@
 
     <main class="flex-grow container mx-auto px-4 py-6 max-w-4xl relative">
         <!-- رسائل تنبيه مخصصة بديلة لـ alert() -->
-        <div id="customToast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-accentGold text-bgMain px-6 py-3 rounded-xl font-bold shadow-2xl z-50 animate-bounce"></div>
+        <div id="customToast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-accentGold text-bgMain px-6 py-3 rounded-xl font-bold shadow-2xl z-50 animate-bounce text-center"></div>
 
         <!-- ================= الواجهة 1: لوحة التحكم والإعدادات ================= -->
         <div id="view-setup" class="space-y-6 fade-in">
@@ -133,21 +133,21 @@
                     <div>
                         <label class="block text-textGray text-sm font-semibold mb-2" data-ar="عدد الأيام المستهدفة" data-en="Target Days">عدد الأيام المستهدفة</label>
                         <div class="flex bg-bgInput border border-borderColor rounded-xl p-3 focus-within:border-accentBlue transition-colors">
-                            <input type="number" id="inpDays" class="bg-transparent text-textWhite font-inter font-bold w-full outline-none text-left" placeholder="20">
+                            <input type="number" id="inpDays" class="bg-transparent text-textWhite font-inter font-bold w-full outline-none text-left" placeholder="0">
                         </div>
                     </div>
                     <div>
                         <label class="block text-textGray text-sm font-semibold mb-2" data-ar="الهدف اليومي" data-en="Daily Target">الهدف اليومي</label>
                         <div class="flex items-center bg-bgInput border border-borderColor rounded-xl p-1 focus-within:border-accentGreen transition-colors">
                             <button class="unit-toggle bg-bgCard text-accentGreen font-inter font-bold px-3 py-2 rounded-lg border border-borderColor hover:bg-borderColor transition">%</button>
-                            <input type="number" id="inpGoal" class="bg-transparent text-accentGreen font-inter font-bold w-full outline-none text-left px-2" placeholder="2">
+                            <input type="number" id="inpGoal" class="bg-transparent text-accentGreen font-inter font-bold w-full outline-none text-left px-2" placeholder="0">
                         </div>
                     </div>
                     <div>
                         <label class="block text-textGray text-sm font-semibold mb-2" data-ar="مبلغ الأمان (خسارة)" data-en="Safety (Stop Loss)">مبلغ الأمان (خسارة)</label>
                         <div class="flex items-center bg-bgInput border border-borderColor rounded-xl p-1 focus-within:border-accentRed transition-colors">
                             <button class="unit-toggle bg-bgCard text-accentRed font-inter font-bold px-3 py-2 rounded-lg border border-borderColor hover:bg-borderColor transition">%</button>
-                            <input type="number" id="inpSafety" class="bg-transparent text-accentRed font-inter font-bold w-full outline-none text-left px-2" placeholder="4">
+                            <input type="number" id="inpSafety" class="bg-transparent text-accentRed font-inter font-bold w-full outline-none text-left px-2" placeholder="0">
                         </div>
                     </div>
                 </div>
@@ -173,14 +173,14 @@
                             <label class="block text-textGray text-sm font-semibold mb-2" data-ar="المبلغ المخصص (من الإجمالي)" data-en="Allocated Amount">المبلغ المخصص (من الإجمالي)</label>
                             <div class="flex items-center bg-bgInput border border-borderColor rounded-xl p-1 focus-within:border-accentGold transition-colors">
                                 <button class="unit-toggle bg-bgCard text-accentGold font-inter font-bold px-3 py-2 rounded-lg border border-borderColor hover:bg-borderColor transition">%</button>
-                                <input type="number" id="inpBinaryAlloc" class="bg-transparent text-accentGold font-inter font-bold w-full outline-none text-left px-2" placeholder="50">
+                                <input type="number" id="inpBinaryAlloc" class="bg-transparent text-accentGold font-inter font-bold w-full outline-none text-left px-2" placeholder="0">
                             </div>
                         </div>
                         <div>
                             <label class="block text-textGray text-sm font-semibold mb-2" data-ar="نسبة الربح الافتراضية للوقت" data-en="Default Payout %">نسبة الربح الافتراضية</label>
                             <div class="flex bg-bgInput border border-borderColor rounded-xl p-3 focus-within:border-accentGold transition-colors">
                                 <span class="text-textGray ml-2 font-inter">%</span>
-                                <input type="number" id="inpBinaryProfit" class="bg-transparent text-textWhite font-inter font-bold w-full outline-none text-left" placeholder="84">
+                                <input type="number" id="inpBinaryProfit" class="bg-transparent text-textWhite font-inter font-bold w-full outline-none text-left" placeholder="0">
                             </div>
                         </div>
                     </div>
@@ -240,13 +240,13 @@
                 </div>
             </div>
 
-            <!-- جدول الفوركس -->
+            <!-- جدول الفوركس (تعديل الأهداف والحدود ديناميكياً يدوياً لكل سطر) -->
             <div id="tableForexContainer" class="bg-bgCard border border-borderColor rounded-2xl shadow-lg overflow-hidden mb-6">
-                <div class="table-container overflow-x-auto max-h-[60vh]">
+                <div class="table-container overflow-y-auto max-h-[60vh]">
                     <table class="w-full text-sm text-center whitespace-nowrap">
                         <thead class="bg-bgInput text-textGray font-semibold sticky top-0 z-10 shadow-sm border-b border-borderColor">
                             <tr>
-                                <th class="py-3 px-2 border-l border-borderColor/50" data-ar="يوم" data-en="Day">يوم</th>
+                                <th class="py-3 px-2 border-l border-borderColor/50" data-ar="اليوم" data-en="Day">اليوم</th>
                                 <th class="py-3 px-3 border-l border-borderColor/50" data-ar="البداية" data-en="Start">البداية</th>
                                 <th class="py-3 px-3 border-l border-borderColor/50 text-accentGreen" data-ar="الهدف" data-en="Goal">الهدف</th>
                                 <th class="py-3 px-3 border-l border-borderColor/50 text-accentRed" data-ar="الخسارة" data-en="Loss">الخسارة</th>
@@ -261,11 +261,11 @@
 
             <!-- جدول الخيارات الثنائية -->
             <div id="tableBinaryContainer" class="hidden bg-bgCard border border-borderColor rounded-2xl shadow-lg overflow-hidden mb-6">
-                <div class="table-container overflow-x-auto max-h-[60vh]">
+                <div class="table-container overflow-y-auto max-h-[60vh]">
                     <table class="w-full text-sm text-center whitespace-nowrap">
                         <thead class="bg-bgInput text-textGray font-semibold sticky top-0 z-10 shadow-sm border-b border-borderColor">
                             <tr>
-                                <th class="py-3 px-2 border-l border-borderColor/50" data-ar="يوم" data-en="Day">يوم</th>
+                                <th class="py-3 px-2 border-l border-borderColor/50" data-ar="اليوم" data-en="Day">اليوم</th>
                                 <th class="py-3 px-3 border-l border-borderColor/50" data-ar="المحفظة" data-en="Wallet">المحفظة</th>
                                 <th class="py-3 px-3 border-l border-borderColor/50 text-accentGold" data-ar="دخول الصفقة" data-en="Trade Amt">دخول الصفقة</th>
                                 <th class="py-3 px-3 min-w-[280px]" data-ar="حالة اليوم (3 محاولات)" data-en="Daily Status (3 Tries)">حالة اليوم (3 محاولات)</th>
@@ -278,7 +278,7 @@
         </div>
 
 
-        <!-- ================= الواجهة 3: المحفظة والربط الإستراتيجي (Dedicated Chaining View) ================= -->
+        <!-- ================= الواجهة 3: المحفظة والربط الإستراتيجي ================= -->
         <div id="view-vault" class="hidden-view fade-in space-y-6">
             <div class="bg-bgCard border border-accentGold/40 rounded-2xl p-6 shadow-xl relative">
                 <div class="flex justify-between items-center mb-6 border-b border-borderColor pb-3">
@@ -289,10 +289,10 @@
                     <button id="btnCloseVault" class="text-textGray hover:text-textWhite bg-bgInput p-2 rounded-lg font-bold">✕</button>
                 </div>
 
-                <!-- إحصائيات الأرباح المحققة فعلياً وصمام الأمان والرواتب -->
+                <!-- الأرباح والرواتب المصححة رياضياً والمستندة إلى الأيام المغلقة فقط -->
                 <div class="space-y-4 font-inter text-lg">
                     <div class="flex justify-between border-b border-borderColor pb-2">
-                        <span class="text-textGray font-cairo" data-ar="إجمالي الأرباح الصافية (الفعلية فقط):" data-en="Realized Net Profit Only:">إجمالي الأرباح الصافية (الفعلية فقط):</span>
+                        <span class="text-textGray font-cairo" data-ar="صافي الأرباح الصافية (الفعلية فقط):" data-en="Realized Net Profit Only:">صافي الأرباح الصافية (الفعلية فقط):</span>
                         <span id="vTotalProfit" class="text-accentGreen font-bold">$0.00</span>
                     </div>
                     <div class="flex justify-between border-b border-borderColor pb-2">
@@ -308,12 +308,12 @@
                                 <label for="chkVault" class="toggle-label block overflow-hidden h-5 rounded-full cursor-pointer"></label>
                             </div>
                         </div>
-                        <p class="text-xs text-textGray font-cairo mb-3" data-ar="يقوم بحجز الفوائض الصافية لتأمين الخطة التالية ضد أي انحراف مستقبلي." data-en="Holds intermediate safety buffer to protect next consecutive month.">يقوم بحجز الفوائض الصافية لتأمين الخطة التالية ضد أي انحراف مستقبلي.</p>
+                        <p class="text-xs text-textGray font-cairo mb-3" data-ar="يحجز الفائض الصافي المتبقي بعد الرواتب لتأمين الشهر القادم." data-en="Secures intermediate surplus after salary to cushion next month.">يحجز الفائض الصافي المتبقي بعد الرواتب لتأمين الشهر القادم.</p>
                         <div class="text-3xl font-extrabold text-accentGold text-center" id="vSafeAmount">$0.00</div>
                     </div>
                 </div>
 
-                <!-- قسم ربط ودمج الجداول بذكاء -->
+                <!-- الربط والدمج المتتالي -->
                 <div class="mt-8 pt-6 border-t border-borderColor">
                     <h3 class="text-md font-bold text-textWhite mb-4 flex items-center gap-2">
                         <span class="w-1.5 h-4 bg-accentBlue rounded"></span>
@@ -322,9 +322,9 @@
                     
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-textGray text-xs mb-1" data-ar="اختر الشهر السابق الذي تريد دمجه وسحب مبالغه" data-en="Select previous month to link and pull funds">اختر الشهر السابق الذي تريد دمجه وسحب مبالغه</label>
+                            <label class="block text-textGray text-xs mb-1" data-ar="اختر الشهر السابق الذي تريد ترحيل مبالغه تلقائياً" data-en="Select previous month to link and pull funds">اختر الشهر السابق الذي تريد ترحيل مبالغه تلقائياً</label>
                             <select id="selPrevMonth" class="w-full bg-bgInput border border-borderColor rounded-xl p-3 text-accentGold font-bold outline-none focus:border-accentGold">
-                                <!-- يتم تعبئتها ديناميكياً -->
+                                <!-- تملأ ديناميكياً -->
                             </select>
                         </div>
                         
@@ -334,7 +334,7 @@
                                 <span class="font-bold text-textWhite" id="chainCapInfo">$0.00</span>
                             </div>
                             <div class="flex justify-between">
-                                <span data-ar="الفائض المتوقع ترحيله:" data-en="Expected safety buffer transfer:">الفائض المتوقع ترحيله:</span>
+                                <span data-ar="الفائض والاحتياطي المُرَحل:" data-en="Expected safety buffer transfer:">الفائض والاحتياطي المُرَحل:</span>
                                 <span class="font-bold text-accentGold" id="chainVaultInfo">$0.00</span>
                             </div>
                         </div>
@@ -347,23 +347,23 @@
                 </button>
             </div>
 
-            <!-- كروت وسجل تصفح الجداول وحذفها -->
+            <!-- الجداول السابقة المخزنة -->
             <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg space-y-3">
                 <h3 class="text-md font-bold text-textWhite flex items-center gap-2">
                     <svg class="w-5 h-5 text-accentGold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20"></path></svg>
                     <span data-ar="سجل وتاريخ الجداول المخزنة" data-en="Stored plans & Months history">سجل وتاريخ الجداول المخزنة</span>
                 </h3>
                 <div id="plansList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- ترسم ديناميكياً -->
+                    <!-- تعبأ تلقائياً -->
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- ================= البرمجة (المنطق الديناميكي المطور) ================= -->
+    <!-- ================= البرمجة (المنطق الرياضي والتفاعل المطور) ================= -->
     <script>
-        // دالة عرض التنبيهات المخصصة
+        // تنبيهات Toast مخصصة
         function showToast(msg) {
             const toast = document.getElementById('customToast');
             toast.innerText = msg;
@@ -371,7 +371,7 @@
             setTimeout(() => toast.classList.add('hidden'), 4000);
         }
 
-        // تنسيق فواصل الآلاف
+        // تنسيق الأرقام بوضع فواصل آلاف
         function formatMoney(num) {
             return Number(num).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         }
@@ -395,7 +395,7 @@
 
         const vSetup = document.getElementById('view-setup'), vActive = document.getElementById('view-active'), vVault = document.getElementById('view-vault');
 
-        // استرداد الخطط من الذاكرة المحلية
+        // استرداد قائمة الشهور من الذاكرة المحلية
         function loadStoredPlans() {
             let data = localStorage.getItem('sa_capital_stored_plans');
             App.storedPlans = data ? JSON.parse(data) : [];
@@ -437,11 +437,11 @@
             }
             App.storedPlans.forEach(plan => {
                 const card = document.createElement('div');
-                card.className = "bg-bgCard border border-borderColor rounded-xl p-4 flex justify-between items-center";
+                card.className = "bg-bgCard border border-borderColor rounded-xl p-4 flex justify-between items-center animate-fade-in";
                 card.innerHTML = `
                     <div>
                         <div class="font-bold text-sm text-textWhite">${plan.name}</div>
-                        <div class="text-xs text-textGray font-inter">End Fx: ${App.currency}${formatMoney(plan.endFx)} ${App.isBinaryEnabled ? '| End Bo: ' + App.currency + formatMoney(plan.endBo) : ''}</div>
+                        <div class="text-xs text-textGray font-inter">End Fx: ${App.currency}${formatMoney(plan.endFx)} | End Bo: ${App.currency}${formatMoney(plan.endBo)}</div>
                     </div>
                     <button onclick="deletePlan('${plan.id}')" class="text-accentRed hover:bg-accentRed/10 p-2 rounded-lg transition-colors text-xs font-bold" data-ar="حذف" data-en="Delete">حذف</button>
                 `;
@@ -456,7 +456,6 @@
             }
         };
 
-        // تحديث المعاينة الحسابية عند دمج الشهور
         function updateChainPreview() {
             const select = document.getElementById('selPrevMonth');
             const targetId = select.value;
@@ -481,7 +480,7 @@
 
         document.getElementById('selPrevMonth').addEventListener('change', updateChainPreview);
 
-        // واجهات التنقل والكبسات العلوية
+        // واجهات التنقل
         document.getElementById('btnGoChainingHub').addEventListener('click', () => {
             vSetup.classList.add('hidden-view');
             vActive.classList.add('hidden-view');
@@ -563,16 +562,15 @@
             conBi.classList.remove('hidden'); conFx.classList.add('hidden');
         });
 
-        // توليد خطة تداول جديدة
+        // توليد الخطة التفاعلية
         document.getElementById('btnGenerate').addEventListener('click', () => {
             const capital = parseFloat(document.getElementById('inpCapital').value);
             const days = parseInt(document.getElementById('inpDays').value);
             const goal = parseFloat(document.getElementById('inpGoal').value);
             const safety = parseFloat(document.getElementById('inpSafety').value);
 
-            // تحقق من الحقول المصفّرة
             if (isNaN(capital) || isNaN(days) || isNaN(goal) || isNaN(safety)) {
-                showToast(App.lang === 'ar' ? 'الرجاء ملء جميع حقول الفوركس للبدء!' : 'Please fill all Forex fields to start!');
+                showToast(App.lang === 'ar' ? 'الرجاء ملء حقول الإدخال لتوليد خطتك الفريدة!' : 'Please fill all fields to generate your unique plan!');
                 return;
             }
 
@@ -596,7 +594,17 @@
             App.forexData = []; App.binaryData = []; App.historyStack = [];
 
             for (let i = 1; i <= App.origDays; i++) {
-                App.forexData.push({ day: i, start: fxCapital, isCompound: isFxCompound, status: 'pending', end: null });
+                App.forexData.push({ 
+                    day: i, 
+                    start: fxCapital, 
+                    isCompound: isFxCompound, 
+                    status: 'pending', 
+                    end: null,
+                    goalVal: goal,      // حفظ الهدف يدوياً لكل يوم لإتاحة التعديل لاحقاً
+                    isGoalPercent: App.settings.fxGoalPct,
+                    safetyVal: safety,  // حفظ الأمان يدوياً لكل يوم لإتاحة التعديل لاحقاً
+                    isSafetyPercent: App.settings.fxSafePct
+                });
                 if(App.isBinaryEnabled) App.binaryData.push({ day: i, start: binCapital, status: 'pending', end: null });
             }
 
@@ -605,7 +613,7 @@
             recalculateEngine();
         });
 
-        // المحرك الحسابي المتكامل
+        // محرك الاحتساب المالي الذكي (Forex & Binary Core Loop)
         function recalculateEngine() {
             let s = App.settings;
             let currentFx = App.forexData[0]?.start || 0;
@@ -616,8 +624,9 @@
                 if (i > 0) row.start = App.forexData[i-1].end !== null ? App.forexData[i-1].end : currentFx;
                 currentFx = row.start;
 
-                let goal = s.fxGoalPct ? (row.start * (s.fxGoal / 100)) : s.fxGoal;
-                let loss = s.fxSafePct ? (row.start * (s.fxSafe / 100)) : s.fxSafe;
+                // الحساب باستخدام المعايير الخاصة بكل يوم على حدة لإتاحة التعديل الفردي
+                let goal = row.isGoalPercent ? (row.start * (row.goalVal / 100)) : row.goalVal;
+                let loss = row.isSafetyPercent ? (row.start * (row.safetyVal / 100)) : row.safetyVal;
 
                 if (row.status === 'hit') { row.end = row.start + goal; currentFx = row.end; }
                 else if (row.status === 'loss') { row.end = row.start - loss; currentFx = row.end; forexTotalDeficit += loss; }
@@ -686,7 +695,7 @@
             const alertComp = document.getElementById('compensationAlert');
             
             if (extraDays > 0 && binaryTotalNetProfit > 0) {
-                let nextFxGoal = s.fxGoalPct ? (currentFx * (s.fxGoal / 100)) : s.fxGoal;
+                let nextFxGoal = App.forexData[App.origDays]?.isGoalPercent ? (currentFx * (App.forexData[App.origDays].goalVal / 100)) : App.forexData[App.origDays]?.goalVal;
                 if(nextFxGoal > 0) {
                     let daysRecovered = Math.floor(binaryTotalNetProfit / nextFxGoal);
                     if (daysRecovered > 0) {
@@ -705,19 +714,53 @@
             renderTables();
         }
 
+        // دالة التعديل التنازلي التراكمي لخانة "الهدف" من داخل سطر الجدول للفوركس
+        window.updateRowGoal = function(index, value) {
+            saveState();
+            let newVal = parseFloat(value) || 0;
+            // تدرج تنازلي لتغيير السطر الحالي وكل الأيام التالية له تلقائياً تسهيلاً للمستخدم
+            for (let k = index; k < App.forexData.length; k++) {
+                App.forexData[k].goalVal = newVal;
+            }
+            recalculateEngine();
+        };
+
+        // دالة التعديل التنازلي التراكمي لخانة "الأمان" من داخل سطر الجدول للفوركس
+        window.updateRowSafety = function(index, value) {
+            saveState();
+            let newVal = parseFloat(value) || 0;
+            for (let k = index; k < App.forexData.length; k++) {
+                App.forexData[k].safetyVal = newVal;
+            }
+            recalculateEngine();
+        };
+
         function renderTables() {
-            let s = App.settings; let l = dict[App.lang];
+            let l = dict[App.lang];
             let tbFx = document.getElementById('tbodyForex'); tbFx.innerHTML = '';
             App.forexData.forEach((row, i) => {
-                let goal = s.fxGoalPct ? (row.start * (s.fxGoal / 100)) : s.fxGoal;
-                let loss = s.fxSafePct ? (row.start * (s.fxSafe / 100)) : s.fxSafe;
+                let goal = row.isGoalPercent ? (row.start * (row.goalVal / 100)) : row.goalVal;
+                let loss = row.isSafetyPercent ? (row.start * (row.safetyVal / 100)) : row.safetyVal;
                 let tr = document.createElement('tr');
                 tr.className = `border-b border-borderColor/50 transition-colors hover:bg-bgInput/50 ${row.status==='hit'?'bg-accentGreen/10':row.status==='loss'?'bg-accentRed/10':row.status==='skip'?'opacity-50':''}`;
+                
                 tr.innerHTML = `
                     <td class="py-2 px-2 font-bold">${row.day}</td>
                     <td class="py-2 px-2">${App.currency}${formatMoney(row.start)}</td>
-                    <td class="py-2 px-2 text-accentGreen">+${formatMoney(goal)}</td>
-                    <td class="py-2 px-2 text-accentRed">-${formatMoney(loss)}</td>
+                    <td class="py-1 px-2 text-accentGreen">
+                        <div class="flex items-center justify-center gap-0.5">
+                            <span>+</span>
+                            <input type="number" class="w-16 bg-transparent border-b border-transparent focus:border-accentGreen text-center outline-none text-accentGreen font-bold font-inter" value="${row.goalVal}" onchange="updateRowGoal(${i}, this.value)" ${row.status !== 'pending' ? 'disabled' : ''}>
+                            <span class="text-[10px] text-textGray">${row.isGoalPercent ? '%' : App.currency}</span>
+                        </div>
+                    </td>
+                    <td class="py-1 px-2 text-accentRed">
+                        <div class="flex items-center justify-center gap-0.5">
+                            <span>-</span>
+                            <input type="number" class="w-16 bg-transparent border-b border-transparent focus:border-accentRed text-center outline-none text-accentRed font-bold font-inter" value="${row.safetyVal}" onchange="updateRowSafety(${i}, this.value)" ${row.status !== 'pending' ? 'disabled' : ''}>
+                            <span class="text-[10px] text-textGray">${row.isSafetyPercent ? '%' : App.currency}</span>
+                        </div>
+                    </td>
                     <td class="py-2 px-2"><input type="checkbox" ${row.isCompound?'checked':''} onchange="setFxComp(${i}, this.checked)" ${row.status!=='pending'?'disabled':''} class="accent-accentBlue w-4 h-4"></td>
                     <td class="py-2 px-2">
                         ${row.status === 'pending' ? `
@@ -734,7 +777,7 @@
             if(App.isBinaryEnabled) {
                 let tbBi = document.getElementById('tbodyBinary'); tbBi.innerHTML = '';
                 App.binaryData.forEach((row, i) => {
-                    let tradeAmt = s.binAllocPct ? (row.start * (s.binAlloc / 100)) : s.binAlloc;
+                    let tradeAmt = App.settings.binAllocPct ? (row.start * (App.settings.binAlloc / 100)) : App.settings.binAlloc;
                     if (tradeAmt > row.start) tradeAmt = row.start;
                     let tr = document.createElement('tr');
                     tr.className = `border-b border-borderColor/50 transition-colors hover:bg-bgInput/50 ${row.status!=='pending'?'bg-accentGold/10':''}`;
@@ -766,9 +809,9 @@
                 let last = App.forexData[App.forexData.length - 1];
                 App.forexData.push({...last, day: last.day + 1, status: 'pending', end: null});
             } else if (action === 'loss') {
-                let s = App.settings;
-                let loss = s.fxSafePct ? (row.start * (s.fxSafe / 100)) : s.fxSafe;
-                let nextGoal = s.fxGoalPct ? (row.start * (s.fxGoal / 100)) : s.fxGoal; 
+                let loss = row.isSafetyPercent ? (row.start * (row.safetyVal / 100)) : row.safetyVal;
+                let nextGoal = App.forexData[idx+1] ? (App.forexData[idx+1].isGoalPercent ? (App.forexData[idx+1].start * (App.forexData[idx+1].goalVal / 100)) : App.forexData[idx+1].goalVal) : (row.isGoalPercent ? (row.start * (row.goalVal / 100)) : row.goalVal);
+                
                 let daysNeeded = Math.ceil(loss / nextGoal);
                 if(daysNeeded < 1 || !isFinite(daysNeeded)) daysNeeded = 1;
                 let last = App.forexData[App.forexData.length - 1];
@@ -787,64 +830,28 @@
             }
         });
 
-        // ================= حساب الأرباح الصافية الفعلية فقط وصمام الأمان (مُصَحَّح 100%) =================
+        // ================= تليسكوب الحسابات المصحح لحساب الصافي الفعلي =================
         function calculateRealizedVaultStats() {
-            let startCap = parseFloat(document.getElementById('inpCapital').value) || 0;
-            
-            // حساب الفوائض والأرباح من الأيام المغلقة فقط لتجنب خلط رأس المال بالأرباح الافتراضية
+            // صافي ربح الفوركس الفعلي = رصيد آخر يوم تم إغلاقه - رصيد البداية الأول لليوم الأول
             let realizedFxProfit = 0;
+            let lastClosedFx = App.forexData.filter(r => r.status !== 'pending');
+            if (lastClosedFx.length > 0) {
+                let lastRow = lastClosedFx[lastClosedFx.length - 1];
+                realizedFxProfit = lastRow.end - App.forexData[0].start;
+            }
+
+            // صافي ربح الثنائية الفعلي = رصيد آخر يوم تم إغلاقه - رصيد البداية الأول
             let realizedBoProfit = 0;
-
-            App.forexData.forEach((row, i) => {
-                let goal = App.settings.fxGoalPct ? (row.start * (App.settings.fxGoal / 100)) : App.settings.fxGoal;
-                let loss = App.settings.fxSafePct ? (row.start * (App.settings.fxSafe / 100)) : App.settings.fxSafe;
-
-                if (row.status === 'hit') realizedFxProfit += goal;
-                else if (row.status === 'loss') realizedFxProfit -= loss;
-            });
-
-            if(App.isBinaryEnabled) {
-                App.binaryData.forEach((row, i) => {
-                    let tradeAmt = App.settings.binAllocPct ? (row.start * (App.settings.binAlloc / 100)) : App.settings.binAlloc;
-                    if (tradeAmt > row.start) tradeAmt = row.start;
-                    let winAmt = tradeAmt * (App.settings.binProfit / 100);
-
-                    if (App.settings.binIntraCompound) {
-                        let allocPct = App.settings.binAllocPct ? (App.settings.binAlloc / 100) : (App.settings.binAlloc / row.start);
-                        if(allocPct > 1) allocPct = 1;
-                        let payoutPct = App.settings.binProfit / 100;
-
-                        if (row.status === 'good') {
-                            let b1 = row.start + (row.start * allocPct) * payoutPct;
-                            let b2 = b1 + (b1 * allocPct) * payoutPct;
-                            let b3 = b2 + (b2 * allocPct) * payoutPct;
-                            realizedBoProfit += (b3 - row.start);
-                        } 
-                        else if (row.status === 'med') {
-                            let b1 = row.start + (row.start * allocPct) * payoutPct;
-                            let b2 = b1 + (b1 * allocPct) * payoutPct;
-                            let b3 = b2 - (b2 * allocPct);
-                            realizedBoProfit += (b3 - row.start);
-                        } 
-                        else if (row.status === 'abad') {
-                            let b1 = row.start + (row.start * allocPct) * payoutPct;
-                            let b2 = b1 - (b1 * allocPct);
-                            realizedBoProfit += (b2 - row.start);
-                        } 
-                        else if (row.status === 'bad') {
-                            realizedBoProfit -= (row.start * allocPct);
-                        }
-                    } else {
-                        if (row.status === 'good') realizedBoProfit += winAmt * 3;
-                        else if (row.status === 'med') realizedBoProfit += (winAmt * 2) - tradeAmt;
-                        else if (row.status === 'abad') realizedBoProfit += winAmt - tradeAmt;
-                        else if (row.status === 'bad') realizedBoProfit -= tradeAmt;
-                    }
-                });
+            if (App.isBinaryEnabled) {
+                let lastClosedBo = App.binaryData.filter(r => r.status !== 'pending');
+                if (lastClosedBo.length > 0) {
+                    let lastRow = lastClosedBo[lastClosedBo.length - 1];
+                    realizedBoProfit = lastRow.end - App.binaryData[0].start;
+                }
             }
 
             let netProfit = realizedFxProfit + realizedBoProfit;
-            if(netProfit < 0) netProfit = 0; // حماية ضد خسارة الرصيد الأساسي
+            if(netProfit < 0) netProfit = 0; // الحفاظ على سلامة المحفظة دون رصيد سالب
 
             let salary = netProfit * 0.20; 
             let remaining = netProfit - salary;
@@ -860,21 +867,12 @@
             };
         }
 
-        // تحفيز حساب الخزنة والرواتب من داخل الكبسة في الجدول
-        document.getElementById('btnOpenVault').addEventListener('click', () => {
-            vActive.classList.add('hidden-view');
-            vSetup.classList.add('hidden-view');
-            vVault.classList.remove('hidden-view');
-            calculateRealizedVaultStats();
-        });
-
-        // ربط وبدء الشهر التالي من الواجهة الثالثة المخصصة
+        // ربط وبدء ترحيل الشهر الجديد
         document.getElementById('btnChainMonth').addEventListener('click', () => {
             let planName = document.getElementById('inpName').value;
             let seq = parseInt(document.getElementById('inpSeq').value) || 1;
             let capital = parseFloat(document.getElementById('inpCapital').value) || 0;
             
-            // قراءة الأرصدة الختامية الفعلية للربط المتسلسل
             let endFx = App.forexData.length > 0 ? (App.forexData[App.forexData.length-1].end || App.forexData[App.forexData.length-1].start) : 0;
             let endBo = (App.isBinaryEnabled && App.binaryData.length > 0) ? (App.binaryData[App.binaryData.length-1].end || App.binaryData[App.binaryData.length-1].start) : 0;
 
@@ -887,25 +885,23 @@
                 endBo: endBo
             };
 
-            // حفظ الملف
             App.storedPlans = App.storedPlans.filter(p => p.sequence !== seq);
             App.storedPlans.push(newPlan);
             saveStoredPlans();
 
-            showToast(App.lang === 'ar' ? 'تم حفظ وترحيل الشهر بنجاح! جاري جدولة الشهر الجديد.' : 'Month saved and link established successfully!');
+            showToast(App.lang === 'ar' ? 'تم ترحيل وحفظ الشهر بنجاح! تم تجهيز الشهر الجديد وتعبئة الأرقام تلقائياً.' : 'Month saved and chained successfully!');
             
             vVault.classList.add('hidden-view');
             vActive.classList.add('hidden-view');
             vSetup.classList.remove('hidden-view');
             
-            // سحب مبالغ الشهر التالي تلقائياً
+            // سحب وتعبئة الأرقام تلقائياً للشهر الجديد
             document.getElementById('inpSeq').value = seq + 1;
             document.getElementById('inpSeq').dispatchEvent(new Event('input'));
             chkChain.checked = true;
             chkChain.dispatchEvent(new Event('change'));
         });
 
-        // تشغيل التحميل الأولي والربط
         window.addEventListener('load', () => {
             loadStoredPlans();
         });
