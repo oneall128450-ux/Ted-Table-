@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sa-capital-v1';
+const CACHE_NAME = 'sa-capital-v2';
 const urlsToCache = [
   './index.html',
   './manifest.json',
