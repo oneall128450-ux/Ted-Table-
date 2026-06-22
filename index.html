@@ -177,7 +177,7 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-textGray text-sm font-semibold mb-2" data-ar="نسبة الربح الافتراضية للوقت" data-en="Default Payout %">نسبة الربح الافتراضية</label>
+                            <label class="block text-textGray text-sm font-semibold mb-2" data-ar="نسبة الربح الافتراضية" data-en="Default Payout %">نسبة الربح الافتراضية</label>
                             <div class="flex bg-bgInput border border-borderColor rounded-xl p-3 focus-within:border-accentGold transition-colors">
                                 <span class="text-textGray ml-2 font-inter">%</span>
                                 <input type="number" id="inpBinaryProfit" class="bg-transparent text-textWhite font-inter font-bold w-full outline-none text-left" placeholder="0">
@@ -250,6 +250,7 @@
                                 <th class="py-3 px-3 border-l border-borderColor/50" data-ar="البداية" data-en="Start">البداية</th>
                                 <th class="py-3 px-3 border-l border-borderColor/50 text-accentGreen" data-ar="الهدف" data-en="Goal">الهدف</th>
                                 <th class="py-3 px-3 border-l border-borderColor/50 text-accentRed" data-ar="الخسارة" data-en="Loss">الخسارة</th>
+                                <th class="py-3 px-3 border-l border-borderColor/50 text-accentGold" data-ar="النهاية" data-en="End">النهاية</th>
                                 <th class="py-3 px-2 border-l border-borderColor/50" data-ar="تراكمي" data-en="Comp.">تراكمي</th>
                                 <th class="py-3 px-3 min-w-[200px]" data-ar="الإجراء" data-en="Action">الإجراء</th>
                             </tr>
@@ -261,7 +262,7 @@
 
             <!-- جدول الخيارات الثنائية -->
             <div id="tableBinaryContainer" class="hidden bg-bgCard border border-borderColor rounded-2xl shadow-lg overflow-hidden mb-6">
-                <div class="table-container overflow-y-auto max-h-[60vh]">
+                <div class="table-container overflow-x-auto max-h-[60vh]">
                     <table class="w-full text-sm text-center whitespace-nowrap">
                         <thead class="bg-bgInput text-textGray font-semibold sticky top-0 z-10 shadow-sm border-b border-borderColor">
                             <tr>
@@ -269,6 +270,7 @@
                                 <th class="py-3 px-3 border-l border-borderColor/50" data-ar="المحفظة" data-en="Wallet">المحفظة</th>
                                 <th class="py-3 px-3 border-l border-borderColor/50 text-accentGold" data-ar="دخول الصفقة" data-en="Trade Amt">دخول الصفقة</th>
                                 <th class="py-3 px-3 min-w-[280px]" data-ar="حالة اليوم (3 محاولات)" data-en="Daily Status (3 Tries)">حالة اليوم (3 محاولات)</th>
+                                <th class="py-3 px-3 border-l border-borderColor/50 text-accentGreen" data-ar="النهاية" data-en="End">النهاية</th>
                             </tr>
                         </thead>
                         <tbody id="tbodyBinary" class="font-inter"></tbody>
@@ -286,6 +288,7 @@
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                         <span data-ar="الخزنة المركزية وإدارة الربط" data-en="Central Vault & Chaining Hub">الخزنة المركزية وإدارة الربط</span>
                     </h2>
+                    <!-- زر العودة للجدول أو الإعدادات بشكل آمن يمنع التجميد -->
                     <button id="btnCloseVault" class="text-textGray hover:text-textWhite bg-bgInput p-2 rounded-lg font-bold">✕</button>
                 </div>
 
@@ -385,7 +388,8 @@
             binaryData: [], 
             historyStack: [], 
             settings: {},
-            storedPlans: [] 
+            storedPlans: [],
+            lastActiveView: 'view-setup' // تتبع آخر واجهة لمنع تعليق زر الإغلاق ✕
         };
 
         const dict = {
@@ -437,7 +441,7 @@
             }
             App.storedPlans.forEach(plan => {
                 const card = document.createElement('div');
-                card.className = "bg-bgCard border border-borderColor rounded-xl p-4 flex justify-between items-center animate-fade-in";
+                card.className = "bg-bgCard border border-borderColor rounded-xl p-4 flex justify-between items-center";
                 card.innerHTML = `
                     <div>
                         <div class="font-bold text-sm text-textWhite">${plan.name}</div>
@@ -480,8 +484,9 @@
 
         document.getElementById('selPrevMonth').addEventListener('change', updateChainPreview);
 
-        // واجهات التنقل
+        // واجهات التنقل وإصلاح تعليق "إغلاق الشهر والرواتب"
         document.getElementById('btnGoChainingHub').addEventListener('click', () => {
+            App.lastActiveView = 'view-setup';
             vSetup.classList.add('hidden-view');
             vActive.classList.add('hidden-view');
             vVault.classList.remove('hidden-view');
@@ -500,9 +505,14 @@
             vSetup.classList.remove('hidden-view');
         });
 
+        // إصلاح فك التعليق: عند إغلاق واجهة الخزنة، نعود للواجهة التي أتينا منها بدقة!
         document.getElementById('btnCloseVault').addEventListener('click', () => {
             vVault.classList.add('hidden-view');
-            vSetup.classList.remove('hidden-view');
+            if (App.lastActiveView === 'view-active') {
+                vActive.classList.remove('hidden-view');
+            } else {
+                vSetup.classList.remove('hidden-view');
+            }
         });
 
         // التسمية التلقائية
@@ -600,9 +610,9 @@
                     isCompound: isFxCompound, 
                     status: 'pending', 
                     end: null,
-                    goalVal: goal,      // حفظ الهدف يدوياً لكل يوم لإتاحة التعديل لاحقاً
+                    goalVal: goal,      
                     isGoalPercent: App.settings.fxGoalPct,
-                    safetyVal: safety,  // حفظ الأمان يدوياً لكل يوم لإتاحة التعديل لاحقاً
+                    safetyVal: safety,  
                     isSafetyPercent: App.settings.fxSafePct
                 });
                 if(App.isBinaryEnabled) App.binaryData.push({ day: i, start: binCapital, status: 'pending', end: null });
@@ -617,21 +627,27 @@
         function recalculateEngine() {
             let s = App.settings;
             let currentFx = App.forexData[0]?.start || 0;
-            let forexTotalDeficit = 0; 
             
             for (let i = 0; i < App.forexData.length; i++) {
                 let row = App.forexData[i];
                 if (i > 0) row.start = App.forexData[i-1].end !== null ? App.forexData[i-1].end : currentFx;
                 currentFx = row.start;
 
-                // الحساب باستخدام المعايير الخاصة بكل يوم على حدة لإتاحة التعديل الفردي
                 let goal = row.isGoalPercent ? (row.start * (row.goalVal / 100)) : row.goalVal;
                 let loss = row.isSafetyPercent ? (row.start * (row.safetyVal / 100)) : row.safetyVal;
 
                 if (row.status === 'hit') { row.end = row.start + goal; currentFx = row.end; }
-                else if (row.status === 'loss') { row.end = row.start - loss; currentFx = row.end; forexTotalDeficit += loss; }
+                else if (row.status === 'loss') { row.end = row.start - loss; currentFx = row.end; }
                 else if (row.status === 'skip') { row.end = row.start; currentFx = row.end; }
-                else { row.end = null; if (row.isCompound) currentFx = row.start + goal; }
+                else { 
+                    // لإظهار المبلغ المتوقع النهائي التراكمي في عمود "النهاية" حتى للأيام المعلقة
+                    row.end = null; 
+                    if (row.isCompound) {
+                        currentFx = row.start + goal; 
+                    } else {
+                        currentFx = row.start + goal; // الفائدة الثابتة المحسوبة لليوم
+                    }
+                }
             }
 
             let currentBin = App.isBinaryEnabled && App.binaryData.length > 0 ? App.binaryData[0].start : 0;
@@ -714,18 +730,15 @@
             renderTables();
         }
 
-        // دالة التعديل التنازلي التراكمي لخانة "الهدف" من داخل سطر الجدول للفوركس
         window.updateRowGoal = function(index, value) {
             saveState();
             let newVal = parseFloat(value) || 0;
-            // تدرج تنازلي لتغيير السطر الحالي وكل الأيام التالية له تلقائياً تسهيلاً للمستخدم
             for (let k = index; k < App.forexData.length; k++) {
                 App.forexData[k].goalVal = newVal;
             }
             recalculateEngine();
         };
 
-        // دالة التعديل التنازلي التراكمي لخانة "الأمان" من داخل سطر الجدول للفوركس
         window.updateRowSafety = function(index, value) {
             saveState();
             let newVal = parseFloat(value) || 0;
@@ -735,12 +748,19 @@
             recalculateEngine();
         };
 
+        // رسم الجداول التفاعلية بالكامل
         function renderTables() {
             let l = dict[App.lang];
+            
+            // 1. رسم الفوركس
             let tbFx = document.getElementById('tbodyForex'); tbFx.innerHTML = '';
             App.forexData.forEach((row, i) => {
                 let goal = row.isGoalPercent ? (row.start * (row.goalVal / 100)) : row.goalVal;
                 let loss = row.isSafetyPercent ? (row.start * (row.safetyVal / 100)) : row.safetyVal;
+                
+                // حساب مبلغ النهاية المتوقع أو الحقيقي لعرضه في عمود "النهاية"
+                let displayEnd = row.end !== null ? row.end : (row.isCompound ? (row.start + goal) : (row.start + goal));
+
                 let tr = document.createElement('tr');
                 tr.className = `border-b border-borderColor/50 transition-colors hover:bg-bgInput/50 ${row.status==='hit'?'bg-accentGreen/10':row.status==='loss'?'bg-accentRed/10':row.status==='skip'?'opacity-50':''}`;
                 
@@ -761,6 +781,7 @@
                             <span class="text-[10px] text-textGray">${row.isSafetyPercent ? '%' : App.currency}</span>
                         </div>
                     </td>
+                    <td class="py-2 px-2 text-accentGold font-bold font-inter">${App.currency}${formatMoney(displayEnd)}</td>
                     <td class="py-2 px-2"><input type="checkbox" ${row.isCompound?'checked':''} onchange="setFxComp(${i}, this.checked)" ${row.status!=='pending'?'disabled':''} class="accent-accentBlue w-4 h-4"></td>
                     <td class="py-2 px-2">
                         ${row.status === 'pending' ? `
@@ -774,11 +795,16 @@
                 tbFx.appendChild(tr);
             });
 
+            // 2. رسم الثنائية
             if(App.isBinaryEnabled) {
                 let tbBi = document.getElementById('tbodyBinary'); tbBi.innerHTML = '';
                 App.binaryData.forEach((row, i) => {
                     let tradeAmt = App.settings.binAllocPct ? (row.start * (App.settings.binAlloc / 100)) : App.settings.binAlloc;
                     if (tradeAmt > row.start) tradeAmt = row.start;
+
+                    // حساب نهاية رصيد الثنائية اليومي لعرضه في عمود "النهاية"
+                    let displayEndBi = row.end !== null ? row.end : row.start;
+
                     let tr = document.createElement('tr');
                     tr.className = `border-b border-borderColor/50 transition-colors hover:bg-bgInput/50 ${row.status!=='pending'?'bg-accentGold/10':''}`;
                     tr.innerHTML = `
@@ -794,7 +820,8 @@
                                     <button onclick="actBi(${i}, 'bad')" class="bg-accentRed/20 text-accentRed hover:bg-accentRed hover:text-white px-2 py-1 rounded font-bold text-xs">${l.bad}</button>
                                 </div>
                             ` : `<span class="px-2 py-1 rounded text-xs font-bold bg-bgInput border border-borderColor">${l[row.status] || row.status}</span>`}
-                        </td>`;
+                        </td>
+                        <td class="py-2 px-2 text-accentGreen font-bold font-inter">${App.currency}${formatMoney(displayEndBi)}</td>`;
                     tbBi.appendChild(tr);
                 });
             }
@@ -830,9 +857,8 @@
             }
         });
 
-        // ================= تليسكوب الحسابات المصحح لحساب الصافي الفعلي =================
+        // ================= حساب الأرباح الصافية الفعلي للمغلق فقط =================
         function calculateRealizedVaultStats() {
-            // صافي ربح الفوركس الفعلي = رصيد آخر يوم تم إغلاقه - رصيد البداية الأول لليوم الأول
             let realizedFxProfit = 0;
             let lastClosedFx = App.forexData.filter(r => r.status !== 'pending');
             if (lastClosedFx.length > 0) {
@@ -840,7 +866,6 @@
                 realizedFxProfit = lastRow.end - App.forexData[0].start;
             }
 
-            // صافي ربح الثنائية الفعلي = رصيد آخر يوم تم إغلاقه - رصيد البداية الأول
             let realizedBoProfit = 0;
             if (App.isBinaryEnabled) {
                 let lastClosedBo = App.binaryData.filter(r => r.status !== 'pending');
@@ -851,7 +876,7 @@
             }
 
             let netProfit = realizedFxProfit + realizedBoProfit;
-            if(netProfit < 0) netProfit = 0; // الحفاظ على سلامة المحفظة دون رصيد سالب
+            if(netProfit < 0) netProfit = 0; 
 
             let salary = netProfit * 0.20; 
             let remaining = netProfit - salary;
@@ -900,6 +925,16 @@
             document.getElementById('inpSeq').dispatchEvent(new Event('input'));
             chkChain.checked = true;
             chkChain.dispatchEvent(new Event('change'));
+        });
+
+        // كبسة فتح الخزنة والربط من داخل الجدول النشط
+        document.getElementById('btnOpenVault').addEventListener('click', () => {
+            saveState();
+            // الانتقال للواجهة الثالثة
+            vActive.classList.add('hidden-view');
+            vSetup.classList.add('hidden-view');
+            vVault.classList.remove('hidden-view');
+            calculateRealizedVaultStats();
         });
 
         window.addEventListener('load', () => {
