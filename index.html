@@ -36,11 +36,11 @@
     </script>
 
     <style>
-        body { 
+        /* منع التحديث عند السحب لأسفل في الجوال بشكل كامل */
+        html, body { 
             background-color: #0B111E; color: #F8FAFC; font-family: 'Cairo', sans-serif; 
             -webkit-tap-highlight-color: transparent; 
-            /* منع التحديث عند السحب لأسفل في الجوال */
-            overscroll-behavior-y: contain; 
+            overscroll-behavior-y: none; /* هذا السطر يمنع التحديث بالسحب */
             touch-action: pan-y;
             user-select: none; -webkit-user-select: none;
         }
@@ -344,13 +344,6 @@
 
     <!-- ================= البرمجة ================= -->
     <script>
-        // --- منع التحديث للسحب باللمس ---
-        document.body.addEventListener('touchmove', function(e) {
-            if (window.scrollY === 0 && e.touches[0].clientY > 50) {
-                // e.preventDefault(); // مفعلة لتجنب السحب، ولكن قد تتعارض مع سكرول الصفحة
-            }
-        }, { passive: false });
-
         // --- الترجمة ---
         const dictionary = {
             'AR': {
@@ -476,7 +469,11 @@
             App.currency = App.currency === '$' ? 'ر.س' : '$';
             e.target.innerText = App.currency;
             document.querySelectorAll('.unit-toggle').forEach(btn => { if(btn.innerText !== '%') btn.innerText = App.currency; });
-            renderTables();
+            
+            // حل مشكلة عدم تحديث الجدول عند تغيير العملة
+            if (App.forexData && App.forexData.length > 0) {
+                recalculateEngine();
+            }
             saveToLocal();
         });
 
@@ -667,7 +664,7 @@
             }
 
             let currentVal = newValue;
-            // تطبيق الزيادة على الأيام التالية
+            // تطبيق الزيادة على الأيام التالية فقط في حال كان التراكم مفعلاً
             for (let i = index + 1; i < App.forexData.length; i++) {
                 if (App.forexData[i].isCompound && !App.forexData[i].isGoalPercent) {
                     currentVal += step;
@@ -694,24 +691,22 @@
             recalculateEngine(); 
         };
 
+        // تم إلغاء التراكم من التوفير - سيقوم بنسخ الرقم كما هو للأسفل
         window.updateRowSavings = function(index, value) { 
             saveState(); 
-            let step = parseFloat(value) || 0; 
-            let val = step;
+            let val = parseFloat(value) || 0; 
             for (let i = index; i < App.forexData.length; i++) {
                 App.forexData[i].savingsVal = val;
-                if (App.forexData[i].isCompound) val += step;
             }
             recalculateEngine(); 
         };
 
+        // تم إلغاء التراكم من الصفقات - سيقوم بنسخ الرقم كما هو للأسفل
         window.updateRowTrades = function(index, value) { 
             saveState(); 
-            let step = parseInt(value) || 0; 
-            let val = step;
+            let val = parseInt(value) || 0; 
             for (let i = index; i < App.forexData.length; i++) {
                 App.forexData[i].trades = val;
-                if (App.forexData[i].isCompound) val += step;
             }
             recalculateEngine(); 
         };
