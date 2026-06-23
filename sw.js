@@ -1,4 +1,4 @@
-const CACHE_NAME = 'n-system-cache-v2';
+const CACHE_NAME = 'n-system-cache-v3';
 const urlsToCache = [
   './index.html',
   './manifest.json',
