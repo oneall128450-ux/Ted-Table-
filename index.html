@@ -211,6 +211,12 @@
                         <input type="number" id="inpStopLoss" class="floating-input w-full bg-bgInput border border-borderColor text-accentRed font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
                         <label class="floating-label font-semibold text-textGray" data-i18n="stopLoss">وقف الخسارة الكلي</label>
                     </div>
+
+                    <!-- ميزة الربح المستهدف المضافة (تأثير دقيق على حساب الأيام) -->
+                    <div class="col-span-2 md:col-span-1 float-wrapper">
+                        <input type="number" id="inpMonthlyTarget" class="floating-input w-full bg-bgInput border border-borderColor text-accentGold font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
+                        <label class="floating-label font-semibold text-textGray" data-i18n="monthlyTarget">الربح الشهري المستهدف</label>
+                    </div>
                 </div>
             </div>
 
@@ -381,19 +387,33 @@
         <div id="view-vault" class="hidden-view fade-in absolute inset-0 bg-bgMain/95 backdrop-blur-md z-50 p-4 pt-10">
             <div class="max-w-md mx-auto bg-bgCard border border-accentGold/40 rounded-2xl p-6 shadow-2xl relative mt-10">
                 <button id="btnCloseVault" class="absolute top-4 rtl:right-4 ltr:left-4 text-textGray hover:text-textWhite bg-bgInput p-2 rounded-lg font-bold transition">✕</button>
-                <h2 class="text-2xl font-bold text-accentGold mb-6 text-center animate-bounce" data-i18n="vaultTitle">الخزنة والترحيل</h2>
+                <h2 class="text-2xl font-bold text-accentGold mb-4 text-center animate-bounce" data-i18n="vaultTitle">الخزنة والترحيل</h2>
 
                 <div class="space-y-4 font-inter text-lg">
                     <div class="flex justify-between border-b border-borderColor pb-2">
                         <span class="text-textGray font-cairo" data-i18n="actualProfit">الأرباح الفعلية المحققة:</span>
                         <span id="vTotalProfit" class="text-accentGreen font-bold">$0.00</span>
                     </div>
-                    <div class="flex justify-between border-b border-borderColor pb-2">
-                        <span class="text-textGray font-cairo" data-i18n="salary">الراتب المستحق (20%):</span>
-                        <span id="vSalary" class="text-textWhite font-bold">$0.00</span>
+
+                    <!-- تخصيص الراتب تفاعلياً بالنسبة أو بمبلغ محدد مباشر لمنع الخطأ الرياضي -->
+                    <div class="border-b border-borderColor pb-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-textGray font-cairo" data-i18n="salary">الراتب المستحق:</span>
+                            <span id="vSalary" class="text-textWhite font-bold">$0.00</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mt-1.5">
+                            <div class="bg-bgInput border border-borderColor rounded-lg p-2 flex items-center gap-1">
+                                <span class="text-xs text-textGray font-bold">%</span>
+                                <input type="number" id="inpSalaryPercent" class="w-full bg-transparent text-textWhite font-bold outline-none text-center text-sm" value="20" min="0" max="100">
+                            </div>
+                            <div class="bg-bgInput border border-borderColor rounded-lg p-2 flex items-center gap-1">
+                                <span class="text-xs text-textGray font-bold" id="lblSalaryCurrency">$</span>
+                                <input type="number" id="inpSalaryAmount" class="w-full bg-transparent text-textWhite font-bold outline-none text-center text-sm" placeholder="مبلغ محدد">
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="bg-bgInput rounded-xl p-4 mt-4 border border-accentGold/20">
+                    <div class="bg-bgInput rounded-xl p-4 mt-2 border border-accentGold/20">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-textWhite font-cairo font-bold text-sm" data-i18n="autoChain">ربط خطة الشهر القادم تلقائياً</span>
                             <input type="checkbox" id="chkAutoChain" class="w-5 h-5 accent-accentBlue cursor-pointer" checked>
@@ -406,7 +426,7 @@
                     </div>
                 </div>
 
-                <!-- أزرار الإجراءات المتطورة للخزنة (إعادة الضخ أو التجميد) -->
+                <!-- أزرار الإجراءات المتطورة للخزنة (إعادة الضخ أو التجميد) مع تعديل المنطق الرياضي بالكامل -->
                 <div class="flex flex-col gap-3 mt-8">
                     <button id="btnChainMonthInject" class="w-full bg-gradient-to-r from-accentGreen to-emerald-600 hover:scale-[1.02] transition-transform text-white font-bold py-3.5 rounded-xl shadow-lg text-md flex items-center justify-center gap-1.5">
                         <span>💉</span> <span data-i18n="btnChainInject">إعادة ضخ الأمان + ترحيل 🔗</span>
@@ -437,13 +457,13 @@
                 thDay: 'يوم', thStart: 'البداية', thTarget: 'الهدف', thSave: 'توفير/سحب', thEmergency: 'طوارئ',
                 thEnd: 'النهاية', thTrades: 'صفقات', thComp: 'تر.', thAction: 'الإجراء', thWallet: 'المحفظة',
                 thEntry: 'الدخول', thStatus: 'حالة (3 محاولات)', binWaitMsg: '⏳ في انتظار وصول رأس مال الفوركس للهدف المحد...',
-                vaultTitle: 'الخزنة والترحيل', actualProfit: 'الأرباح الفعلية المحققة:', salary: 'الراتب المستحق (20%):',
+                vaultTitle: 'الخزنة والترحيل', actualProfit: 'الأرباح الفعلية المحققة:', salary: 'الراتب المستحق:',
                 safeAmountTitle: 'ترحيل للخزنة كأمان خارجي', autoChain: 'ربط خطة الشهر القادم تلقائياً',
                 btnChainInject: 'إعادة ضخ الأمان وبدء التداول 🔗', btnChainFreeze: 'تجميد الأمان في الخزنة وبدء التداول 🔗',
                 actHit: 'تحقيق', actSkip: 'تخطي', actLoss: 'خسارة', actGood: 'جيد', actMed: 'متوسط', actAbad: 'شبه سيء', actBad: 'سيء',
                 done: 'تم', planStr: 'خطة التداول: الشهر ', storedPlansTitle: 'الجداول المحفوظة السابقة', 
                 crossCompMsg: 'تمت عملية المقاصة: أرباح الثنائية ({BO_PROFIT}) غطت تراجع الفوركس ({FX_LOSS}) بالكامل وتلغى الأيام الإضافية! 🎉',
-                openPlan: 'فتح الخطة', delPlan: 'حذف'
+                openPlan: 'فتح الخطة', delPlan: 'حذف', monthlyTarget: 'الربح الشهري المستهدف'
             },
             'EN': {
                 title: 'S&A Capital - Management', portfolio: 'Portfolio', seqMonth: 'Sequence (Month)', autoName: 'Auto Table Name',
@@ -458,13 +478,13 @@
                 thDay: 'Day', thStart: 'Start', thTarget: 'Goal', thSave: 'Save/W.Draw', thEmergency: 'Emergency',
                 thEnd: 'End', thTrades: 'Trades', thComp: 'Cmp.', thAction: 'Action', thWallet: 'Wallet',
                 thEntry: 'Entry', thStatus: 'Status (3 Tries)', binWaitMsg: '⏳ Waiting for Forex target to start Binary...',
-                vaultTitle: 'Vault & Rollover', actualProfit: 'Actual Realized Profit:', salary: 'Due Salary (20%):',
+                vaultTitle: 'Vault & Rollover', actualProfit: 'Actual Realized Profit:', salary: 'Due Salary:',
                 safeAmountTitle: 'Transfer to External Vault', autoChain: 'Auto-chain Next Month Plan',
                 btnChainInject: 'Re-Inject Safety & Start Plan 🔗', btnChainFreeze: 'Freeze Safety in Vault & Start Plan 🔗',
                 actHit: 'Hit', actSkip: 'Skip', actLoss: 'Loss', actGood: 'Good', actMed: 'Mid', actAbad: 'Poor', actBad: 'Bad',
                 done: 'Done', planStr: 'Trading Plan: Month ', storedPlansTitle: 'Previously Stored Plans', 
                 crossCompMsg: 'Compensation Successful: Binary profit ({BO_PROFIT}) covered Forex loss ({FX_LOSS}). Extra days cleared! 🎉',
-                openPlan: 'Open Plan', delPlan: 'Delete'
+                openPlan: 'Open Plan', delPlan: 'Delete', monthlyTarget: 'Monthly Target Profit'
             }
         };
 
@@ -483,6 +503,7 @@
             let seqNum = document.getElementById('inpSeq').value || 1;
             document.getElementById('inpName').value = App.settings.planName || (dictionary[App.lang].planStr + seqNum);
             document.getElementById('activePlanTitle').innerText = App.settings.planName || (dictionary[App.lang].planStr + seqNum);
+            document.getElementById('lblSalaryCurrency').innerText = App.currency;
             if(App.forexData.length > 0) recalculateEngine();
             renderStoredPlans();
         }
@@ -620,6 +641,7 @@
             App.currency = App.currency === '$' ? 'ر.س' : '$';
             e.target.innerText = App.currency;
             document.querySelectorAll('.unit-toggle').forEach(btn => { if(btn.innerText !== '%') btn.innerText = App.currency; });
+            document.getElementById('lblSalaryCurrency').innerText = App.currency;
             
             if (App.forexData && App.forexData.length > 0) {
                 recalculateEngine();
@@ -667,7 +689,8 @@
                 binDays: parseInt(document.getElementById('inpBinaryDays').value) || 10,
                 binIntraCompound: document.getElementById('chkIntraCompound').checked,
                 binTrigger: document.getElementById('selBinaryTrigger').value,
-                binTarget: parseFloat(document.getElementById('inpBinaryTriggerTarget').value) || 0
+                binTarget: parseFloat(document.getElementById('inpBinaryTriggerTarget').value) || 0,
+                monthlyTarget: parseFloat(document.getElementById('inpMonthlyTarget').value) || 0
             };
 
             document.getElementById('activePlanTitle').innerText = App.settings.planName;
@@ -853,12 +876,10 @@
             let newValue = parseFloat(value) || 0;
             App.forexData[index].goalVal = newValue;
             
-            // في حال تم إيقاف التراكم، ينتشر القيمة المحددة تنازلياً بالتساوي لكافة الحقول التالية
             for (let i = index + 1; i < App.forexData.length; i++) {
                 if (!App.forexData[i].isCompound) {
                     App.forexData[i].goalVal = newValue;
                 } else {
-                    // إذا كان تراكمي، نقوم بزيادة تراكمية بالنسبة المحددة
                     let step = index > 0 ? (newValue - App.forexData[index - 1].goalVal) : newValue;
                     App.forexData[i].goalVal = App.forexData[i-1].goalVal + step;
                 }
@@ -871,7 +892,6 @@
             let newValue = parseFloat(value) || 0;
             App.forexData[index].safetyVal = newValue;
             
-            // النشر التنازلي الانسيابي للأمان وقف الخسارة
             for (let i = index + 1; i < App.forexData.length; i++) {
                 if (!App.forexData[i].isCompound) {
                     App.forexData[i].safetyVal = newValue;
@@ -1016,8 +1036,18 @@
                 App.forexData.push({...last, day: last.day + 1, status: 'pending', end: null});
             } else if (action === 'loss') {
                 let loss = row.isSafetyPercent ? (row.start * (row.safetyVal / 100)) : row.safetyVal;
-                let nextGoal = App.forexData[idx+1] ? (App.forexData[idx+1].isGoalPercent ? (App.forexData[idx+1].start * (App.forexData[idx+1].goalVal / 100)) : App.forexData[idx+1].goalVal) : (row.isGoalPercent ? (row.start * (row.goalVal / 100)) : row.goalVal);
-                let daysNeeded = Math.ceil(loss / nextGoal);
+                
+                // استخدام الربح الشهري المستهدف لحساب دقيق لأيام التعويض إن وجد
+                let dailyRate = 0;
+                let monthlyTarget = parseFloat(App.settings.monthlyTarget) || 0;
+                if (monthlyTarget > 0 && App.origDays > 0) {
+                    dailyRate = monthlyTarget / App.origDays;
+                } else {
+                    dailyRate = App.forexData[idx+1] ? (App.forexData[idx+1].isGoalPercent ? (App.forexData[idx+1].start * (App.forexData[idx+1].goalVal / 100)) : App.forexData[idx+1].goalVal) : (row.isGoalPercent ? (row.start * (row.goalVal / 100)) : row.goalVal);
+                }
+                if (dailyRate <= 0) dailyRate = 1;
+
+                let daysNeeded = Math.ceil(loss / dailyRate);
                 if(daysNeeded < 1 || !isFinite(daysNeeded)) daysNeeded = 1;
                 let last = App.forexData[App.forexData.length - 1];
                 for(let k=1; k<=daysNeeded; k++) App.forexData.push({...last, day: last.day + k, status: 'pending', end: null});
@@ -1045,6 +1075,36 @@
         let rolloverNetProfit = 0;
         let rolloverSalary = 0;
         let rolloverSafeDeduction = 0;
+        let customSalaryPercent = 20;
+
+        // تحديث الراتب والنسب تلقائياً
+        document.getElementById('inpSalaryPercent').addEventListener('input', (e) => {
+            let pct = parseFloat(e.target.value);
+            if (isNaN(pct) || pct < 0) pct = 0;
+            if (pct > 100) pct = 100;
+            customSalaryPercent = pct;
+            
+            rolloverSalary = rolloverNetProfit * (pct / 100);
+            document.getElementById('inpSalaryAmount').value = rolloverSalary.toFixed(2);
+            updateVaultCalculations();
+        });
+
+        document.getElementById('inpSalaryAmount').addEventListener('input', (e) => {
+            let amt = parseFloat(e.target.value);
+            if (isNaN(amt) || amt < 0) amt = 0;
+            if (amt > rolloverNetProfit) amt = rolloverNetProfit;
+            rolloverSalary = amt;
+            
+            customSalaryPercent = rolloverNetProfit > 0 ? (amt / rolloverNetProfit) * 100 : 0;
+            document.getElementById('inpSalaryPercent').value = customSalaryPercent.toFixed(1);
+            updateVaultCalculations();
+        });
+
+        function updateVaultCalculations() {
+            rolloverSafeDeduction = document.getElementById('chkVault').checked ? (rolloverNetProfit - rolloverSalary) : 0;
+            document.getElementById('vSalary').innerText = `${App.currency} ${formatMoney(rolloverSalary)}`;
+            document.getElementById('vSafeAmount').innerText = `${App.currency} ${formatMoney(rolloverSafeDeduction + App.totalEmergency)}`;
+        }
 
         document.getElementById('btnOpenVault').addEventListener('click', () => {
             vActive.classList.add('hidden-view'); vVault.classList.remove('hidden-view');
@@ -1060,22 +1120,24 @@
 
             rolloverNetProfit = realizedFxProfit + realizedBoProfit;
             if(rolloverNetProfit < 0) rolloverNetProfit = 0; 
+            
+            // تهيئة القيم الافتراضية للراتب (20%)
+            customSalaryPercent = 20;
+            document.getElementById('inpSalaryPercent').value = "20";
             rolloverSalary = rolloverNetProfit * 0.20; 
-            rolloverSafeDeduction = document.getElementById('chkVault').checked ? (rolloverNetProfit - rolloverSalary) : 0;
+            document.getElementById('inpSalaryAmount').value = rolloverSalary.toFixed(2);
 
             document.getElementById('vTotalProfit').innerText = `${App.currency} ${formatMoney(rolloverNetProfit)}`;
-            document.getElementById('vSalary').innerText = `${App.currency} ${formatMoney(rolloverSalary)}`;
-            document.getElementById('vSafeAmount').innerText = `${App.currency} ${formatMoney(rolloverSafeDeduction + App.totalEmergency)}`;
+            updateVaultCalculations();
             
             document.getElementById('chkVault').onchange = (e) => {
-                rolloverSafeDeduction = e.target.checked ? (rolloverNetProfit - rolloverSalary) : 0;
-                document.getElementById('vSafeAmount').innerText = `${App.currency} ${formatMoney(rolloverSafeDeduction + App.totalEmergency)}`;
+                updateVaultCalculations();
             };
         });
 
         document.getElementById('btnCloseVault').addEventListener('click', () => { vVault.classList.add('hidden-view'); vActive.classList.remove('hidden-view'); });
 
-        // ترحيل البيانات مع إدارة الخزنة الاحترافية (ضخ أو تجميد)
+        // ترحيل البيانات وحل المشكلة الحسابية للسالب بالكامل
         function triggerRollover(shouldInject) {
             // أرشفة الخطة الحالية في قائمة الخطط السابقة قبل التصفير
             let archivedPlan = JSON.parse(JSON.stringify(App));
@@ -1087,22 +1149,23 @@
             else App.storedPlans.push(archivedPlan);
 
             let safeAmount = rolloverSafeDeduction + App.totalEmergency;
+            let lastFxEnd = App.forexData[App.forexData.length - 1].end || App.forexData[App.forexData.length - 1].start;
 
             if(shouldInject) {
-                // إعادة ضخ الخزنة: يتم إضافة مبلغ الأمان بالكامل لرأس المال الجديد
+                // منطق إعادة الضخ الصحيح رياضياً 100%:
+                // نعيد دمج مبالغ الطوارئ التي تم خصمها خلال الشهر مع الحساب
                 if(document.getElementById('chkAutoChain').checked) {
-                    let lastFxEnd = App.forexData[App.forexData.length - 1].end || App.forexData[App.forexData.length - 1].start;
-                    let remainingCapital = lastFxEnd - rolloverSalary; // رأس المال المتبقي بعد الراتب + الخزنة بالكامل
-                    document.getElementById('inpCapital').value = remainingCapital;
+                    let remainingCapital = lastFxEnd - rolloverSalary + App.totalEmergency;
+                    document.getElementById('inpCapital').value = Math.max(0, remainingCapital).toFixed(2);
                 }
                 showToast(App.lang === 'AR' ? 'تم ترحيل الأرباح وإعادة ضخ مبلغ الأمان بنجاح! 💉' : 'Rollover successful with Safety Re-injected! 💉');
             } else {
-                // تجميد الأمان: يتم خصم مبلغ الخزنة ووضعه كاحتياطي خارجي مجمد
+                // منطق التجميد والترحيل الصحيح رياضياً 100%:
+                // ترحيل الرصيد الفعلي بعد استقطاع الراتب وحصة الخزنة (دون لمس الطوارئ المحفوظة بالخارج)
                 App.externalVaultFrozen = (App.externalVaultFrozen || 0) + safeAmount;
                 if(document.getElementById('chkAutoChain').checked) {
-                    let lastFxEnd = App.forexData[App.forexData.length - 1].end || App.forexData[App.forexData.length - 1].start;
-                    let remainingCapital = lastFxEnd - rolloverSalary - safeAmount; // يتم خصم مبلغ الأمان وتجميده خارجياً
-                    document.getElementById('inpCapital').value = remainingCapital;
+                    let remainingCapital = lastFxEnd - rolloverSalary - rolloverSafeDeduction;
+                    document.getElementById('inpCapital').value = Math.max(0, remainingCapital).toFixed(2);
                 }
                 showToast(App.lang === 'AR' ? `تم تجميد مبلغ الأمان (${App.currency} ${formatMoney(safeAmount)}) بنجاح! ❄️` : `Safety Amount (${App.currency} ${formatMoney(safeAmount)}) frozen successfully! ❄️`);
             }
