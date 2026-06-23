@@ -7,7 +7,7 @@
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0B111E" id="metaThemeColor">
-    <link rel="apple-touch-icon" href="logo.n.png">
+    <link class="rounded-full" rel="apple-touch-icon" href="logo.n.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -66,7 +66,7 @@
         .floating-input { padding-top: 1.5rem; padding-bottom: 0.5rem; transition: border-color 0.2s; }
         .floating-label {
             position: absolute; top: 1.1rem; transition: all 0.2s ease-out; pointer-events: none; opacity: 0.8;
-            left: 1rem; right: 1rem;
+            left: 1rem; right: 1rem; font-size: 0.85rem;
         }
         .floating-input:focus ~ .floating-label, .floating-input:not(:placeholder-shown) ~ .floating-label {
             top: 0.25rem; font-size: 0.7rem; opacity: 1; color: #F59E0B;
@@ -105,7 +105,7 @@
     <!-- شريط التنقل العلوي -->
     <header class="bg-bgCard border-b border-borderColor px-4 py-3 flex flex-wrap justify-between items-center sticky top-0 z-50 shadow-md gap-2">
         <div class="flex items-center gap-3">
-            <!-- الشعار المدمج SA الجديد -->
+            <!-- الشعار المدمج SA الاحترافي -->
             <svg viewBox="0 0 100 100" class="w-10 h-10">
                 <defs>
                     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -119,11 +119,11 @@
             </svg>
             <h1 class="text-xl font-bold tracking-wider cursor-pointer text-textWhite" id="btnGoHome" data-i18n="title">إدارة رأس المال</h1>
         </div>
-        <div class="flex gap-2 flex-wrap items-center">
+        <div class="flex gap-2 flex-wrap items-center font-cairo">
             <!-- أزرار النسخ الاحتياطي والثيم -->
-            <button id="btnTheme" class="bg-bgInput border border-borderColor text-textGray px-2 py-1.5 rounded-lg hover:text-accentGold transition" title="تبديل المظهر">☀️/🌙</button>
-            <button id="btnBackup" class="bg-bgInput border border-borderColor text-textGray px-2 py-1.5 rounded-lg hover:text-accentGold transition" title="نسخ احتياطي (JSON)">💾</button>
-            <button id="btnRestore" class="bg-bgInput border border-borderColor text-textGray px-2 py-1.5 rounded-lg hover:text-accentGold transition" title="استعادة البيانات">📥</button>
+            <button id="btnTheme" class="bg-bgInput border border-borderColor text-textGray px-2.5 py-1.5 rounded-lg hover:text-accentGold transition" title="تبديل المظهر">☀️/🌙</button>
+            <button id="btnBackup" class="bg-bgInput border border-borderColor text-textGray px-2.5 py-1.5 rounded-lg hover:text-accentGold transition" title="نسخ احتياطي (JSON)">💾</button>
+            <button id="btnRestore" class="bg-bgInput border border-borderColor text-textGray px-2.5 py-1.5 rounded-lg hover:text-accentGold transition" title="استعادة البيانات">📥</button>
             
             <button id="btnGoChainingHub" class="bg-bgInput border border-accentGold/40 text-accentGold px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 hover:bg-borderColor/30 transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
@@ -147,11 +147,11 @@
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="w-full md:w-1/3 float-wrapper">
                         <input type="number" id="inpSeq" class="floating-input w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-xl outline-none focus:border-accentGold text-left ltr:text-left rtl:text-right" placeholder=" " value="1">
-                        <label class="floating-label font-semibold" data-i18n="seqMonth">رقم السلسلة (الشهر)</label>
+                        <label class="floating-label font-semibold text-textGray" data-i18n="seqMonth">رقم السلسلة (الشهر)</label>
                     </div>
                     <div class="w-full md:w-2/3 float-wrapper">
                         <input type="text" id="inpName" readonly class="floating-input w-full bg-bgInput border border-borderColor text-accentGold font-bold rounded-xl outline-none ltr:text-left rtl:text-right" placeholder=" " value="خطة التداول: الشهر 1">
-                        <label class="floating-label font-semibold" data-i18n="autoName">اسم الجدول التلقائي</label>
+                        <label class="floating-label font-semibold text-textGray" data-i18n="autoName">اسم الجدول التلقائي</label>
                     </div>
                 </div>
             </div>
@@ -160,7 +160,7 @@
             <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg relative overflow-hidden">
                 <div class="absolute right-0 ltr:right-auto ltr:left-0 top-0 bottom-0 w-1 bg-accentBlue"></div>
                 <div class="flex flex-wrap justify-between items-center mb-5 border-b border-borderColor pb-3 gap-3">
-                    <h2 class="text-lg font-bold text-textWhite" data-i18n="forexSys">نظام الفوركس</h2>
+                    <h2 class="text-lg font-bold text-textWhite animate-pulse" data-i18n="forexSys">نظام الفوركس</h2>
                     <div class="flex items-center gap-4">
                         <div class="flex items-center gap-1.5 bg-bgInput p-1.5 rounded-lg border border-borderColor">
                             <span class="text-xs font-semibold text-accentRed" data-i18n="emergency">الطوارئ</span>
@@ -182,34 +182,34 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 border-b border-borderColor pb-4">
                     <div class="col-span-2 float-wrapper">
                         <input type="number" id="inpCapital" class="floating-input w-full bg-bgInput border border-borderColor text-accentBlue font-inter font-bold rounded-lg outline-none focus:border-accentBlue text-left ltr:text-left rtl:text-right" placeholder=" ">
-                        <label class="floating-label font-semibold" data-i18n="initCapital">رأس المال المبدئي</label>
+                        <label class="floating-label font-semibold text-textGray" data-i18n="initCapital">رأس المال المبدئي</label>
                     </div>
                     <div class="col-span-2 float-wrapper">
                         <input type="number" id="inpDays" class="floating-input w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none focus:border-accentBlue text-left ltr:text-left rtl:text-right" placeholder=" ">
-                        <label class="floating-label font-semibold" data-i18n="targetDays">الأيام المستهدفة</label>
+                        <label class="floating-label font-semibold text-textGray" data-i18n="targetDays">الأيام المستهدفة</label>
                     </div>
                     
                     <div class="col-span-2 md:col-span-1 float-wrapper">
                         <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentGreen ltr:flex-row-reverse relative">
                             <button class="unit-toggle text-accentGreen font-bold px-2 py-1 z-10">%</button>
                             <input type="number" id="inpGoal" class="floating-input w-full bg-transparent text-accentGreen font-bold outline-none px-1 text-left ltr:text-right rtl:text-left" placeholder=" ">
-                            <label class="floating-label absolute right-8 ltr:left-8 rtl:right-8 top-3 text-[10px] font-semibold transition-all pointer-events-none" data-i18n="dailyGoal">الهدف اليومي</label>
+                            <label class="floating-label absolute right-8 ltr:left-8 rtl:right-8 top-3 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="dailyGoal">الهدف اليومي</label>
                         </div>
                     </div>
                     <div class="col-span-2 md:col-span-1 float-wrapper">
                         <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentRed ltr:flex-row-reverse relative">
                             <button class="unit-toggle text-accentRed font-bold px-2 py-1 z-10">%</button>
                             <input type="number" id="inpSafety" class="floating-input w-full bg-transparent text-accentRed font-bold outline-none px-1 text-left ltr:text-right rtl:text-left" placeholder=" ">
-                            <label class="floating-label absolute right-8 ltr:left-8 rtl:right-8 top-3 text-[10px] font-semibold transition-all pointer-events-none" data-i18n="safeAmount">مبلغ طوارئ (وقف خسارة)</label>
+                            <label class="floating-label absolute right-8 ltr:left-8 rtl:right-8 top-3 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="safeAmount">مبلغ طوارئ (وقف خسارة)</label>
                         </div>
                     </div>
                     <div class="col-span-2 md:col-span-1 float-wrapper">
                         <input type="number" id="inpStopProfit" class="floating-input w-full bg-bgInput border border-borderColor text-accentGreen font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
-                        <label class="floating-label font-semibold" data-i18n="stopProfit">وقف الربح الكلي</label>
+                        <label class="floating-label font-semibold text-textGray" data-i18n="stopProfit">وقف الربح الكلي</label>
                     </div>
                     <div class="col-span-2 md:col-span-1 float-wrapper">
                         <input type="number" id="inpStopLoss" class="floating-input w-full bg-bgInput border border-borderColor text-accentRed font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
-                        <label class="floating-label font-semibold" data-i18n="stopLoss">وقف الخسارة الكلي</label>
+                        <label class="floating-label font-semibold text-textGray" data-i18n="stopLoss">وقف الخسارة الكلي</label>
                     </div>
                 </div>
             </div>
@@ -231,23 +231,23 @@
                             <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentGold ltr:flex-row-reverse relative">
                                 <button class="unit-toggle text-accentGold font-bold px-2 py-1 z-10">%</button>
                                 <input type="number" id="inpBinaryAlloc" class="floating-input w-full bg-transparent text-accentGold font-bold outline-none px-1 text-left ltr:text-right rtl:text-left" placeholder=" ">
-                                <label class="floating-label absolute right-8 ltr:left-8 rtl:right-8 top-3 text-[10px] font-semibold transition-all pointer-events-none" data-i18n="binWallet">محفظة الثنائية (تُسحب من الإجمالي)</label>
+                                <label class="floating-label absolute right-8 ltr:left-8 rtl:right-8 top-3 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="binWallet">محفظة الثنائية (تُسحب من الإجمالي)</label>
                             </div>
                         </div>
                         <div class="col-span-2 float-wrapper">
                             <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentGold ltr:flex-row-reverse relative">
                                 <button class="unit-toggle text-accentGold font-bold px-2 py-1 z-10">%</button>
                                 <input type="number" id="inpBinaryTradeSize" class="floating-input w-full bg-transparent text-accentGold font-bold outline-none px-1 text-left ltr:text-right rtl:text-left" placeholder=" ">
-                                <label class="floating-label absolute right-8 ltr:left-8 rtl:right-8 top-3 text-[10px] font-semibold transition-all pointer-events-none" data-i18n="binEntry">حجم دخول الصفقة (من محفظة الثنائية)</label>
+                                <label class="floating-label absolute right-8 ltr:left-8 rtl:right-8 top-3 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="binEntry">حجم دخول الصفقة (من محفظة الثنائية)</label>
                             </div>
                         </div>
                         <div class="col-span-1 float-wrapper">
                             <input type="number" id="inpBinaryProfit" class="floating-input w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
-                            <label class="floating-label font-semibold" data-i18n="binProfit">ربح الصفقة</label>
+                            <label class="floating-label font-semibold text-textGray" data-i18n="binProfit">ربح الصفقة</label>
                         </div>
                         <div class="col-span-1 float-wrapper">
                             <input type="number" id="inpBinaryDays" class="floating-input w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
-                            <label class="floating-label font-semibold" data-i18n="binDays">عدد الأيام</label>
+                            <label class="floating-label font-semibold text-textGray" data-i18n="binDays">عدد الأيام</label>
                         </div>
                     </div>
 
@@ -302,7 +302,6 @@
                     </div>
 
                     <div class="flex gap-2">
-                        <!-- زر الحفظ الجديد -->
                         <button id="btnSaveData" class="bg-bgInput p-2 rounded-lg border border-borderColor hover:bg-accentGreen/20 hover:text-accentGreen transition text-textGray" title="حفظ البيانات يدوياً">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                         </button>
@@ -322,15 +321,15 @@
                         <div id="lblTotalEmergency" class="font-bold text-accentCyan text-sm">$0.00</div>
                     </div>
                     <div class="text-[10px] md:text-xs text-center flex-1 cursor-pointer hover:bg-borderColor/30 rounded px-1 transition bg-bgCard mx-1 p-1 flex items-center justify-center" id="btnOpenVault">
-                        <div class="text-textWhite font-bold text-accentGold text-sm" data-i18n="closeSalary">إغلاق و راتب 🔒</div>
+                        <div class="text-textWhite font-bold text-accentGold text-sm animate-pulse" data-i18n="closeSalary">إغلاق و راتب 🔒</div>
                     </div>
                 </div>
             </div>
 
             <!-- مؤشر المقاصة التلقائي (Cross-Compensation Indicator) -->
-            <div id="compBanner" class="hidden bg-accentGreen/10 border border-accentGreen text-accentGreen px-4 py-2 rounded-xl mb-4 flex items-center justify-center gap-2 animate-pulse shadow-md">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="font-bold text-sm" data-i18n="crossCompMsg">مؤشر المقاصة: أرباح الثنائية عوّضت تراجع الفوركس وتم إلغاء التمديد الإضافي! ✨</span>
+            <div id="compBanner" class="hidden bg-accentGreen/10 border border-accentGreen text-accentGreen px-4 py-2 rounded-xl mb-4 flex items-center justify-center gap-2 animate-bounce shadow-md">
+                <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="font-bold text-sm" id="lblCrossCompMsg"></span>
             </div>
 
             <!-- جدول الفوركس -->
@@ -382,7 +381,7 @@
         <div id="view-vault" class="hidden-view fade-in absolute inset-0 bg-bgMain/95 backdrop-blur-md z-50 p-4 pt-10">
             <div class="max-w-md mx-auto bg-bgCard border border-accentGold/40 rounded-2xl p-6 shadow-2xl relative mt-10">
                 <button id="btnCloseVault" class="absolute top-4 rtl:right-4 ltr:left-4 text-textGray hover:text-textWhite bg-bgInput p-2 rounded-lg font-bold transition">✕</button>
-                <h2 class="text-2xl font-bold text-accentGold mb-6 text-center" data-i18n="vaultTitle">الخزنة والترحيل</h2>
+                <h2 class="text-2xl font-bold text-accentGold mb-6 text-center animate-bounce" data-i18n="vaultTitle">الخزنة والترحيل</h2>
 
                 <div class="space-y-4 font-inter text-lg">
                     <div class="flex justify-between border-b border-borderColor pb-2">
@@ -407,9 +406,13 @@
                     </div>
                 </div>
 
-                <div class="flex gap-2 mt-8">
-                    <button id="btnChainMonth" class="flex-1 bg-accentBlue hover:bg-blue-600 transition-colors text-white font-bold py-4 rounded-xl shadow-lg text-lg" data-i18n="btnChain">
-                        ترحيل وبدء 🔗
+                <!-- أزرار الإجراءات المتطورة للخزنة (إعادة الضخ أو التجميد) -->
+                <div class="flex flex-col gap-3 mt-8">
+                    <button id="btnChainMonthInject" class="w-full bg-gradient-to-r from-accentGreen to-emerald-600 hover:scale-[1.02] transition-transform text-white font-bold py-3.5 rounded-xl shadow-lg text-md flex items-center justify-center gap-1.5">
+                        <span>💉</span> <span data-i18n="btnChainInject">إعادة ضخ الأمان + ترحيل 🔗</span>
+                    </button>
+                    <button id="btnChainMonthFreeze" class="w-full bg-gradient-to-r from-accentBlue to-indigo-600 hover:scale-[1.02] transition-transform text-white font-bold py-3.5 rounded-xl shadow-lg text-md flex items-center justify-center gap-1.5">
+                        <span>❄️</span> <span data-i18n="btnChainFreeze">تجميد الاحتياطي + ترحيل 🔗</span>
                     </button>
                 </div>
             </div>
@@ -422,7 +425,7 @@
         // --- الترجمة ---
         const dictionary = {
             'AR': {
-                title: 'إدارة رأس المال', portfolio: 'المحفظة', seqMonth: 'رقم السلسلة (الشهر)', autoName: 'اسم الجدول التلقائي',
+                title: 'S&A Capital - إدارة رأس المال', portfolio: 'المحفظة', seqMonth: 'رقم السلسلة (الشهر)', autoName: 'اسم الجدول التلقائي',
                 forexSys: 'نظام الفوركس', emergency: 'الطوارئ', compound: 'تراكمي', initCapital: 'رأس المال المبدئي',
                 targetDays: 'الأيام المستهدفة', dailyGoal: 'الهدف اليومي', safeAmount: 'مبلغ طوارئ (وقف خسارة)',
                 stopProfit: 'وقف الربح الكلي', stopLoss: 'وقف الخسارة الكلي', binarySys: 'الخيارات الثنائية',
@@ -435,13 +438,15 @@
                 thEnd: 'النهاية', thTrades: 'صفقات', thComp: 'تر.', thAction: 'الإجراء', thWallet: 'المحفظة',
                 thEntry: 'الدخول', thStatus: 'حالة (3 محاولات)', binWaitMsg: '⏳ في انتظار وصول رأس مال الفوركس للهدف المحد...',
                 vaultTitle: 'الخزنة والترحيل', actualProfit: 'الأرباح الفعلية المحققة:', salary: 'الراتب المستحق (20%):',
-                safeAmountTitle: 'ترحيل للخزنة كأمان خارجي', autoChain: 'ربط خطة الشهر القادم تلقائياً', btnChain: 'ترحيل وبدء 🔗',
+                safeAmountTitle: 'ترحيل للخزنة كأمان خارجي', autoChain: 'ربط خطة الشهر القادم تلقائياً',
+                btnChainInject: 'إعادة ضخ الأمان وبدء التداول 🔗', btnChainFreeze: 'تجميد الأمان في الخزنة وبدء التداول 🔗',
                 actHit: 'تحقيق', actSkip: 'تخطي', actLoss: 'خسارة', actGood: 'جيد', actMed: 'متوسط', actAbad: 'شبه سيء', actBad: 'سيء',
-                done: 'تم', planStr: 'خطة التداول: الشهر ', storedPlansTitle: 'الجداول المحفوظة السابقة', crossCompMsg: 'مؤشر المقاصة: أرباح الثنائية عوّضت تراجع الفوركس وتم إلغاء التمديد الإضافي! ✨',
+                done: 'تم', planStr: 'خطة التداول: الشهر ', storedPlansTitle: 'الجداول المحفوظة السابقة', 
+                crossCompMsg: 'تمت عملية المقاصة: أرباح الثنائية ({BO_PROFIT}) غطت تراجع الفوركس ({FX_LOSS}) بالكامل وتلغى الأيام الإضافية! 🎉',
                 openPlan: 'فتح الخطة', delPlan: 'حذف'
             },
             'EN': {
-                title: 'Capital Management', portfolio: 'Portfolio', seqMonth: 'Sequence (Month)', autoName: 'Auto Table Name',
+                title: 'S&A Capital - Management', portfolio: 'Portfolio', seqMonth: 'Sequence (Month)', autoName: 'Auto Table Name',
                 forexSys: 'Forex System', emergency: 'Emergency', compound: 'Compound', initCapital: 'Initial Capital',
                 targetDays: 'Target Days', dailyGoal: 'Daily Goal', safeAmount: 'Emergency (Stop Loss)',
                 stopProfit: 'Total Stop Profit', stopLoss: 'Total Stop Loss', binarySys: 'Binary Options',
@@ -454,9 +459,11 @@
                 thEnd: 'End', thTrades: 'Trades', thComp: 'Cmp.', thAction: 'Action', thWallet: 'Wallet',
                 thEntry: 'Entry', thStatus: 'Status (3 Tries)', binWaitMsg: '⏳ Waiting for Forex target to start Binary...',
                 vaultTitle: 'Vault & Rollover', actualProfit: 'Actual Realized Profit:', salary: 'Due Salary (20%):',
-                safeAmountTitle: 'Transfer to External Vault', autoChain: 'Auto-chain Next Month Plan', btnChain: 'Rollover & Start 🔗',
+                safeAmountTitle: 'Transfer to External Vault', autoChain: 'Auto-chain Next Month Plan',
+                btnChainInject: 'Re-Inject Safety & Start Plan 🔗', btnChainFreeze: 'Freeze Safety in Vault & Start Plan 🔗',
                 actHit: 'Hit', actSkip: 'Skip', actLoss: 'Loss', actGood: 'Good', actMed: 'Mid', actAbad: 'Poor', actBad: 'Bad',
-                done: 'Done', planStr: 'Trading Plan: Month ', storedPlansTitle: 'Previously Stored Plans', crossCompMsg: 'Compensation: Binary profits covered Forex losses. Extension days cancelled! ✨',
+                done: 'Done', planStr: 'Trading Plan: Month ', storedPlansTitle: 'Previously Stored Plans', 
+                crossCompMsg: 'Compensation Successful: Binary profit ({BO_PROFIT}) covered Forex loss ({FX_LOSS}). Extra days cleared! 🎉',
                 openPlan: 'Open Plan', delPlan: 'Delete'
             }
         };
@@ -464,7 +471,7 @@
         let App = { 
             lang: 'AR', theme: 'dark', currency: '$', isBinaryEnabled: true, origDays: 0, 
             forexData: [], binaryData: [], historyStack: [], settings: { planName: '' },
-            totalEmergency: 0, storedPlans: [] 
+            totalEmergency: 0, storedPlans: [], externalVaultFrozen: 0 
         };
 
         function applyLanguage() {
@@ -476,7 +483,7 @@
             let seqNum = document.getElementById('inpSeq').value || 1;
             document.getElementById('inpName').value = App.settings.planName || (dictionary[App.lang].planStr + seqNum);
             document.getElementById('activePlanTitle').innerText = App.settings.planName || (dictionary[App.lang].planStr + seqNum);
-            if(App.forexData.length > 0) renderTables();
+            if(App.forexData.length > 0) recalculateEngine();
             renderStoredPlans();
         }
 
@@ -503,7 +510,7 @@
             saveToLocal();
         });
 
-        // ميزة النسخ الاحتياطي والاستعادة
+        // ميزة النسخ الاحتياطي والاستعادة الذكية
         document.getElementById('btnBackup').addEventListener('click', () => {
             saveToLocal();
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(App));
@@ -697,13 +704,13 @@
 
         document.getElementById('btnBackToSetup').addEventListener('click', () => { vActive.classList.add('hidden-view'); vSetup.classList.remove('hidden-view'); renderStoredPlans(); });
 
-        // المحرك الرياضي الشامل مع المقاصة والتنبيهات
+        // المحرك الرياضي الشامل مع المقاصة التلقائية الذكية والتنبيهات
         function recalculateEngine() {
             let s = App.settings;
             let currentFx = App.forexData[0]?.start || 0;
             App.totalEmergency = 0;
             let binaryTriggeredThisLoop = false;
-            let fxAccumulatedLoss = 0; // لحساب خسائر الفوركس للمقاصة
+            let fxAccumulatedLoss = 0; 
 
             for (let i = 0; i < App.forexData.length; i++) {
                 let row = App.forexData[i];
@@ -761,7 +768,7 @@
                     if (i > 0) row.start = App.binaryData[i-1].end !== null ? App.binaryData[i-1].end : currentBin;
                     currentBin = row.start;
 
-                    // Hard Stop Loss التنبيه بـ 50% تراجع
+                    // Hard Stop Loss التنبيه بـ 50% تراجع للثنائية
                     if(row.status === 'pending' && currentBin <= (initialBinCapital * 0.5) && !alertedStopLoss) {
                         showToast(App.lang === 'AR' ? '🚨 تحذير: تراجع رأس مال الخيارات الثنائية بنسبة 50% أو أكثر!' : '🚨 Warning: Binary capital dropped by 50% or more!');
                         alertedStopLoss = true;
@@ -815,13 +822,19 @@
                 document.getElementById('binaryTableWrap').classList.add('hidden');
             }
 
-            // ميزة المقاصة والتعويض التلقائي (Cross-Compensation)
+            // ميزة المقاصة والتعويض التلقائي (Cross-Compensation) مع تفاصيل دقيقة
             const compBanner = document.getElementById('compBanner');
+            const lblCrossCompMsg = document.getElementById('lblCrossCompMsg');
             let hasExtraDays = App.forexData.length > App.origDays;
             
             if (boNetProfit > 0 && fxAccumulatedLoss > 0 && boNetProfit >= fxAccumulatedLoss && hasExtraDays) {
+                let text = dictionary[App.lang].crossCompMsg
+                    .replace('{BO_PROFIT}', `${App.currency} ${formatMoney(boNetProfit)}`)
+                    .replace('{FX_LOSS}', `${App.currency} ${formatMoney(fxAccumulatedLoss)}`);
+                lblCrossCompMsg.innerText = text;
                 compBanner.classList.remove('hidden');
-                // إلغاء أيام التمديد الإضافية (إزالة آخر الأيام التي لا تزال pending)
+                
+                // إلغاء تمديد أيام التعويض تلقائياً
                 while(App.forexData.length > App.origDays && App.forexData[App.forexData.length-1].status === 'pending') {
                     App.forexData.pop();
                 }
@@ -834,15 +847,21 @@
             saveToLocal(); 
         }
 
+        // تحسين ميزة التعديل الانسيابي التنازلي (Cascading amounts) للمبالغ الثابتة والتراكمية
         window.updateRowGoal = function(index, value) {
             saveState();
             let newValue = parseFloat(value) || 0;
             App.forexData[index].goalVal = newValue;
-            let step = index > 0 ? (newValue - App.forexData[index - 1].goalVal) : newValue;
-            let currentVal = newValue;
+            
+            // في حال تم إيقاف التراكم، ينتشر القيمة المحددة تنازلياً بالتساوي لكافة الحقول التالية
             for (let i = index + 1; i < App.forexData.length; i++) {
-                if (App.forexData[i].isCompound && !App.forexData[i].isGoalPercent) currentVal += step;
-                App.forexData[i].goalVal = currentVal;
+                if (!App.forexData[i].isCompound) {
+                    App.forexData[i].goalVal = newValue;
+                } else {
+                    // إذا كان تراكمي، نقوم بزيادة تراكمية بالنسبة المحددة
+                    let step = index > 0 ? (newValue - App.forexData[index - 1].goalVal) : newValue;
+                    App.forexData[i].goalVal = App.forexData[i-1].goalVal + step;
+                }
             }
             recalculateEngine();
         };
@@ -851,11 +870,15 @@
             saveState(); 
             let newValue = parseFloat(value) || 0;
             App.forexData[index].safetyVal = newValue;
-            let step = index > 0 ? (newValue - App.forexData[index - 1].safetyVal) : newValue;
-            let currentVal = newValue;
+            
+            // النشر التنازلي الانسيابي للأمان وقف الخسارة
             for (let i = index + 1; i < App.forexData.length; i++) {
-                if (App.forexData[i].isCompound && !App.forexData[i].isSafetyPercent) currentVal += step;
-                App.forexData[i].safetyVal = currentVal;
+                if (!App.forexData[i].isCompound) {
+                    App.forexData[i].safetyVal = newValue;
+                } else {
+                    let step = index > 0 ? (newValue - App.forexData[index - 1].safetyVal) : newValue;
+                    App.forexData[i].safetyVal = App.forexData[i-1].safetyVal + step;
+                }
             }
             recalculateEngine(); 
         };
@@ -932,12 +955,12 @@
             }
         }
 
-        // عرض الجداول المحفوظة السابقة
+        // عرض وإدارة الجداول المحفوظة السابقة مع شريط تقدم
         function renderStoredPlans() {
             const container = document.getElementById('storedPlansContainer');
             container.innerHTML = '';
             if(!App.storedPlans || App.storedPlans.length === 0) {
-                container.innerHTML = `<div class="text-textGray col-span-full text-center py-4 text-sm font-semibold">لا توجد جداول محفوظة بعد.</div>`;
+                container.innerHTML = `<div class="text-textGray col-span-full text-center py-6 text-sm font-semibold">لا توجد جداول محفوظة بعد.</div>`;
                 return;
             }
             let dict = dictionary[App.lang];
@@ -958,9 +981,9 @@
                             <span>End: ${App.currency}${formatMoney(current)}</span>
                         </div>
                         <div class="w-full bg-bgCard rounded-full h-2 mb-1">
-                            <div class="bg-accentGreen h-2 rounded-full" style="width: ${pct}%"></div>
+                            <div class="bg-accentGreen h-2 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
                         </div>
-                        <div class="text-[10px] text-textWhite text-left ltr:text-right">${daysHit} / ${totalDays} ${dict.thDay}</div>
+                        <div class="text-[10px] text-textWhite text-left ltr:text-right">${daysHit} / ${totalDays} ${dict.thDay} (${pct}%)</div>
                     </div>
                 </div>`;
             });
@@ -1004,7 +1027,7 @@
 
         window.actBi = function(idx, action) { saveState(); App.binaryData[idx].status = action; recalculateEngine(); };
 
-        // برمجة زر الحفظ اليدوي
+        // برمجة زر الحفظ اليدوي للخطط والبيانات العامة
         document.getElementById('btnSaveData').addEventListener('click', () => {
             saveToLocal();
             showToast(App.lang === 'AR' ? 'تم حفظ البيانات بنجاح! 💾' : 'Data Saved Successfully! 💾');
@@ -1018,6 +1041,11 @@
             }
         });
 
+        // متغيرات الترحيل
+        let rolloverNetProfit = 0;
+        let rolloverSalary = 0;
+        let rolloverSafeDeduction = 0;
+
         document.getElementById('btnOpenVault').addEventListener('click', () => {
             vActive.classList.add('hidden-view'); vVault.classList.remove('hidden-view');
             
@@ -1030,39 +1058,56 @@
                 if (lastClosedBo.length > 0) realizedBoProfit = lastClosedBo[lastClosedBo.length - 1].end - App.binaryData[0].start;
             }
 
-            let netProfit = realizedFxProfit + realizedBoProfit;
-            if(netProfit < 0) netProfit = 0; 
-            let salary = netProfit * 0.20; 
-            let vaultAmount = document.getElementById('chkVault').checked ? (netProfit - salary) : 0;
+            rolloverNetProfit = realizedFxProfit + realizedBoProfit;
+            if(rolloverNetProfit < 0) rolloverNetProfit = 0; 
+            rolloverSalary = rolloverNetProfit * 0.20; 
+            rolloverSafeDeduction = document.getElementById('chkVault').checked ? (rolloverNetProfit - rolloverSalary) : 0;
 
-            document.getElementById('vTotalProfit').innerText = `${App.currency} ${formatMoney(netProfit)}`;
-            document.getElementById('vSalary').innerText = `${App.currency} ${formatMoney(salary)}`;
-            document.getElementById('vSafeAmount').innerText = `${App.currency} ${formatMoney(vaultAmount + App.totalEmergency)}`;
+            document.getElementById('vTotalProfit').innerText = `${App.currency} ${formatMoney(rolloverNetProfit)}`;
+            document.getElementById('vSalary').innerText = `${App.currency} ${formatMoney(rolloverSalary)}`;
+            document.getElementById('vSafeAmount').innerText = `${App.currency} ${formatMoney(rolloverSafeDeduction + App.totalEmergency)}`;
             
             document.getElementById('chkVault').onchange = (e) => {
-                vaultAmount = e.target.checked ? (netProfit - salary) : 0;
-                document.getElementById('vSafeAmount').innerText = `${App.currency} ${formatMoney(vaultAmount + App.totalEmergency)}`;
+                rolloverSafeDeduction = e.target.checked ? (rolloverNetProfit - rolloverSalary) : 0;
+                document.getElementById('vSafeAmount').innerText = `${App.currency} ${formatMoney(rolloverSafeDeduction + App.totalEmergency)}`;
             };
         });
 
         document.getElementById('btnCloseVault').addEventListener('click', () => { vVault.classList.add('hidden-view'); vActive.classList.remove('hidden-view'); });
 
-        // --- ترحيل وبدء الشهر الجديد أو الخطة القادمة ---
-        document.getElementById('btnChainMonth').addEventListener('click', () => {
-            // حفظ الخطة الحالية في قائمة الخطط السابقة
+        // ترحيل البيانات مع إدارة الخزنة الاحترافية (ضخ أو تجميد)
+        function triggerRollover(shouldInject) {
+            // أرشفة الخطة الحالية في قائمة الخطط السابقة قبل التصفير
             let archivedPlan = JSON.parse(JSON.stringify(App));
-            delete archivedPlan.storedPlans; // لمنع التكدس غير الضروري
+            delete archivedPlan.storedPlans; 
             if(!App.storedPlans) App.storedPlans = [];
-            // تحديث خطة موجودة أو إضافة جديدة
+            
             let existingIdx = App.storedPlans.findIndex(p => p.settings.planName === App.settings.planName);
             if(existingIdx >= 0) App.storedPlans[existingIdx] = archivedPlan;
             else App.storedPlans.push(archivedPlan);
 
+            let safeAmount = rolloverSafeDeduction + App.totalEmergency;
+
+            if(shouldInject) {
+                // إعادة ضخ الخزنة: يتم إضافة مبلغ الأمان بالكامل لرأس المال الجديد
+                if(document.getElementById('chkAutoChain').checked) {
+                    let lastFxEnd = App.forexData[App.forexData.length - 1].end || App.forexData[App.forexData.length - 1].start;
+                    let remainingCapital = lastFxEnd - rolloverSalary; // رأس المال المتبقي بعد الراتب + الخزنة بالكامل
+                    document.getElementById('inpCapital').value = remainingCapital;
+                }
+                showToast(App.lang === 'AR' ? 'تم ترحيل الأرباح وإعادة ضخ مبلغ الأمان بنجاح! 💉' : 'Rollover successful with Safety Re-injected! 💉');
+            } else {
+                // تجميد الأمان: يتم خصم مبلغ الخزنة ووضعه كاحتياطي خارجي مجمد
+                App.externalVaultFrozen = (App.externalVaultFrozen || 0) + safeAmount;
+                if(document.getElementById('chkAutoChain').checked) {
+                    let lastFxEnd = App.forexData[App.forexData.length - 1].end || App.forexData[App.forexData.length - 1].start;
+                    let remainingCapital = lastFxEnd - rolloverSalary - safeAmount; // يتم خصم مبلغ الأمان وتجميده خارجياً
+                    document.getElementById('inpCapital').value = remainingCapital;
+                }
+                showToast(App.lang === 'AR' ? `تم تجميد مبلغ الأمان (${App.currency} ${formatMoney(safeAmount)}) بنجاح! ❄️` : `Safety Amount (${App.currency} ${formatMoney(safeAmount)}) frozen successfully! ❄️`);
+            }
+
             if(document.getElementById('chkAutoChain').checked) {
-                let safeText = document.getElementById('vSafeAmount').innerText;
-                let newCapital = parseFloat(safeText.replace(/[^0-9.-]+/g,"")) || 0;
-                
-                document.getElementById('inpCapital').value = newCapital;
                 let currentMonth = parseInt(document.getElementById('inpSeq').value) || 1;
                 document.getElementById('inpSeq').value = currentMonth + 1;
                 App.settings.planName = dictionary[App.lang].planStr + (currentMonth + 1);
@@ -1078,9 +1123,10 @@
             vActive.classList.add('hidden-view');
             vSetup.classList.remove('hidden-view');
             renderStoredPlans();
-            
-            showToast(App.lang === 'AR' ? 'تم الترحيل وبدء الخطة بنجاح! 🎉' : 'Rollover successful! 🎉');
-        });
+        }
+
+        document.getElementById('btnChainMonthInject').addEventListener('click', () => triggerRollover(true));
+        document.getElementById('btnChainMonthFreeze').addEventListener('click', () => triggerRollover(false));
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
