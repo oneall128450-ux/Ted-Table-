@@ -40,7 +40,7 @@
         html, body { 
             background-color: #0B111E; color: #F8FAFC; font-family: 'Cairo', sans-serif; 
             -webkit-tap-highlight-color: transparent; 
-            overscroll-behavior-y: none; /* هذا السطر يمنع التحديث بالسحب */
+            overscroll-behavior-y: none; 
             touch-action: pan-y;
             user-select: none; -webkit-user-select: none;
         }
@@ -244,9 +244,15 @@
                         <button id="tabBinary" class="px-5 py-1.5 rounded-md font-bold text-sm text-textGray hover:text-textWhite transition-colors" data-i18n="tabBinary">الثنائية</button>
                     </div>
 
-                    <button id="btnUndo" class="bg-bgInput p-2 rounded-lg border border-borderColor disabled:opacity-30 transition" disabled>
-                        <svg class="w-5 h-5 text-textWhite" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
-                    </button>
+                    <div class="flex gap-2">
+                        <!-- زر الحفظ الجديد -->
+                        <button id="btnSaveData" class="bg-bgInput p-2 rounded-lg border border-borderColor hover:bg-accentGreen/20 hover:text-accentGreen transition text-textGray" title="حفظ البيانات يدوياً">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                        </button>
+                        <button id="btnUndo" class="bg-bgInput p-2 rounded-lg border border-borderColor disabled:opacity-30 transition text-textWhite" disabled>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="flex justify-between items-center bg-bgInput rounded-xl p-2 border border-borderColor/50">
@@ -396,7 +402,6 @@
                 const key = el.getAttribute('data-i18n');
                 if(dictionary[App.lang][key]) el.innerText = dictionary[App.lang][key];
             });
-            // تحديث اسم الخطة التلقائي
             let seqNum = document.getElementById('inpSeq').value || 1;
             document.getElementById('inpName').value = dictionary[App.lang].planStr + seqNum;
             if(App.forexData.length > 0) renderTables();
@@ -470,7 +475,6 @@
             e.target.innerText = App.currency;
             document.querySelectorAll('.unit-toggle').forEach(btn => { if(btn.innerText !== '%') btn.innerText = App.currency; });
             
-            // حل مشكلة عدم تحديث الجدول عند تغيير العملة
             if (App.forexData && App.forexData.length > 0) {
                 recalculateEngine();
             }
@@ -531,7 +535,7 @@
                     status: 'pending', end: null, 
                     goalVal: App.settings.fxGoal, isGoalPercent: App.settings.fxGoalPct,
                     safetyVal: App.settings.isMasterEmergency ? App.settings.fxSafe : 0, isSafetyPercent: App.settings.fxSafePct,
-                    savingsVal: 0, trades: 0
+                    savingsVal: 0, trades: 0, binaryDeduction: 0 // تمت إضافة متعقب للخصم
                 });
             }
 
@@ -560,6 +564,7 @@
                 let row = App.forexData[i];
                 if (i > 0) row.start = App.forexData[i-1].end !== null ? App.forexData[i-1].end : currentFx;
                 currentFx = row.start;
+                row.binaryDeduction = 0; // تصفير متغير الخصم الثنائي في كل دورة حساب
 
                 let goal = row.isGoalPercent ? (row.start * (row.goalVal / 100)) : row.goalVal;
                 let loss = row.isSafetyPercent ? (row.start * (row.safetyVal / 100)) : row.safetyVal;
@@ -573,10 +578,14 @@
                 else if (row.status === 'skip') { row.end = row.start; currentFx = row.end; }
                 else { row.end = null; currentFx = row.start + goal; }
 
+                // تفعيل الثنائية وخصم قيمتها بشكل دقيق مرئي ومخفي
                 if (App.isBinaryEnabled && s.binTrigger === 'target' && App.binaryData.length === 0 && !binaryTriggeredThisLoop) {
                     if (currentFx >= s.binTarget) {
                         binaryTriggeredThisLoop = true;
                         let binCapital = s.binAllocPct ? (currentFx * (s.binAlloc / 100)) : s.binAlloc;
+                        
+                        row.binaryDeduction = binCapital; // تسجيل الخصم ليتم عرضه فوراً
+
                         if (row.end !== null) row.end -= binCapital;
                         currentFx -= binCapital;
                         
@@ -590,7 +599,7 @@
             if (currentFx >= s.stopProfit && currentFx !== App.forexData[0]?.start) showToast(App.lang === 'AR' ? '🎉 مبروك! وصلت لحد وقف الربح الكلي.' : '🎉 Congrats! Reached stop profit.');
             if (currentFx <= s.stopLoss && currentFx > 0) showToast(App.lang === 'AR' ? '⚠️ انتبه! وصلت لحد وقف الخسارة الكلي.' : '⚠️ Warning! Reached stop loss.');
 
-            document.getElementById('lblTotalEmergency').innerText = `${App.currency}${formatMoney(App.totalEmergency)}`;
+            document.getElementById('lblTotalEmergency').innerText = `${App.currency} ${formatMoney(App.totalEmergency)}`; // تمت إضافة مسافة للعملة
 
             let currentBin = App.isBinaryEnabled && App.binaryData.length > 0 ? App.binaryData[0].start : 0;
             if (App.isBinaryEnabled && App.binaryData.length > 0) {
@@ -649,26 +658,14 @@
             saveToLocal(); // حفظ التغييرات بعد كل عملية حساب
         }
 
-        // ================= الدالة السحرية للتراكم الخطي الرياضي =================
         window.updateRowGoal = function(index, value) {
             saveState();
             let newValue = parseFloat(value) || 0;
             App.forexData[index].goalVal = newValue;
-            
-            // حساب مقدار الزيادة (الفرق بين اليوم والمبلغ السابق)
-            let step = 0;
-            if (index > 0) {
-                step = newValue - App.forexData[index - 1].goalVal;
-            } else {
-                step = newValue; 
-            }
-
+            let step = index > 0 ? (newValue - App.forexData[index - 1].goalVal) : newValue;
             let currentVal = newValue;
-            // تطبيق الزيادة على الأيام التالية فقط في حال كان التراكم مفعلاً
             for (let i = index + 1; i < App.forexData.length; i++) {
-                if (App.forexData[i].isCompound && !App.forexData[i].isGoalPercent) {
-                    currentVal += step;
-                }
+                if (App.forexData[i].isCompound && !App.forexData[i].isGoalPercent) currentVal += step;
                 App.forexData[i].goalVal = currentVal;
             }
             recalculateEngine();
@@ -678,11 +675,7 @@
             saveState(); 
             let newValue = parseFloat(value) || 0;
             App.forexData[index].safetyVal = newValue;
-            
-            let step = 0;
-            if (index > 0) step = newValue - App.forexData[index - 1].safetyVal;
-            else step = newValue;
-
+            let step = index > 0 ? (newValue - App.forexData[index - 1].safetyVal) : newValue;
             let currentVal = newValue;
             for (let i = index + 1; i < App.forexData.length; i++) {
                 if (App.forexData[i].isCompound && !App.forexData[i].isSafetyPercent) currentVal += step;
@@ -691,23 +684,17 @@
             recalculateEngine(); 
         };
 
-        // تم إلغاء التراكم من التوفير - سيقوم بنسخ الرقم كما هو للأسفل
         window.updateRowSavings = function(index, value) { 
             saveState(); 
             let val = parseFloat(value) || 0; 
-            for (let i = index; i < App.forexData.length; i++) {
-                App.forexData[i].savingsVal = val;
-            }
+            for (let i = index; i < App.forexData.length; i++) App.forexData[i].savingsVal = val;
             recalculateEngine(); 
         };
 
-        // تم إلغاء التراكم من الصفقات - سيقوم بنسخ الرقم كما هو للأسفل
         window.updateRowTrades = function(index, value) { 
             saveState(); 
             let val = parseInt(value) || 0; 
-            for (let i = index; i < App.forexData.length; i++) {
-                App.forexData[i].trades = val;
-            }
+            for (let i = index; i < App.forexData.length; i++) App.forexData[i].trades = val;
             recalculateEngine(); 
         };
 
@@ -716,7 +703,10 @@
             let tbFx = document.getElementById('tbodyForex'); tbFx.innerHTML = '';
             App.forexData.forEach((row, i) => {
                 let goal = row.isGoalPercent ? (row.start * (row.goalVal / 100)) : row.goalVal;
-                let displayEnd = row.end !== null ? row.end : (row.start + goal - row.savingsVal);
+                
+                // هنا تطبيق الخصم فوراً بشكل مرئي في خانة النهاية حتى قبل الضغط على تحقيق
+                let calculatedEnd = row.start + goal - row.savingsVal - (row.binaryDeduction || 0);
+                let displayEnd = row.end !== null ? row.end : calculatedEnd;
 
                 let tr = document.createElement('tr');
                 tr.className = `border-b border-borderColor/50 transition-colors ${row.status==='hit'?'bg-accentGreen/10':row.status==='loss'?'bg-accentRed/10':row.status==='skip'?'opacity-50':''}`;
@@ -788,6 +778,12 @@
 
         window.actBi = function(idx, action) { saveState(); App.binaryData[idx].status = action; recalculateEngine(); };
 
+        // برمجة زر الحفظ اليدوي
+        document.getElementById('btnSaveData').addEventListener('click', () => {
+            saveToLocal();
+            showToast(App.lang === 'AR' ? 'تم حفظ البيانات بنجاح! 💾' : 'Data Saved Successfully! 💾');
+        });
+
         document.getElementById('btnUndo').addEventListener('click', () => {
             if(App.historyStack.length > 0) {
                 let state = App.historyStack.pop(); App.forexData = state.fx; App.binaryData = state.bi;
@@ -813,14 +809,15 @@
             let salary = netProfit * 0.20; 
             let vaultAmount = document.getElementById('chkVault').checked ? (netProfit - salary) : 0;
 
-            document.getElementById('vTotalProfit').innerText = `${App.currency}${formatMoney(netProfit)}`;
-            document.getElementById('vSalary').innerText = `${App.currency}${formatMoney(salary)}`;
-            document.getElementById('vSafeAmount').innerText = `${App.currency}${formatMoney(vaultAmount + App.totalEmergency)}`;
+            // تم إضافة مسافة بين العملة والرقم لتظهر بشكل صحيح دائماً
+            document.getElementById('vTotalProfit').innerText = `${App.currency} ${formatMoney(netProfit)}`;
+            document.getElementById('vSalary').innerText = `${App.currency} ${formatMoney(salary)}`;
+            document.getElementById('vSafeAmount').innerText = `${App.currency} ${formatMoney(vaultAmount + App.totalEmergency)}`;
             
             // تحديث المبلغ عند تغيير خيار "مبلغ الأمان"
             document.getElementById('chkVault').onchange = (e) => {
                 vaultAmount = e.target.checked ? (netProfit - salary) : 0;
-                document.getElementById('vSafeAmount').innerText = `${App.currency}${formatMoney(vaultAmount + App.totalEmergency)}`;
+                document.getElementById('vSafeAmount').innerText = `${App.currency} ${formatMoney(vaultAmount + App.totalEmergency)}`;
             };
         });
 
@@ -828,23 +825,19 @@
 
         // --- ترحيل وبدء الشهر الجديد ---
         document.getElementById('btnChainMonth').addEventListener('click', () => {
-            // أخذ الرصيد من الخزنة
             let safeText = document.getElementById('vSafeAmount').innerText;
             let newCapital = parseFloat(safeText.replace(/[^0-9.-]+/g,"")) || 0;
             
-            // تحديث الإعدادات
             document.getElementById('inpCapital').value = newCapital;
             let currentMonth = parseInt(document.getElementById('inpSeq').value) || 1;
             document.getElementById('inpSeq').value = currentMonth + 1;
             document.getElementById('inpName').value = dictionary[App.lang].planStr + (currentMonth + 1);
             
-            // تصفير الجداول
             App.forexData = [];
             App.binaryData = [];
             App.historyStack = [];
             saveToLocal();
             
-            // العودة للإعدادات
             vVault.classList.add('hidden-view');
             vActive.classList.add('hidden-view');
             vSetup.classList.remove('hidden-view');
@@ -852,14 +845,12 @@
             showToast(App.lang === 'AR' ? 'تم ترحيل المبلغ وبدء شهر جديد بنجاح! 🎉' : 'Rollover successful! 🎉');
         });
 
-        // تشغيل Service Worker للحفظ على الهاتف (PWA)
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
             .then(() => console.log('Service Worker Registered'))
             .catch(err => console.log('Service Worker Failed', err));
         }
 
-        // استرجاع البيانات عند الفتح
         window.addEventListener('DOMContentLoaded', loadFromLocal);
 
     </script>
