@@ -1,26 +1,16 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="htmlTag">
 <head>
-    <!-- 
-    =======================================================================
-    * اسم التطبيق: S&A Capital - N System
-    * الوصف: نظام متطور لإدارة رأس المال وتتبع خطط التداول في الفوركس والخيارات الثنائية
-    * الإصدار: 3.3 (إصلاح تفعيل الثنائية، فصل التراجع، وتحديث النسب والرسائل)
-    =======================================================================
-    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>S&A Capital - N System</title>
     
-    <!-- إعدادات تطبيق الويب التقدمي PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0B111E" id="metaThemeColor">
     <link class="rounded-full" rel="apple-touch-icon" href="logo.n.png">
     
-    <!-- استدعاء الخطوط العربية والإنجليزية -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- استدعاء مكتبة Tailwind CSS للتنسيق السريع والمتجاوب -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
@@ -187,7 +177,6 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col transition-colors duration-300">
 
-    <!-- شريط التنقل العلوي (Header) -->
     <header class="bg-bgCard border-b border-borderColor px-4 py-3 flex flex-wrap justify-between items-center sticky top-0 z-50 shadow-md gap-2">
         <div class="flex items-center gap-3">
             <svg viewBox="0 0 100 100" class="w-10 h-10">
@@ -212,16 +201,12 @@
         </div>
     </header>
 
-    <!-- منطقة المحتوى الرئيسية -->
     <main class="flex-grow container mx-auto px-3 py-6 max-w-5xl relative">
-        <!-- طبقة التنبيه (Toast Notification) المحسنة والمثبتة بنجاح أسفل الشاشة بالكامل وبشكل مريح -->
         <div id="customToast" class="hidden fixed bottom-10 left-1/2 -translate-x-1/2 bg-accentGold text-black px-6 py-3.5 rounded-xl font-bold shadow-2xl z-[9999] text-center w-11/12 max-w-sm transition-transform duration-300"></div>
         <input type="file" id="fileRestore" class="hidden" accept=".json">
 
-        <!-- الواجهة 1: الإعدادات والخطط السابقة (View Setup) -->
         <div id="view-setup" class="space-y-6 fade-in">
             
-            <!-- تنبيه الخطة النشطة -->
             <div id="activePlanBanner" class="hidden bg-gradient-to-r from-bgCard to-bgInput border border-accentGreen rounded-2xl p-5 shadow-lg active-pulse relative overflow-hidden">
                 <div class="absolute right-0 top-0 bottom-0 w-2 bg-accentGreen"></div>
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -236,7 +221,6 @@
                 </div>
             </div>
 
-            <!-- إعدادات رقم الخطة واسمها -->
             <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg mt-2">
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="w-full md:w-1/3 float-wrapper">
@@ -250,18 +234,15 @@
                 </div>
             </div>
 
-            <!-- إعدادات نظام الفوركس -->
             <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg relative overflow-hidden">
                 <div class="absolute right-0 ltr:right-auto ltr:left-0 top-0 bottom-0 w-1 bg-accentBlue"></div>
                 <div class="flex flex-wrap justify-between items-center mb-5 border-b border-borderColor pb-3 gap-3">
                     <h2 class="text-lg font-bold text-textWhite" data-i18n="forexSys">نظام الفوركس</h2>
                     <div class="flex items-center gap-4">
-                        <!-- تفعيل إدارة المخاطر 2:1 -->
                         <div class="flex items-center gap-1.5 bg-bgInput p-1.5 rounded-lg border border-borderColor">
                             <span class="text-xs font-semibold text-accentGold" data-i18n="riskMgmt">إدارة مخاطر (2:1)</span>
                             <input type="checkbox" id="chkRiskManagement" class="w-4 h-4 accent-accentGold cursor-pointer">
                         </div>
-                        <!-- زر تبديل وضع الأمان والخسارة المطور -->
                         <div class="flex items-center gap-1.5 bg-bgInput p-1.5 rounded-lg border border-borderColor">
                             <span class="text-xs font-semibold text-accentRed" id="lblSafetyLossToggleText" data-i18n="safetyAmount">مبلغ الأمان (خط أحمر)</span>
                             <div class="relative inline-block w-8 align-middle">
@@ -297,7 +278,6 @@
                         </div>
                     </div>
 
-                    <!-- حقل إدخال رقمي جديد مطور للأمان أو الخسارة -->
                     <div class="col-span-2 md:col-span-1 float-wrapper relative">
                         <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentRed ltr:flex-row-reverse relative mt-0">
                             <button class="unit-toggle text-accentRed font-bold px-3 py-1 z-10">%</button>
@@ -305,8 +285,6 @@
                             <label id="lblSafetyOrLossInput" class="floating-label absolute right-12 ltr:left-12 rtl:right-12 top-3.5 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="safetyAmount">مبلغ الأمان اليومي</label>
                         </div>
                     </div>
-
-                    <!-- تم حذف حقلي وقف الربح الكلي ووقف الخسارة الكلي من الواجهة بناء على طلبك للتنظيف -->
 
                     <div class="col-span-2 md:col-span-1 float-wrapper">
                         <input type="text" id="inpMonthlyTarget" inputmode="decimal" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-accentGold font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
@@ -320,7 +298,6 @@
                 </div>
             </div>
 
-            <!-- إعدادات نظام الخيارات الثنائية -->
             <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300" id="cardBinary">
                 <div class="absolute right-0 ltr:right-auto ltr:left-0 top-0 bottom-0 w-1 bg-accentGold"></div>
                 <div class="flex justify-between items-center mb-5 border-b border-borderColor pb-3">
@@ -379,19 +356,16 @@
                 </div>
             </div>
 
-            <!-- زر التوليد الرئيسي -->
             <button id="btnGenerate" class="w-full bg-gradient-to-r from-accentGold to-yellow-600 text-bgMain font-extrabold text-xl py-4 rounded-xl shadow-lg transition-all hover:scale-[1.02]" data-i18n="btnGenerate">
                 توليد الخطة وبدء التداول 🚀
             </button>
 
-            <!-- قسم الجداول السابقة المحفوظة -->
             <div id="storedPlansSection" class="mt-8 border-t border-borderColor/50 pt-6">
                 <h3 class="text-xl font-bold text-textWhite mb-4" data-i18n="storedPlansTitle">الجداول المحفوظة السابقة</h3>
                 <div id="storedPlansContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
         </div>
 
-        <!-- الواجهة 2: التتبع والجداول النشطة (View Active) -->
         <div id="view-active" class="hidden-view fade-in">
             
             <div class="bg-bgCard border border-borderColor rounded-2xl p-4 shadow-lg mb-4 sticky top-16 z-40">
@@ -410,19 +384,16 @@
                     </div>
                 </div>
 
-                <!-- زر الحفظ اليدوي المحدث -->
                 <button id="btnSaveData" class="w-full bg-gradient-to-r from-accentGreen/20 to-emerald-900/40 border border-accentGreen text-accentGreen hover:bg-accentGreen hover:text-white transition-all duration-300 py-2.5 rounded-xl font-bold mb-3 flex items-center justify-center gap-2 shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 00-2 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                     <span data-i18n="saveNow">حفظ التغييرات الآن</span>
                 </button>
 
-                <!-- تبويبات التنقل -->
                 <div class="flex bg-bgInput rounded-lg p-1 border border-borderColor mb-3 justify-center">
                     <button id="tabForex" class="px-8 py-2 rounded-md font-bold text-sm bg-borderColor text-accentBlue transition-colors w-1/2" data-i18n="tabForex">الفوركس</button>
                     <button id="tabBinary" class="px-8 py-2 rounded-md font-bold text-sm text-textGray hover:text-textWhite transition-colors w-1/2" data-i18n="tabBinary">الثنائية</button>
                 </div>
 
-                <!-- شريط الإحصائيات المصغر والإغلاق -->
                 <div class="flex justify-between items-center bg-bgInput rounded-xl p-2 border border-borderColor/50">
                     <div class="text-[10px] md:text-xs text-center flex-1 rtl:border-l ltr:border-r border-borderColor/50 px-1 bg-bgCard rounded mx-1 p-1">
                         <div class="text-textGray font-bold" data-i18n="forexExt">تمديد أيام الفوركس</div>
@@ -438,18 +409,15 @@
                 </div>
             </div>
 
-            <!-- مؤشر المقاصة التلقائي -->
             <div id="compBanner" class="hidden bg-accentGreen/10 border border-accentGreen text-accentGreen px-4 py-3 rounded-xl mb-4 flex items-center justify-center gap-2 shadow-md">
                 <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <span class="font-bold text-sm text-center" id="lblCrossCompMsg"></span>
             </div>
 
-            <!-- واجهة كروت تتبع الفوركس -->
             <div id="tableForexContainer" class="space-y-4 mb-6">
                 <div id="forexCardsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- واجهة كروت تتبع الخيارات الثنائية -->
             <div id="tableBinaryContainer" class="hidden space-y-4 mb-6">
                 <div id="binaryStatusMsg" class="p-4 text-center text-accentGold text-sm hidden font-bold bg-accentGold/10 border border-accentGold/20 rounded-xl" data-i18n="binWaitMsg">
                     ⏳ في انتظار وصول رأس مال الفوركس للهدف المحدد ليتم خصم وبدء الثنائية...
@@ -458,7 +426,6 @@
             </div>
         </div>
 
-        <!-- الواجهة 3: الخزنة والرواتب وتحديد مسار الشهر القادم -->
         <div id="view-vault" class="hidden-view fade-in absolute inset-0 bg-bgMain/95 backdrop-blur-md z-50 p-4 pt-10">
             <div class="max-w-md mx-auto bg-bgCard border border-accentGold/40 rounded-2xl p-6 shadow-2xl relative mt-4">
                 <button id="btnCloseVault" class="absolute top-4 rtl:right-4 ltr:left-4 text-textGray hover:text-textWhite bg-bgInput p-2 rounded-lg font-bold transition">✕</button>
@@ -474,7 +441,6 @@
                         <span id="vTotalProfit" class="text-accentGreen font-bold">$0.00</span>
                     </div>
 
-                    <!-- إعدادات الشهر القادم (الربط التلقائي) -->
                     <div class="bg-bgInput rounded-xl p-3 border border-accentBlue/30 mt-2">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-textWhite font-cairo font-bold text-sm" data-i18n="autoChain">ربط خطة الشهر القادم تلقائياً</span>
@@ -493,7 +459,6 @@
                         </div>
                     </div>
 
-                    <!-- إعدادات الراتب والأمان الخارجي -->
                     <div class="border border-borderColor rounded-xl p-3 space-y-3 bg-bgInput mt-2 relative">
                         <div class="flex justify-between items-center border-b border-borderColor pb-2">
                             <span class="text-textWhite font-cairo font-bold text-sm" data-i18n="safeAmountTitle">اقتطاع جزء للخزنة كأمان؟</span>
@@ -558,7 +523,6 @@
 
     </main>
 
-    <!-- البرمجة (Logic - JavaScript) -->
     <script>
         const dictionary = {
             'AR': {
@@ -998,7 +962,8 @@
                     safetyVal: App.settings.safetyVal, isSafetyPercent: App.settings.fxSafetyPct,
                     savingsVal: 0, trades: App.settings.defaultTrades, binaryDeduction: 0, isTriggerDay: false,
                     fixedDepositInput: 0, 
-                    fixedDeposit: 0 
+                    fixedDeposit: 0,
+                    isDepositAccumulated: true // القيمة الافتراضية للزر الجديد المضاف للتراكم
                 });
             }
 
@@ -1024,7 +989,7 @@
         });
 
         // =======================================================================
-        // المحرك الرياضي والمحاسبي المطور الخالي من التداخل والأخطاء (v3.3)
+        // المحرك الرياضي والمحاسبي المطور الخالي من التداخل والأخطاء (v3.4)
         // =======================================================================
         function recalculateEngine() {
             let s = App.settings;
@@ -1046,17 +1011,23 @@
                 tabBiElement.classList.remove('hidden');
             }
 
-            // 1. إعادة توليد متوالية الإيداعات الدورية المتراكمة بالاعتماد على حقل الإدخال الأزرق
+            // 1. إعادة توليد متوالية الإيداعات الدورية المتراكمة والمربوطة بالزر (Toggle)
             let currentAccumulatedDeposit = 0;
             for (let i = 0; i < App.forexData.length; i++) {
                 let row = App.forexData[i];
                 let depositInput = parseFloat(row.fixedDepositInput) || 0;
                 
-                if (depositInput > 0) {
-                    currentAccumulatedDeposit += depositInput;
-                    row.fixedDeposit = currentAccumulatedDeposit;
+                // فحص حالة الزر لمعرفة إذا كان النظام سيكمل المراقبة التراكمية للمبلغ
+                if (row.isDepositAccumulated !== false) {
+                    if (depositInput > 0) {
+                        currentAccumulatedDeposit += depositInput;
+                        row.fixedDeposit = currentAccumulatedDeposit;
+                    } else {
+                        row.fixedDeposit = 0;
+                    }
                 } else {
-                    row.fixedDeposit = 0;
+                    // يتوقف النظام تماماً عن مراكمة المبالغ ويحتفظ بالقيمة الحالية مباشرة دون دمجها
+                    row.fixedDeposit = depositInput;
                 }
             }
 
@@ -1296,6 +1267,12 @@
             recalculateEngine();
         };
 
+        // الدالة الجديدة للتحكم في مفتاح التبديل (مراكمة المبلغ الثابت)
+        window.toggleRowAccumulation = function(index, value) {
+            App.forexData[index].isDepositAccumulated = value;
+            recalculateEngine();
+        };
+
         window.toggleForexDayCollapse = function(day) {
             App.expandedForexDays = App.expandedForexDays || {};
             App.expandedForexDays[day] = !App.expandedForexDays[day];
@@ -1311,7 +1288,7 @@
         };
 
         // =======================================================================
-        // بناء وعرض الكروت الأنيقة الموحدة (v3.3)
+        // بناء وعرض الكروت الأنيقة الموحدة (v3.4)
         // =======================================================================
         function renderCardsViews() {
             let dict = dictionary[App.lang];
@@ -1344,9 +1321,7 @@
                 // احتساب مخاطر 2:1 تلقائياً
                 let riskText = "";
                 if (App.settings.riskManagement && row.trades > 0) {
-                    // التعديل المطلوب: حساب ربح الصفقة بناءً على الهدف الإجمالي (totalGoalHeader) وليس الهدف الأساسي (goal)
-                    let totalTargetForRiskCalculation = totalGoalHeader;
-                    let singleProfit = totalTargetForRiskCalculation / row.trades;
+                    let singleProfit = goal / row.trades;
                     let singleLoss = singleProfit / 2;
                     riskText = `<div class="text-[9px] text-accentGold font-bold mt-1">مخاطر 2:1 (ربح الصفقة: ${formatMoney(singleProfit)} | خسارة: ${formatMoney(singleLoss)})</div>`;
                 }
@@ -1372,6 +1347,12 @@
                 cardDiv.className = `bg-bgCard border border-borderColor rounded-2xl p-4 shadow-lg transition-all ${row.status==='hit'?'border-accentGreen/40 bg-accentGreen/[0.02]':row.status==='loss'?'border-accentRed/40 bg-accentRed/[0.02]':row.status==='skip'?'opacity-60':''}`;
                 
                 let currentAccumulatedDisplay = row.fixedDeposit || 0;
+
+                // الميزة الأولى: توليد العرض الديناميكي للقيمة المالية إذا كان الهدف نسبة مئوية
+                let dynamicGoalDisplay = '';
+                if (row.isGoalPercent) {
+                    dynamicGoalDisplay = `<div class="text-[10px] text-accentGold font-bold mt-1.5 text-center bg-bgInput rounded border border-accentGold/20 py-1 fade-in">القيمة المالية: ${formatMoney(goal)} ${App.currency}</div>`;
+                }
 
                 cardDiv.innerHTML = `
                     <div class="flex justify-between items-center cursor-pointer" onclick="toggleForexDayCollapse(${row.day})">
@@ -1412,11 +1393,21 @@
                             <div>
                                 <label class="block text-[10px] text-textGray mb-1">الهدف الأساسي</label>
                                 <input type="text" inputmode="decimal" class="w-full bg-bgInput border border-borderColor rounded-lg p-2 text-xs text-accentGreen font-bold text-center" value="${row.goalVal}" onchange="updateRowGoal(${i}, this.value)" ${row.status !== 'pending' ? 'disabled' : ''}>
+                                ${dynamicGoalDisplay}
                             </div>
                             <div>
                                 <label class="block text-[10px] text-textGray mb-1">مبلغ تراكمي ثابت (+)</label>
                                 <input type="text" inputmode="decimal" class="w-full bg-bgInput border border-borderColor rounded-lg p-2 text-xs text-accentCyan font-bold text-center" value="${currentAccumulatedDisplay}" onchange="updatePeriodicDeposit(${i}, this.value)" ${row.status !== 'pending' ? 'disabled' : ''} placeholder="0">
                             </div>
+                            
+                            <div class="col-span-2 flex items-center justify-between bg-bgInput border border-borderColor/40 p-2 rounded-lg mb-1 mt-1 fade-in">
+                                <span class="text-[10px] font-bold text-accentCyan">مراكمة المبلغ الثابت تلقائياً (ON/OFF)؟</span>
+                                <div class="relative inline-block w-8 align-middle">
+                                    <input type="checkbox" id="chkAcc_${i}" ${row.isDepositAccumulated !== false ? 'checked' : ''} onchange="toggleRowAccumulation(${i}, this.checked)" ${row.status !== 'pending' ? 'disabled' : ''} class="toggle-checkbox absolute block w-4 h-4 rounded-full bg-white border-2 border-bgCard appearance-none cursor-pointer"/>
+                                    <label for="chkAcc_${i}" class="toggle-label block overflow-hidden h-4 rounded-full cursor-pointer w-8"></label>
+                                </div>
+                            </div>
+
                             <div>
                                 <label class="block text-[10px] text-textGray mb-1">${App.settings.safetyMode === 'loss' ? 'مبلغ الخسارة' : 'مبلغ الأمان'}</label>
                                 <input type="text" inputmode="decimal" class="w-full bg-bgInput border border-borderColor rounded-lg p-2 text-xs text-accentRed font-bold text-center" value="${row.safetyVal}" onchange="updateRowSafety(${i}, this.value)" ${row.status !== 'pending' ? 'disabled' : ''}>
