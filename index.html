@@ -5,7 +5,7 @@
     =======================================================================
     * اسم التطبيق: S&A Capital - N System
     * الوصف: نظام متطور لإدارة رأس المال وتتبع خطط التداول في الفوركس والخيارات الثنائية
-    * الإصدار: 3.5 (التفصيل الكامل ومعالجة حساب مخاطر 2:1 من الهدف الإجمالي)
+    * الإصدار: 3.3 (إصلاح تفعيل الثنائية، فصل التراجع، وتحديث النسب والرسائل)
     =======================================================================
     -->
     <meta charset="UTF-8">
@@ -17,14 +17,14 @@
     <meta name="theme-color" content="#0B111E" id="metaThemeColor">
     <link class="rounded-full" rel="apple-touch-icon" href="logo.n.png">
     
-    <!-- استدعاء الخطوط العربية والإنجليزية المعتمدة -->
+    <!-- استدعاء الخطوط العربية والإنجليزية -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <!-- استدعاء مكتبة Tailwind CSS للتنسيق السريع والمتجاوب -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        /* تعريف متغيرات الألوان الأساسية لدعم المظهر الداكن والفاتح */
+        /* تعريف متغيرات الألوان لدعم الثيمين الداكن والفاتح */
         :root {
             --bg-main: #0B111E;      
             --bg-card: #151C2C;      
@@ -187,7 +187,7 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col transition-colors duration-300">
 
-    <!-- شريط التنقل العلوي الرئيسي (Header) -->
+    <!-- شريط التنقل العلوي (Header) -->
     <header class="bg-bgCard border-b border-borderColor px-4 py-3 flex flex-wrap justify-between items-center sticky top-0 z-50 shadow-md gap-2">
         <div class="flex items-center gap-3">
             <svg viewBox="0 0 100 100" class="w-10 h-10">
@@ -212,16 +212,16 @@
         </div>
     </header>
 
-    <!-- منطقة المحتوى الرئيسية للتطبيق -->
+    <!-- منطقة المحتوى الرئيسية -->
     <main class="flex-grow container mx-auto px-3 py-6 max-w-5xl relative">
-        <!-- طبقة الإشعارات والتنبيهات المحدثة هندسياً لتظهر في أسفل وسط الشاشة بشكل عائم وجاذب -->
-        <div id="customToast" class="hidden fixed bottom-10 left-1/2 -translate-x-1/2 bg-accentGold text-black px-6 py-3.5 rounded-xl font-bold shadow-2xl z-[9999] text-center w-11/12 max-w-sm transition-all duration-300"></div>
+        <!-- طبقة التنبيه (Toast Notification) المحسنة والمثبتة بنجاح أسفل الشاشة بالكامل وبشكل مريح -->
+        <div id="customToast" class="hidden fixed bottom-10 left-1/2 -translate-x-1/2 bg-accentGold text-black px-6 py-3.5 rounded-xl font-bold shadow-2xl z-[9999] text-center w-11/12 max-w-sm transition-transform duration-300"></div>
         <input type="file" id="fileRestore" class="hidden" accept=".json">
 
         <!-- الواجهة 1: الإعدادات والخطط السابقة (View Setup) -->
         <div id="view-setup" class="space-y-6 fade-in">
             
-            <!-- تنبيه الخطة النشطة الجارية حالياً -->
+            <!-- تنبيه الخطة النشطة -->
             <div id="activePlanBanner" class="hidden bg-gradient-to-r from-bgCard to-bgInput border border-accentGreen rounded-2xl p-5 shadow-lg active-pulse relative overflow-hidden">
                 <div class="absolute right-0 top-0 bottom-0 w-2 bg-accentGreen"></div>
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -231,47 +231,47 @@
                     </div>
                     <button id="btnResumeActivePlan" class="bg-accentGreen hover:bg-emerald-500 text-bgMain font-bold px-6 py-3 rounded-xl shadow-lg transition-transform hover:scale-105 flex items-center gap-2 w-full md:w-auto justify-center">
                         <span data-i18n="resumeActivePlan">استكمال الخطة الحالية</span>
-                        <svg class="w-5 h-5 rlt:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+                        <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
                     </button>
                 </div>
             </div>
 
-            <!-- إعدادات رقم الخطة وتحديد الاسم التلقائي واليدوي -->
+            <!-- إعدادات رقم الخطة واسمها -->
             <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg mt-2">
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="w-full md:w-1/3 float-wrapper">
-                        <input type="text" id="inpSeq" inputmode="numeric" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-xl outline-none focus:border-accentGold text-left ltr:text-left" placeholder=" " value="1">
+                        <input type="text" id="inpSeq" inputmode="numeric" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-xl outline-none focus:border-accentGold text-left ltr:text-left rtl:text-right" placeholder=" " value="1">
                         <label class="floating-label font-semibold text-textGray" data-i18n="seqMonth">رقم السلسلة (الشهر)</label>
                     </div>
                     <div class="w-full md:w-2/3 float-wrapper">
-                        <input type="text" id="inpName" readonly class="floating-input px-4 w-full bg-bgInput border border-borderColor text-accentGold font-bold rounded-xl outline-none ltr:text-left" placeholder=" " value="خطة التداول: الشهر 1">
+                        <input type="text" id="inpName" readonly class="floating-input px-4 w-full bg-bgInput border border-borderColor text-accentGold font-bold rounded-xl outline-none ltr:text-left rtl:text-right" placeholder=" " value="خطة التداول: الشهر 1">
                         <label class="floating-label font-semibold text-textGray" data-i18n="autoName">اسم الجدول التلقائي</label>
                     </div>
                 </div>
             </div>
 
-            <!-- إعدادات نظام الفوركس وإدارة المحفظة والتحوط -->
+            <!-- إعدادات نظام الفوركس -->
             <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg relative overflow-hidden">
                 <div class="absolute right-0 ltr:right-auto ltr:left-0 top-0 bottom-0 w-1 bg-accentBlue"></div>
                 <div class="flex flex-wrap justify-between items-center mb-5 border-b border-borderColor pb-3 gap-3">
                     <h2 class="text-lg font-bold text-textWhite" data-i18n="forexSys">نظام الفوركس</h2>
                     <div class="flex items-center gap-4">
-                        <!-- تفعيل إدارة مخاطر الصفقات 2:1 -->
+                        <!-- تفعيل إدارة المخاطر 2:1 -->
                         <div class="flex items-center gap-1.5 bg-bgInput p-1.5 rounded-lg border border-borderColor">
                             <span class="text-xs font-semibold text-accentGold" data-i18n="riskMgmt">إدارة مخاطر (2:1)</span>
                             <input type="checkbox" id="chkRiskManagement" class="w-4 h-4 accent-accentGold cursor-pointer">
                         </div>
-                        <!-- زر تبديل وضع الأمان والخسارة اليومية المطور -->
+                        <!-- زر تبديل وضع الأمان والخسارة المطور -->
                         <div class="flex items-center gap-1.5 bg-bgInput p-1.5 rounded-lg border border-borderColor">
                             <span class="text-xs font-semibold text-accentRed" id="lblSafetyLossToggleText" data-i18n="safetyAmount">مبلغ الأمان (خط أحمر)</span>
-                            <div class="relative inline-block w-8 align-middle select-none">
+                            <div class="relative inline-block w-8 align-middle">
                                 <input type="checkbox" id="chkSafetyLossToggle" class="toggle-checkbox absolute block w-4 h-4 rounded-full bg-white border-2 border-bgCard appearance-none cursor-pointer"/>
                                 <label for="chkSafetyLossToggle" class="toggle-label block overflow-hidden h-4 rounded-full cursor-pointer w-8"></label>
                             </div>
                         </div>
                         <div class="flex items-center gap-1.5 bg-bgInput p-1.5 rounded-lg border border-borderColor">
                             <span class="text-xs font-semibold text-textGray" data-i18n="compound">تراكمي</span>
-                            <div class="relative inline-block w-8 align-middle select-none">
+                            <div class="relative inline-block w-8 align-middle">
                                 <input type="checkbox" id="chkCompound" class="toggle-checkbox absolute block w-4 h-4 rounded-full bg-white border-2 border-bgCard appearance-none cursor-pointer" checked/>
                                 <label for="chkCompound" class="toggle-label block overflow-hidden h-4 rounded-full cursor-pointer w-8"></label>
                             </div>
@@ -281,11 +281,11 @@
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 border-b border-borderColor pb-4">
                     <div class="col-span-2 float-wrapper">
-                        <input type="text" id="inpCapital" inputmode="decimal" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-accentBlue font-inter font-bold rounded-lg outline-none focus:border-accentBlue text-left ltr:text-left" placeholder=" ">
+                        <input type="text" id="inpCapital" inputmode="decimal" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-accentBlue font-inter font-bold rounded-lg outline-none focus:border-accentBlue text-left ltr:text-left rtl:text-right" placeholder=" ">
                         <label class="floating-label font-semibold text-textGray" data-i18n="initCapital">رأس المال المبدئي</label>
                     </div>
                     <div class="col-span-2 float-wrapper">
-                        <input type="text" id="inpDays" inputmode="numeric" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none focus:border-accentBlue text-left ltr:text-left" placeholder=" ">
+                        <input type="text" id="inpDays" inputmode="numeric" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none focus:border-accentBlue text-left ltr:text-left rtl:text-right" placeholder=" ">
                         <label class="floating-label font-semibold text-textGray" data-i18n="targetDays">الأيام المستهدفة</label>
                     </div>
                     
@@ -293,39 +293,39 @@
                         <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentGreen ltr:flex-row-reverse relative">
                             <button class="unit-toggle text-accentGreen font-bold px-3 py-1 z-10">%</button>
                             <input type="text" id="inpGoal" inputmode="decimal" class="floating-input unit-toggle-input w-full bg-transparent text-accentGreen font-bold outline-none text-left ltr:text-right rtl:text-left" placeholder=" ">
-                            <label class="floating-label absolute right-12 ltr:left-12 top-3.5 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="dailyGoal">الهدف اليومي</label>
+                            <label class="floating-label absolute right-12 ltr:left-12 rtl:right-12 top-3.5 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="dailyGoal">الهدف اليومي</label>
                         </div>
                     </div>
 
-                    <!-- حقل إدخال مبلغ الأمان أو الخسارة اليومية المزدوج -->
+                    <!-- حقل إدخال رقمي جديد مطور للأمان أو الخسارة -->
                     <div class="col-span-2 md:col-span-1 float-wrapper relative">
                         <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentRed ltr:flex-row-reverse relative mt-0">
                             <button class="unit-toggle text-accentRed font-bold px-3 py-1 z-10">%</button>
                             <input type="text" id="inpSafetyOrLoss" inputmode="decimal" class="floating-input unit-toggle-input w-full bg-transparent text-accentRed font-bold outline-none text-left ltr:text-right rtl:text-left" placeholder=" ">
-                            <label id="lblSafetyOrLossInput" class="floating-label absolute right-12 ltr:left-12 top-3.5 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="safetyAmount">مبلغ الأمان اليومي</label>
+                            <label id="lblSafetyOrLossInput" class="floating-label absolute right-12 ltr:left-12 rtl:right-12 top-3.5 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="safetyAmount">مبلغ الأمان اليومي</label>
                         </div>
                     </div>
 
-                    <!-- تم إزالة حقول وقف الخسارة والربح الكلي من واجهة الإعدادات لتنظيف مساحة الرؤية بنجاح -->
+                    <!-- تم حذف حقلي وقف الربح الكلي ووقف الخسارة الكلي من الواجهة بناء على طلبك للتنظيف -->
 
                     <div class="col-span-2 md:col-span-1 float-wrapper">
-                        <input type="text" id="inpMonthlyTarget" inputmode="decimal" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-accentGold font-inter font-bold rounded-lg outline-none text-left ltr:text-left" placeholder=" ">
+                        <input type="text" id="inpMonthlyTarget" inputmode="decimal" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-accentGold font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
                         <label class="floating-label font-semibold text-textGray" data-i18n="monthlyTarget">الربح الشهري المستهدف</label>
                     </div>
 
                     <div class="col-span-2 md:col-span-1 float-wrapper">
-                        <input type="text" id="inpDefaultTrades" inputmode="numeric" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none text-left ltr:text-left" placeholder=" " value="5">
+                        <input type="text" id="inpDefaultTrades" inputmode="numeric" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" " value="5">
                         <label class="floating-label font-semibold text-textGray" data-i18n="numTrades">عدد صفقات اليوم</label>
                     </div>
                 </div>
             </div>
 
-            <!-- إعدادات نظام الخيارات الثنائية (Binary Options System) -->
+            <!-- إعدادات نظام الخيارات الثنائية -->
             <div class="bg-bgCard border border-borderColor rounded-2xl p-5 shadow-lg relative overflow-hidden transition-all duration-300" id="cardBinary">
                 <div class="absolute right-0 ltr:right-auto ltr:left-0 top-0 bottom-0 w-1 bg-accentGold"></div>
                 <div class="flex justify-between items-center mb-5 border-b border-borderColor pb-3">
                     <h2 class="text-lg font-bold text-textWhite" data-i18n="binarySys">الخيارات الثنائية</h2>
-                    <div class="relative inline-block w-12 align-middle select-none">
+                    <div class="relative inline-block w-12 align-middle">
                         <input type="checkbox" id="chkBinary" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-bgCard appearance-none cursor-pointer" checked/>
                         <label for="chkBinary" class="toggle-label block overflow-hidden h-6 rounded-full cursor-pointer"></label>
                     </div>
@@ -337,26 +337,26 @@
                             <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentGold ltr:flex-row-reverse relative">
                                 <button class="unit-toggle text-accentGold font-bold px-3 py-1 z-10">%</button>
                                 <input type="text" id="inpBinaryAlloc" inputmode="decimal" class="floating-input unit-toggle-input w-full bg-transparent text-accentGold font-bold outline-none text-left ltr:text-right rtl:text-left" placeholder=" ">
-                                <label class="floating-label absolute right-12 ltr:left-12 top-3.5 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="binWallet">محفظة الثنائية (تُسحب من الإجمالي)</label>
+                                <label class="floating-label absolute right-12 ltr:left-12 rtl:right-12 top-3.5 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="binWallet">محفظة الثنائية (تُسحب من الإجمالي)</label>
                             </div>
                         </div>
                         <div class="col-span-2 float-wrapper">
                             <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentGold ltr:flex-row-reverse relative">
                                 <button class="unit-toggle text-accentGold font-bold px-3 py-1 z-10">%</button>
-                                <input type="text" id="inpBinaryTradeSize" inputmode="decimal" class="floating-input unit-toggle-input w-full bg-transparent text-accentGold font-bold outline-none text-left ltr:text-right" placeholder=" ">
-                                <label class="floating-label absolute right-12 ltr:left-12 top-3.5 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="binEntry">حجم دخول الصفقة</label>
+                                <input type="text" id="inpBinaryTradeSize" inputmode="decimal" class="floating-input unit-toggle-input w-full bg-transparent text-accentGold font-bold outline-none text-left ltr:text-right rtl:text-left" placeholder=" ">
+                                <label class="floating-label absolute right-12 ltr:left-12 rtl:right-12 top-3.5 text-[10px] font-semibold transition-all pointer-events-none text-textGray" data-i18n="binEntry">حجم دخول الصفقة</label>
                             </div>
                         </div>
                         <div class="col-span-2 md:col-span-1 float-wrapper">
-                            <input type="text" id="inpBinaryMaxWall" inputmode="decimal" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none text-left ltr:text-left" placeholder=" ">
+                            <input type="text" id="inpBinaryMaxWall" inputmode="decimal" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
                             <label class="floating-label font-semibold text-textGray" data-i18n="binMaxWall">الحد الأقصى (الجدار)</label>
                         </div>
                         <div class="col-span-1 float-wrapper">
-                            <input type="text" id="inpBinaryProfit" inputmode="decimal" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none text-left ltr:text-left" placeholder=" ">
+                            <input type="text" id="inpBinaryProfit" inputmode="decimal" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
                             <label class="floating-label font-semibold text-textGray" data-i18n="binProfit">ربح الصفقة (%)</label>
                         </div>
                         <div class="col-span-1 float-wrapper">
-                            <input type="text" id="inpBinaryDays" inputmode="numeric" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none text-left ltr:text-left" placeholder=" ">
+                            <input type="text" id="inpBinaryDays" inputmode="numeric" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-textWhite font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
                             <label class="floating-label font-semibold text-textGray" data-i18n="binDays">عدد الأيام</label>
                         </div>
                     </div>
@@ -368,7 +368,7 @@
                                 <option value="immediate" data-i18n="binTrigImmed">فوراً مع بداية الشهر</option>
                                 <option value="target" data-i18n="binTrigTarget">عندما يصل رأس مال الفوركس لهدف معين</option>
                             </select>
-                            <input type="text" id="inpBinaryTriggerTarget" inputmode="decimal" class="hidden w-full md:w-1/3 bg-bgCard border border-borderColor text-accentGold font-bold rounded-lg p-2.5 outline-none text-left ltr:text-left" placeholder="المبلغ المستهدف">
+                            <input type="text" id="inpBinaryTriggerTarget" inputmode="decimal" class="hidden w-full md:w-1/3 bg-bgCard border border-borderColor text-accentGold font-bold rounded-lg p-2.5 outline-none text-left ltr:text-left rtl:text-right" placeholder="المبلغ المستهدف">
                         </div>
                     </div>
 
@@ -379,26 +379,26 @@
                 </div>
             </div>
 
-            <!-- زر التوليد الرئيسي لبدء بناء الجدول المالي والرياضي -->
+            <!-- زر التوليد الرئيسي -->
             <button id="btnGenerate" class="w-full bg-gradient-to-r from-accentGold to-yellow-600 text-bgMain font-extrabold text-xl py-4 rounded-xl shadow-lg transition-all hover:scale-[1.02]" data-i18n="btnGenerate">
                 توليد الخطة وبدء التداول 🚀
             </button>
 
-            <!-- قسم الجداول والخطط السابقة المحفوظة محلياً في ذاكرة المتصفح -->
+            <!-- قسم الجداول السابقة المحفوظة -->
             <div id="storedPlansSection" class="mt-8 border-t border-borderColor/50 pt-6">
                 <h3 class="text-xl font-bold text-textWhite mb-4" data-i18n="storedPlansTitle">الجداول المحفوظة السابقة</h3>
                 <div id="storedPlansContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
         </div>
 
-        <!-- الواجهة 2: التتبع اليومي الفعال للخطط والجداول النشطة (View Active) -->
+        <!-- الواجهة 2: التتبع والجداول النشطة (View Active) -->
         <div id="view-active" class="hidden-view fade-in">
             
             <div class="bg-bgCard border border-borderColor rounded-2xl p-4 shadow-lg mb-4 sticky top-16 z-40">
                 <div class="flex justify-between items-center mb-3">
                     <div class="flex items-center gap-2">
                         <button id="btnBackToSetup" class="bg-bgInput p-2 rounded-lg border border-borderColor hover:bg-borderColor transition">
-                            <svg class="w-5 h-5 ltr:rotate-180 text-textWhite" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            <svg class="w-5 h-5 rtl:rotate-180 ltr:rotate-0 text-textWhite" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </button>
                         <div id="activePlanTitle" contenteditable="true" class="text-lg md:text-xl font-bold text-accentGold border-b border-dashed border-transparent focus:border-accentGold outline-none min-w-[100px]" placeholder="اسم الجدول"></div>
                     </div>
@@ -410,19 +410,19 @@
                     </div>
                 </div>
 
-                <!-- زر الحفظ الفوري واليدوي المحدث -->
+                <!-- زر الحفظ اليدوي المحدث -->
                 <button id="btnSaveData" class="w-full bg-gradient-to-r from-accentGreen/20 to-emerald-900/40 border border-accentGreen text-accentGreen hover:bg-accentGreen hover:text-white transition-all duration-300 py-2.5 rounded-xl font-bold mb-3 flex items-center justify-center gap-2 shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 00-2 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                     <span data-i18n="saveNow">حفظ التغييرات الآن</span>
                 </button>
 
-                <!-- تبويبات التنقل بين تتبع الفوركس والخيارات الثنائية -->
+                <!-- تبويبات التنقل -->
                 <div class="flex bg-bgInput rounded-lg p-1 border border-borderColor mb-3 justify-center">
                     <button id="tabForex" class="px-8 py-2 rounded-md font-bold text-sm bg-borderColor text-accentBlue transition-colors w-1/2" data-i18n="tabForex">الفوركس</button>
                     <button id="tabBinary" class="px-8 py-2 rounded-md font-bold text-sm text-textGray hover:text-textWhite transition-colors w-1/2" data-i18n="tabBinary">الثنائية</button>
                 </div>
 
-                <!-- شريط الإحصائيات الفوري وعمليات الإغلاق والترحيل -->
+                <!-- شريط الإحصائيات المصغر والإغلاق -->
                 <div class="flex justify-between items-center bg-bgInput rounded-xl p-2 border border-borderColor/50">
                     <div class="text-[10px] md:text-xs text-center flex-1 rtl:border-l ltr:border-r border-borderColor/50 px-1 bg-bgCard rounded mx-1 p-1">
                         <div class="text-textGray font-bold" data-i18n="forexExt">تمديد أيام الفوركس</div>
@@ -438,18 +438,18 @@
                 </div>
             </div>
 
-            <!-- مؤشر وتنبيه المقاصة التلقائية بين أرباح الثنائية وخسائر الفوركس -->
+            <!-- مؤشر المقاصة التلقائي -->
             <div id="compBanner" class="hidden bg-accentGreen/10 border border-accentGreen text-accentGreen px-4 py-3 rounded-xl mb-4 flex items-center justify-center gap-2 shadow-md">
                 <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <span class="font-bold text-sm text-center" id="lblCrossCompMsg"></span>
             </div>
 
-            <!-- واجهة كروت تتبع الفوركس اليومية المحدثة بالكامل -->
+            <!-- واجهة كروت تتبع الفوركس -->
             <div id="tableForexContainer" class="space-y-4 mb-6">
                 <div id="forexCardsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- واجهة كروت تتبع الخيارات الثنائية والانتظار التكيفي -->
+            <!-- واجهة كروت تتبع الخيارات الثنائية -->
             <div id="tableBinaryContainer" class="hidden space-y-4 mb-6">
                 <div id="binaryStatusMsg" class="p-4 text-center text-accentGold text-sm hidden font-bold bg-accentGold/10 border border-accentGold/20 rounded-xl" data-i18n="binWaitMsg">
                     ⏳ في انتظار وصول رأس مال الفوركس للهدف المحدد ليتم خصم وبدء الثنائية...
@@ -458,7 +458,7 @@
             </div>
         </div>
 
-        <!-- الواجهة 3: شاشة الخزنة والرواتب والترحيل التلقائي للشهر القادم (View Vault) -->
+        <!-- الواجهة 3: الخزنة والرواتب وتحديد مسار الشهر القادم -->
         <div id="view-vault" class="hidden-view fade-in absolute inset-0 bg-bgMain/95 backdrop-blur-md z-50 p-4 pt-10">
             <div class="max-w-md mx-auto bg-bgCard border border-accentGold/40 rounded-2xl p-6 shadow-2xl relative mt-4">
                 <button id="btnCloseVault" class="absolute top-4 rtl:right-4 ltr:left-4 text-textGray hover:text-textWhite bg-bgInput p-2 rounded-lg font-bold transition">✕</button>
@@ -474,7 +474,7 @@
                         <span id="vTotalProfit" class="text-accentGreen font-bold">$0.00</span>
                     </div>
 
-                    <!-- إعدادات الشهر القادم وبناء الربط الآلي المتتابع للخطة الجارية -->
+                    <!-- إعدادات الشهر القادم (الربط التلقائي) -->
                     <div class="bg-bgInput rounded-xl p-3 border border-accentBlue/30 mt-2">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-textWhite font-cairo font-bold text-sm" data-i18n="autoChain">ربط خطة الشهر القادم تلقائياً</span>
@@ -488,12 +488,12 @@
                             <label class="block text-xs text-accentBlue font-bold mb-1 font-cairo" data-i18n="nextMonthCapLabel">كم المبلغ الذي ستبدأ به الشهر القادم؟</label>
                             <div class="flex items-center bg-bgCard border border-borderColor rounded-lg overflow-hidden">
                                 <span class="px-3 text-textGray font-bold" id="lblNextCapCurrency">$</span>
-                                <input type="text" id="inpNextMonthCapital" inputmode="decimal" class="w-full bg-transparent text-textWhite font-bold outline-none p-2 text-left ltr:text-left" placeholder="ادخل المبلغ الجديد هنا...">
+                                <input type="text" id="inpNextMonthCapital" inputmode="decimal" class="w-full bg-transparent text-textWhite font-bold outline-none p-2 text-left ltr:text-left rtl:text-right" placeholder="ادخل المبلغ الجديد هنا...">
                             </div>
                         </div>
                     </div>
 
-                    <!-- إعدادات اقتطاع الأمان والراتب وحساب الأرباح المحتفظ بها -->
+                    <!-- إعدادات الراتب والأمان الخارجي -->
                     <div class="border border-borderColor rounded-xl p-3 space-y-3 bg-bgInput mt-2 relative">
                         <div class="flex justify-between items-center border-b border-borderColor pb-2">
                             <span class="text-textWhite font-cairo font-bold text-sm" data-i18n="safeAmountTitle">اقتطاع جزء للخزنة كأمان؟</span>
@@ -558,7 +558,7 @@
 
     </main>
 
-    <!-- البرمجة الفعالة (Logic - JavaScript) -->
+    <!-- البرمجة (Logic - JavaScript) -->
     <script>
         const dictionary = {
             'AR': {
@@ -630,8 +630,8 @@
                 safetyMode: 'safety', 
                 riskManagement: false,
                 defaultTrades: 5,
-                stopProfit: Infinity, 
-                stopLoss: 0 
+                stopProfit: Infinity, // تم استبداله بقيمة افتراضية لمنع توقف المحاسبة
+                stopLoss: 0 // تم استبداله بقيمة افتراضية لمنع توقف المحاسبة
             },
             totalEmergency: 0, 
             storedPlans: [], 
@@ -669,6 +669,7 @@
             });
         }
 
+        // تم حذف حقول إيقاف الربح والخسارة من التنسيق بالكومة لعدم تواجدهم بالواجهة
         const commaInputs = [
             'inpCapital', 'inpMonthlyTarget', 
             'inpBinaryAlloc', 'inpBinaryTradeSize', 'inpBinaryTriggerTarget', 
@@ -798,7 +799,7 @@
             saveToLocal();
         });
 
-        // رسالة الإشعار منسقة وموجودة بوسط الشاشة من الأسفل تماماً
+        // تحسين مظهر الإشعار وموقعه في الجزء السفلي بوسط الشاشة (Toast Message)
         function showToast(msg) {
             const toast = document.getElementById('customToast');
             toast.innerText = msg;
@@ -833,6 +834,7 @@
             vActive.classList.remove('hidden-view');
             document.getElementById('activePlanTitle').innerText = App.settings.planName || "الجدول النشط";
             
+            // مزامنة حالة وعرض التبويبات عند الاستئناف
             const tabBi = document.getElementById('tabBinary');
             if(!App.isBinaryEnabled) {
                 tabBi.classList.add('hidden');
@@ -856,6 +858,7 @@
                     chkRiskManagement.checked = App.settings.riskManagement || false;
                     document.getElementById('inpDefaultTrades').value = App.settings.defaultTrades || 5;
 
+                    // استعادة حالة ومظهر زر تفعيل الخيارات الثنائية من الذاكرة المحلية بنجاح
                     const chkBinary = document.getElementById('chkBinary');
                     if (chkBinary) {
                         chkBinary.checked = App.isBinaryEnabled !== undefined ? App.isBinaryEnabled : true;
@@ -962,8 +965,8 @@
                 safetyMode: App.settings.safetyMode,
                 riskManagement: App.settings.riskManagement,
                 defaultTrades: App.settings.defaultTrades,
-                stopProfit: Infinity, 
-                stopLoss: 0, 
+                stopProfit: Infinity, // تم وضعه كافتراضي لمنع حدوث كراش رياضي
+                stopLoss: 0, // تم وضعه كافتراضي لمنع حدوث كراش رياضي
                 binAlloc: cleanNum(document.getElementById('inpBinaryAlloc').value) || 0, binAllocPct: document.querySelectorAll('.unit-toggle')[2].innerText === '%',
                 binTradeSize: cleanNum(document.getElementById('inpBinaryTradeSize').value) || 0, binTradePct: document.querySelectorAll('.unit-toggle')[3].innerText === '%',
                 binMaxWall: cleanNum(document.getElementById('inpBinaryMaxWall').value) || 0, 
@@ -1021,7 +1024,7 @@
         });
 
         // =======================================================================
-        // المحرك الرياضي والمحاسبي المطور الخالي من التداخل والأخطاء (v3.5)
+        // المحرك الرياضي والمحاسبي المطور الخالي من التداخل والأخطاء (v3.3)
         // =======================================================================
         function recalculateEngine() {
             let s = App.settings;
@@ -1034,6 +1037,7 @@
 
             App.binaryData = App.binaryData || [];
 
+            // إدارة إظهار وتبديل الواجهة المكتملة بناء على الحساب النشط للخيارات الثنائية
             const tabBiElement = document.getElementById('tabBinary');
             if(!App.isBinaryEnabled) {
                 tabBiElement.classList.add('hidden');
@@ -1042,6 +1046,7 @@
                 tabBiElement.classList.remove('hidden');
             }
 
+            // 1. إعادة توليد متوالية الإيداعات الدورية المتراكمة بالاعتماد على حقل الإدخال الأزرق
             let currentAccumulatedDeposit = 0;
             for (let i = 0; i < App.forexData.length; i++) {
                 let row = App.forexData[i];
@@ -1055,6 +1060,7 @@
                 }
             }
 
+            // 2. احتساب كامل مسار صفقات وعناصر الفوركس بدقة متناهية
             for (let i = 0; i < App.forexData.length; i++) {
                 let row = App.forexData[i];
                 
@@ -1077,6 +1083,7 @@
                 let totalGoalForThisDay = goal + (row.fixedDeposit || 0);
                 let theoreticalEnd = row.start + totalGoalForThisDay - row.savingsVal;
 
+                // تفعيل نظام الخصم للخيارات الثنائية التكيفي الأوتوماتيكي عند بلوغ الهدف
                 if (App.isBinaryEnabled && s.binTrigger === 'target') {
                     if (!binaryTriggered && theoreticalEnd >= s.binTarget) {
                         row.isTriggerDay = true; 
@@ -1133,6 +1140,7 @@
 
             document.getElementById('lblTotalEmergency').innerText = `${App.currency} ${formatMoney(App.totalEmergency)}`;
 
+            // 3. احتساب الخيارات الثنائية وعرض ملخص نتائجها المالية
             let currentBin = App.isBinaryEnabled && App.binaryData.length > 0 ? App.binaryData[0].start : 0;
             let boNetProfit = 0;
             let alertedStopLoss = false;
@@ -1201,6 +1209,7 @@
                 document.getElementById('binaryStatusMsg').classList.remove('hidden');
             }
 
+            // المقاصة وإلغاء التعويضات
             const compBanner = document.getElementById('compBanner');
             const lblCrossCompMsg = document.getElementById('lblCrossCompMsg');
             let hasExtraDays = App.forexData.length > App.origDays;
@@ -1225,7 +1234,7 @@
             saveToLocal(); 
         }
 
-        // تم إلغاء استدعاء saveState() بالكامل من هنا لضمان عدم حدوث تراجع عند تعديل النصوص والأرقام
+        // تم إلغاء استدعاء saveState() من كافة دوال تحديث المدخلات لفصل الأحداث تلبيةً لطلبك
         window.updateRowGoal = function(index, value) {
             let newValue = parseFloat(value) || 0;
             App.forexData[index].goalVal = newValue;
@@ -1302,17 +1311,18 @@
         };
 
         // =======================================================================
-        // بناء وعرض الكروت الأنيقة الموحدة والمطابقة للصور (Render Cards Views v3.5)
+        // بناء وعرض الكروت الأنيقة الموحدة (v3.3)
         // =======================================================================
         function renderCardsViews() {
             let dict = dictionary[App.lang];
             let initialFx = App.forexData[0]?.start || 0;
-            let s = App.settings; // تعريف الكائن s يمنع حدوث crash الرسوم تماماً وينقذ التبويب الثنائي!
+            let s = App.settings; // تعريف s هنا يمنع حدوث crash الرسوم تماماً وينقذ التبويب الثنائي!
             
             App.expandedForexDays = App.expandedForexDays || {};
             App.expandedBinaryDays = App.expandedBinaryDays || {};
             App.binaryData = App.binaryData || [];
 
+            // 1. كروت الفوركس المحدثة
             let forexContainer = document.getElementById('forexCardsList');
             forexContainer.innerHTML = '';
 
@@ -1331,15 +1341,17 @@
                 let displayEnd = row.end !== null ? row.end : calculatedEnd;
                 let isExpanded = App.expandedForexDays[row.day] || false;
 
-                // التعديل الهندسي المطلوب: حساب مخاطر 2:1 بناءً على الهدف الإجمالي اليومي بالكامل
+                // احتساب مخاطر 2:1 تلقائياً
                 let riskText = "";
                 if (App.settings.riskManagement && row.trades > 0) {
-                    let singleProfit = totalGoalHeader / row.trades;
+                    // التعديل المطلوب: حساب ربح الصفقة بناءً على الهدف الإجمالي (totalGoalHeader) وليس الهدف الأساسي (goal)
+                    let totalTargetForRiskCalculation = totalGoalHeader;
+                    let singleProfit = totalTargetForRiskCalculation / row.trades;
                     let singleLoss = singleProfit / 2;
                     riskText = `<div class="text-[9px] text-accentGold font-bold mt-1">مخاطر 2:1 (ربح الصفقة: ${formatMoney(singleProfit)} | خسارة: ${formatMoney(singleLoss)})</div>`;
                 }
 
-                // الحسبة الذكية للنسبة المئوية لليوم وعرضها بدقة متناهية
+                // الحسبة الذكية للنسبة المئوية لليوم وعرضها بدقة
                 let targetPctDisplay = "";
                 if (row.isGoalPercent && (row.fixedDeposit || 0) === 0) {
                     targetPctDisplay = `+${row.goalVal}%`;
@@ -1559,15 +1571,17 @@
             }
         }
 
+        // حفظ الحالة مخصص بالكامل لتقييمات الأيام فقط ويتم استدعاؤه حصرياً في actFx و actBi
         function saveState() { 
             App.historyStack.push({ fx: JSON.parse(JSON.stringify(App.forexData)), bi: JSON.parse(JSON.stringify(App.binaryData)) }); 
             document.getElementById('btnUndo').disabled = false; 
         }
 
+        // تم إلغاء saveState() من النسبة المئوية لفصل الأحداث بالكامل ومنع التداخل
         window.setFxComp = function(idx, val) { App.forexData[idx].isCompound = val; updateRowGoal(idx, App.forexData[idx].goalVal); };
 
         window.actFx = function(idx, action) {
-            saveState(); 
+            saveState(); // يتم الاستدعاء هنا حصراً عند حدوث التقييم
             let row = App.forexData[idx]; row.status = action;
             if (action === 'skip') {
                 let last = App.forexData[App.forexData.length - 1];
@@ -1601,7 +1615,7 @@
         };
 
         window.actBi = function(idx, action) { 
-            saveState(); 
+            saveState(); // يتم الاستدعاء هنا حصراً عند حدوث تقييم خيارات ثنائية
             App.binaryData[idx].status = action; 
             recalculateEngine(); 
         };
