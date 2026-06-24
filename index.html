@@ -5,7 +5,7 @@
     =======================================================================
     * اسم التطبيق: S&A Capital - N System
     * الوصف: نظام متطور لإدارة رأس المال وتتبع خطط التداول في الفوركس والخيارات الثنائية
-    * الإصدار: 3.0 (إصدار متكامل ومعدل بالكامل وفقاً للتحسينات المطلوبة)
+    * الإصدار: 3.1 (معالجة تراكم الحقل الأزرق وتفعيل الخيارات الثنائية التكيفية)
     =======================================================================
     -->
     <meta charset="UTF-8">
@@ -17,7 +17,7 @@
     <meta name="theme-color" content="#0B111E" id="metaThemeColor">
     <link class="rounded-full" rel="apple-touch-icon" href="logo.n.png">
     
-    <!-- استدعاء الخطوط العربية والإنجليزية -->
+    <!-- @import استدعاء الخطوط العربية والإنجليزية -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <!-- استدعاء مكتبة Tailwind CSS للتنسيق السريع والمتجاوب -->
@@ -296,7 +296,7 @@
                         </div>
                     </div>
 
-                    <!-- حقل إدخال رقمي جديد مطور للأمان أو الخسارة حسب وضع التبديل -->
+                    <!-- حقل إدخال رقمي جديد مطور للأمان أو الخسارة -->
                     <div class="col-span-2 md:col-span-1 float-wrapper relative">
                         <div class="flex bg-bgInput border border-borderColor rounded-lg focus-within:border-accentRed ltr:flex-row-reverse relative mt-0">
                             <button class="unit-toggle text-accentRed font-bold px-3 py-1 z-10">%</button>
@@ -416,7 +416,7 @@
                     </div>
                 </div>
 
-                <!-- زر الحفظ اليدوي المحدث -->
+                <!-- زر الحفظ اليدوي -->
                 <button id="btnSaveData" class="w-full bg-gradient-to-r from-accentGreen/20 to-emerald-900/40 border border-accentGreen text-accentGreen hover:bg-accentGreen hover:text-white transition-all duration-300 py-2.5 rounded-xl font-bold mb-3 flex items-center justify-center gap-2 shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 00-2 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                     <span data-i18n="saveNow">حفظ التغييرات الآن</span>
@@ -450,25 +450,21 @@
                 <span class="font-bold text-sm text-center" id="lblCrossCompMsg"></span>
             </div>
 
-            <!-- واجهة كروت تتبع الفوركس (Forex Cards View) بديلة للجداول التقليدية -->
+            <!-- واجهة كروت تتبع الفوركس -->
             <div id="tableForexContainer" class="space-y-4 mb-6">
-                <div id="forexCardsList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- سيتم حقن كروت الأيام هنا برمجياً لتطابق المظهر والطلب بدقة -->
-                </div>
+                <div id="forexCardsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- واجهة كروت تتبع الخيارات الثنائية (Binary Cards View) الموحدة والمحسنة بالكامل لتطابق تصميم الفوركس -->
+            <!-- واجهة كروت تتبع الخيارات الثنائية -->
             <div id="tableBinaryContainer" class="hidden space-y-4 mb-6">
-                <div id="binaryStatusMsg" class="p-4 text-center text-accentGold text-sm hidden font-bold bg-accentGold/10 border-b border-accentGold/20 rounded-xl" data-i18n="binWaitMsg">
+                <div id="binaryStatusMsg" class="p-4 text-center text-accentGold text-sm hidden font-bold bg-accentGold/10 border border-accentGold/20 rounded-xl" data-i18n="binWaitMsg">
                     ⏳ في انتظار وصول رأس مال الفوركس للهدف المحدد ليتم خصم وبدء الثنائية...
                 </div>
-                <div id="binaryCardsList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- سيتم حقن كروت الخيارات الثنائية المتناسقة هنا برمجياً -->
-                </div>
+                <div id="binaryCardsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
         </div>
 
-        <!-- الواجهة 3: الخزنة والرواتب وتحديد مسار الشهر القادم (View Vault) -->
+        <!-- الواجهة 3: الخزنة والرواتب وتحديد مسار الشهر القادم -->
         <div id="view-vault" class="hidden-view fade-in absolute inset-0 bg-bgMain/95 backdrop-blur-md z-50 p-4 pt-10">
             <div class="max-w-md mx-auto bg-bgCard border border-accentGold/40 rounded-2xl p-6 shadow-2xl relative mt-4">
                 <button id="btnCloseVault" class="absolute top-4 rtl:right-4 ltr:left-4 text-textGray hover:text-textWhite bg-bgInput p-2 rounded-lg font-bold transition">✕</button>
@@ -570,14 +566,13 @@
 
     <!-- البرمجة (Logic - JavaScript) -->
     <script>
-        // قاموس الترجمة المدمج والموسع للتحسينات الجديدة
         const dictionary = {
             'AR': {
                 title: 'S&A Capital - إدارة رأس المال', seqMonth: 'رقم السلسلة (الشهر)', autoName: 'اسم الجدول التلقائي',
                 forexSys: 'نظام الفوركس', emergency: 'الطوارئ', compound: 'تراكمي', initCapital: 'رأس المال المبدئي',
                 targetDays: 'الأيام المستهدفة', dailyGoal: 'الهدف اليومي', 
                 safetyAmount: 'مبلغ الأمان (خط أحمر)', lossAmount: 'مبلغ الخسارة', 
-                periodicDeposit: 'إيداع دوري (+)', riskMgmt: 'إدارة مخاطر (2:1)', numTrades: 'عدد صفقات اليوم',
+                periodicDeposit: 'مبلغ تراكمي ثابت (+)', riskMgmt: 'إدارة مخاطر (2:1)', numTrades: 'عدد صفقات اليوم',
                 stopProfit: 'وقف الربح الكلي', stopLoss: 'وقف الخسارة الكلي', binarySys: 'الخيارات الثنائية',
                 binWallet: 'محفظة الثنائية (تُسحب من الإجمالي)', binEntry: 'حجم دخول الصفقة', binProfit: 'ربح الصفقة (%)',
                 binDays: 'عدد الأيام', binTriggerTitle: 'متى تتفعل الثنائية ويُسحب مبلغها؟', binTrigImmed: 'فوراً مع بداية الشهر',
@@ -638,13 +633,13 @@
             historyStack: [], 
             settings: { 
                 planName: '',
-                safetyMode: 'safety', // 'safety' (أمان) أو 'loss' (خسارة)
+                safetyMode: 'safety', 
                 riskManagement: false,
                 defaultTrades: 5
             },
             totalEmergency: 0, 
             storedPlans: [], 
-            expandedForexDays: {}, // تتبع الكروت المفتوحة والمغلقة
+            expandedForexDays: {}, 
             expandedBinaryDays: {},
             externalVaultFrozen: 0 
         };
@@ -687,7 +682,6 @@
             commaInputs.forEach(registerCommaInput);
         }
 
-        // تحويل وضع الأمان أو الخسارة الديناميكي
         const safetyLossToggle = document.getElementById('chkSafetyLossToggle');
         const safetyLossToggleText = document.getElementById('lblSafetyLossToggleText');
         const safetyOrLossLabel = document.getElementById('lblSafetyOrLossInput');
@@ -705,7 +699,6 @@
             saveToLocal();
         });
 
-        // تفعيل إدارة المخاطر 2:1
         const chkRiskManagement = document.getElementById('chkRiskManagement');
         chkRiskManagement.addEventListener('change', function() {
             App.settings.riskManagement = this.checked;
@@ -724,7 +717,6 @@
             document.getElementById('lblSalaryCurrency').innerText = App.currency;
             document.getElementById('lblNextCapCurrency').innerText = App.currency;
 
-            // تحديث نصوص الأمان والخسارة حسب الوضع الحالي
             if (App.settings.safetyMode === 'loss') {
                 safetyLossToggle.checked = true;
                 safetyLossToggleText.innerText = dictionary[App.lang].lossAmount;
@@ -738,7 +730,7 @@
             if (!vSetup.classList.contains('hidden-view')) {
                 checkActivePlanOnStartup();
             } else {
-                if(App.forexData.length > 0) recalculateEngine();
+                if(App.forexData && App.forexData.length > 0) recalculateEngine();
             }
             renderStoredPlans();
         }
@@ -930,7 +922,6 @@
             conBi.classList.remove('hidden'); conFx.classList.add('hidden');
         });
 
-        // زر التوليد الرئيسي لبدء تداول جديد
         document.getElementById('btnGenerate').addEventListener('click', () => {
             const capital = cleanNum(document.getElementById('inpCapital').value) || 0;
             if(capital <= 0) {
@@ -970,7 +961,8 @@
             }
 
             App.forexData = []; App.binaryData = []; App.historyStack = []; App.totalEmergency = 0;
-            App.expandedForexDays = { 1: true }; // فتح اليوم الأول افتراضياً
+            App.expandedForexDays = { 1: true }; 
+            App.expandedBinaryDays = {};
 
             for (let i = 1; i <= App.origDays; i++) {
                 App.forexData.push({ 
@@ -979,7 +971,8 @@
                     goalVal: App.settings.fxGoal, isGoalPercent: App.settings.fxGoalPct,
                     safetyVal: App.settings.safetyVal, isSafetyPercent: App.settings.fxSafetyPct,
                     savingsVal: 0, trades: App.settings.defaultTrades, binaryDeduction: 0, isTriggerDay: false,
-                    fixedDeposit: 0 // حقل الإيداع الدوري الثابت الجديد
+                    fixedDepositInput: 0, 
+                    fixedDeposit: 0 
                 });
             }
 
@@ -1005,8 +998,7 @@
         });
 
         // =======================================================================
-        // المحرك الرياضي والمحاسبي المتطور (Recalculate Engine v3.0)
-        // يغطي الأمان، الخسارة، إدارة المخاطر 2:1، التراكم التكيفي، وحائط الصفقات.
+        // المحرك الرياضي والمحاسبي المتطور (Recalculate Engine v3.1)
         // =======================================================================
         function recalculateEngine() {
             let s = App.settings;
@@ -1016,15 +1008,31 @@
             let fxAccumulatedLoss = 0; 
             let binaryTriggeredDayIdx = -1;
 
-            // 1. حساب مسار الفوركس متضمناً الإيداعات الدورية المتراكمة والخصم التكيفي للثنائية
+            App.binaryData = App.binaryData || [];
+
+            // حساب متوالية الإيداعات الدورية المتراكمة تلقائياً للأيام التالية
+            let currentAccumulatedDeposit = 0;
+            for (let i = 0; i < App.forexData.length; i++) {
+                let row = App.forexData[i];
+                let depositInput = parseFloat(row.fixedDepositInput) || 0;
+                
+                if (depositInput > 0) {
+                    currentAccumulatedDeposit += depositInput;
+                    row.fixedDeposit = currentAccumulatedDeposit;
+                } else {
+                    row.fixedDeposit = 0;
+                }
+            }
+
+            // احتساب مسار تداول الفوركس
             for (let i = 0; i < App.forexData.length; i++) {
                 let row = App.forexData[i];
                 
-                // إضافة مبلغ الإيداع الدوري التلقائي على البداية مباشرة
+                // تطبيق الإيداع المتراكم من الحقل الأزرق مباشرة على البداية
                 if (i > 0) {
-                    row.start = (App.forexData[i-1].end !== null ? App.forexData[i-1].end : currentFx) + (row.fixedDeposit || 0);
+                    row.start = (App.forexData[i-1].end !== null ? App.forexData[i-1].end : currentFx) + (row.fixedDepositInput || 0);
                 } else {
-                    row.start = initialFx + (row.fixedDeposit || 0);
+                    row.start = initialFx + (row.fixedDepositInput || 0);
                 }
                 currentFx = row.start;
                 
@@ -1033,9 +1041,9 @@
                 let goal = row.isGoalPercent ? (baseCapitalForPercent * (row.goalVal / 100)) : row.goalVal;
                 let loss = row.isSafetyPercent ? (baseCapitalForPercent * (row.safetyVal / 100)) : row.safetyVal;
 
-                // تطبيق الأمان (Safety Amount - خط أحمر) لمنع التداول
+                // خط الأمان الأحمر لوقف التداول
                 if (s.safetyMode === 'safety' && currentFx <= loss) {
-                    row.status = 'skip'; // إيقاف التداول واليوم يصبح تخطي لحماية الحساب
+                    row.status = 'skip'; 
                 }
 
                 let theoreticalEnd = row.start + goal;
@@ -1043,21 +1051,30 @@
 
                 // تفعيل نظام الخصم التكيفي للثنائية
                 if (App.isBinaryEnabled && s.binTrigger === 'target') {
-                    if (binaryTriggeredDayIdx === -1 && theoreticalEnd >= s.binTarget) {
+                    if (theoreticalEnd >= s.binTarget) {
                         row.isTriggerDay = true; 
-                        binaryTriggeredDayIdx = i;
+                        if (binaryTriggeredDayIdx === -1) {
+                            binaryTriggeredDayIdx = i;
+                        }
                         
-                        let binCapital = s.binAllocPct ? (theoreticalEnd * (s.binAlloc / 100)) : s.binAlloc;
-                        
-                        // احتساب مرن لعدد أيام الثنائية (Adaptive Binary Days)
-                        // المتبقي من الأيام المخطط لها = إجمالي أيام الفوركس - يوم تحقيق الهدف
+                        // ننشئ كروت الثنائية فقط إذا كانت فارغة أو نحدثها بأمان لمنع مسح إنجازات المستخدم
+                        let oldBinaryData = App.binaryData || [];
                         let remainingDays = App.origDays - (i + 1);
                         let adaptiveDaysCount = Math.min(s.binDays, Math.max(1, remainingDays));
+                        let binCapital = s.binAllocPct ? (theoreticalEnd * (s.binAlloc / 100)) : s.binAlloc;
                         
                         App.binaryData = [];
                         for(let b = 1; b <= adaptiveDaysCount; b++) {
-                            App.binaryData.push({ day: b, start: binCapital, status: 'pending', end: null });
+                            let oldRow = oldBinaryData.find(r => r.day === b);
+                            App.binaryData.push({ 
+                                day: b, 
+                                start: b === 1 ? binCapital : (oldRow?.start || binCapital), 
+                                status: oldRow?.status || 'pending', 
+                                end: oldRow?.end || null 
+                            });
                         }
+                    } else {
+                        row.isTriggerDay = false;
                     }
                     
                     if (row.isTriggerDay) {
@@ -1089,7 +1106,7 @@
                 }
             }
 
-            // تفعيل تنبيهات وقف الخسارة والربح الكلي
+            // تنبيهات الخسارة والربح الكلي
             if (currentFx >= s.stopProfit && currentFx !== App.forexData[0]?.start) {
                 showToast(App.lang === 'AR' ? '🎉 مبروك! وصلت لحد وقف الربح الكلي.' : '🎉 Congrats! Reached stop profit.');
             }
@@ -1099,7 +1116,7 @@
 
             document.getElementById('lblTotalEmergency').innerText = `${App.currency} ${formatMoney(App.totalEmergency)}`;
 
-            // حساب الخيارات الثنائية وعرضها بالكروت المتناسقة الموحدة
+            // حساب محفظة الخيارات الثنائية
             let currentBin = App.isBinaryEnabled && App.binaryData.length > 0 ? App.binaryData[0].start : 0;
             let boNetProfit = 0;
             let alertedStopLoss = false;
@@ -1168,7 +1185,7 @@
                 document.getElementById('binaryStatusMsg').classList.remove('hidden');
             }
 
-            // التعويض المتقاطع والمقاصة التلقائية للتراكمات
+            // المقاصة والتعويض المتقاطع
             const compBanner = document.getElementById('compBanner');
             const lblCrossCompMsg = document.getElementById('lblCrossCompMsg');
             let hasExtraDays = App.forexData.length > App.origDays;
@@ -1199,7 +1216,6 @@
             let newValue = parseFloat(value) || 0;
             App.forexData[index].goalVal = newValue;
             
-            // إصلاح الخلل: إذا كانت نسبة مئوية، نجعل التعديل ثابتاً للأيام التالية دون تراكم للفارق
             let isPct = App.forexData[index].isGoalPercent;
             for (let i = index + 1; i < App.forexData.length; i++) {
                 if (isPct) {
@@ -1245,37 +1261,48 @@
             recalculateEngine(); 
         };
 
-        // دالة إضافة الإيداع الدوري الثابت للأيام التالية تلقائياً وبشكل دوري
+        // تحديث مبلغ الزيادة التراكمية في الحقل الأزرق وتمريره للأيام التالية
         window.updatePeriodicDeposit = function(index, value) {
             saveState();
-            let val = parseFloat(value) || 0;
-            // تكرار الزيادة بشكل تراكمي دوري على الأيام التالية
-            for (let i = index; i < App.forexData.length; i++) {
-                App.forexData[i].fixedDeposit = val;
+            let baseVal = parseFloat(value) || 0;
+            
+            App.forexData[index].fixedDepositInput = baseVal;
+            App.forexData[index].fixedDeposit = baseVal;
+            
+            let factor = 1;
+            for (let i = index + 1; i < App.forexData.length; i++) {
+                factor++;
+                App.forexData[i].fixedDepositInput = baseVal; 
+                App.forexData[i].fixedDeposit = baseVal * factor; 
             }
             recalculateEngine();
         };
 
         window.toggleForexDayCollapse = function(day) {
+            App.expandedForexDays = App.expandedForexDays || {};
             App.expandedForexDays[day] = !App.expandedForexDays[day];
             saveToLocal();
             recalculateEngine();
         };
 
         window.toggleBinaryDayCollapse = function(day) {
+            App.expandedBinaryDays = App.expandedBinaryDays || {};
             App.expandedBinaryDays[day] = !App.expandedBinaryDays[day];
             saveToLocal();
             recalculateEngine();
         };
 
         // =======================================================================
-        // بناء وعرض الكروت الأنيقة الموحدة (Render Cards Views)
-        // واجهات حديثة ومطابقة للتصميم والصور بدقة ومجهزة لجميع مقاسات الشاشات
+        // بناء وعرض الكروت الأنيقة الموحدة (Render Cards Views v3.1)
         // =======================================================================
         function renderCardsViews() {
             let dict = dictionary[App.lang];
             let initialFx = App.forexData[0]?.start || 0;
             
+            App.expandedForexDays = App.expandedForexDays || {};
+            App.expandedBinaryDays = App.expandedBinaryDays || {};
+            App.binaryData = App.binaryData || [];
+
             // 1. كروت الفوركس
             let forexContainer = document.getElementById('forexCardsList');
             forexContainer.innerHTML = '';
@@ -1293,7 +1320,7 @@
                 let displayEnd = row.end !== null ? row.end : calculatedEnd;
                 let isExpanded = App.expandedForexDays[row.day] || false;
 
-                // احتساب مخاطر 2:1 بناءً على عدد الصفقات والهدف تلقائياً
+                // احتساب مخاطر 2:1 تلقائياً لتقسيم الصفقات
                 let riskText = "";
                 if (App.settings.riskManagement && row.trades > 0) {
                     let singleProfit = goal / row.trades;
@@ -1304,8 +1331,10 @@
                 let cardDiv = document.createElement('div');
                 cardDiv.className = `bg-bgCard border border-borderColor rounded-2xl p-4 shadow-lg transition-all ${row.status==='hit'?'border-accentGreen/40 bg-accentGreen/[0.02]':row.status==='loss'?'border-accentRed/40 bg-accentRed/[0.02]':row.status==='skip'?'opacity-60':''}`;
                 
+                // الحقل الأزرق يعرض القيمة التراكمية الرياضية لليوم الحالي
+                let currentAccumulatedDisplay = row.fixedDeposit || 0;
+
                 cardDiv.innerHTML = `
-                    <!-- ترويسة الكارت المصغرة والمطابقة للصورة -->
                     <div class="flex justify-between items-center cursor-pointer" onclick="toggleForexDayCollapse(${row.day})">
                         <div class="flex items-center gap-3">
                             <span class="w-8 h-8 rounded-full bg-accentBlue text-bgMain font-bold flex items-center justify-center text-sm font-inter">${row.day}</span>
@@ -1333,14 +1362,12 @@
                         </button>
                     </div>
 
-                    <!-- إشعار الخصم التكيفي للثنائية أسفل رقم نهاية اليوم -->
                     ${row.binaryDeduction > 0 ? `
                         <div class="mt-2 text-center bg-accentGold/10 text-accentGold border border-accentGold/20 rounded-lg p-1.5 text-xs font-bold animate-pulse">
                             🚨 خصم الخيارات الثنائية: -${formatMoney(row.binaryDeduction)} (الخيارات الثنائية)
                         </div>
                     ` : ''}
 
-                    <!-- جسم الكارت الموسع لإدخال البيانات والتعديل والتراكم -->
                     <div class="${isExpanded ? 'mt-4 border-t border-borderColor/40 pt-4' : 'hidden'} space-y-3">
                         <div class="grid grid-cols-2 gap-3">
                             <div>
@@ -1348,8 +1375,8 @@
                                 <input type="text" inputmode="decimal" class="w-full bg-bgInput border border-borderColor rounded-lg p-2 text-xs text-accentGreen font-bold text-center" value="${row.goalVal}" onchange="updateRowGoal(${i}, this.value)" ${row.status !== 'pending' ? 'disabled' : ''}>
                             </div>
                             <div>
-                                <label class="block text-[10px] text-textGray mb-1">مبلغ إيداع دوري (+)</label>
-                                <input type="text" inputmode="decimal" class="w-full bg-bgInput border border-borderColor rounded-lg p-2 text-xs text-accentCyan font-bold text-center" value="${row.fixedDeposit || 0}" onchange="updatePeriodicDeposit(${i}, this.value)" ${row.status !== 'pending' ? 'disabled' : ''} placeholder="0">
+                                <label class="block text-[10px] text-textGray mb-1">مبلغ تراكمي ثابت (+)</label>
+                                <input type="text" inputmode="decimal" class="w-full bg-bgInput border border-borderColor rounded-lg p-2 text-xs text-accentCyan font-bold text-center" value="${currentAccumulatedDisplay}" onchange="updatePeriodicDeposit(${i}, this.value)" ${row.status !== 'pending' ? 'disabled' : ''} placeholder="0">
                             </div>
                             <div>
                                 <label class="block text-[10px] text-textGray mb-1">${App.settings.safetyMode === 'loss' ? 'مبلغ الخسارة' : 'مبلغ الأمان'}</label>
@@ -1374,7 +1401,6 @@
 
                         ${riskText}
 
-                        <!-- أزرار الإجراءات المتطابقة مع الصورة بدقة -->
                         <div class="flex gap-2 pt-2 justify-end">
                             ${row.status === 'pending' ? `
                                 <button onclick="actFx(${i}, 'loss')" class="bg-accentRed/10 hover:bg-accentRed/20 text-accentRed border border-accentRed/30 px-4 py-2 rounded-xl text-xs font-bold flex-1 transition">${dict.actLoss}</button>
@@ -1391,7 +1417,7 @@
                 forexContainer.appendChild(cardDiv);
             });
 
-            // 2. كروت الخيارات الثنائية (الموحدة مع الفوركس)
+            // 2. كروت الخيارات الثنائية
             if(App.isBinaryEnabled) {
                 let binaryContainer = document.getElementById('binaryCardsList');
                 binaryContainer.innerHTML = '';
@@ -1518,7 +1544,7 @@
             if (action === 'skip') {
                 let last = App.forexData[App.forexData.length - 1];
                 App.forexData.push({...last, day: last.day + 1, status: 'pending', end: null});
-                App.expandedForexDays[last.day + 1] = true; // توسيع اليوم التالي المضاف تلقائياً
+                App.expandedForexDays[last.day + 1] = true; 
             } else if (action === 'loss') {
                 let baseCapital = row.isCompound ? row.start : App.forexData[0].start;
                 let loss = row.isSafetyPercent ? (baseCapital * (row.safetyVal / 100)) : row.safetyVal;
@@ -1541,7 +1567,7 @@
                     App.forexData.push({...last, day: last.day + k, status: 'pending', end: null});
                     App.expandedForexDays[last.day + k] = false;
                 }
-                App.expandedForexDays[last.day + 1] = true; // تفعيل التركيز على أول يوم تعويضي مضاف
+                App.expandedForexDays[last.day + 1] = true; 
             }
             recalculateEngine();
         };
@@ -1566,7 +1592,7 @@
             }
         });
 
-        // الخزنة والرواتب
+        // الخزنة والرواتب والترحيل لشهر جديد
         let rolloverNetProfit = 0;
         let rolloverSalary = 0;
         let rolloverSafeDeduction = 0;
