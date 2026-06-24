@@ -5,7 +5,7 @@
     =======================================================================
     * اسم التطبيق: S&A Capital - N System
     * الوصف: نظام متطور لإدارة رأس المال وتتبع خطط التداول في الفوركس والخيارات الثنائية
-    * الإصدار: 3.2 (معالجة تراكم الحقل الأزرق وتفعيل الخيارات الثنائية التكيفية)
+    * الإصدار: 3.3 (إصلاح تفعيل الثنائية، فصل التراجع، وتحديث النسب والرسائل)
     =======================================================================
     -->
     <meta charset="UTF-8">
@@ -214,7 +214,8 @@
 
     <!-- منطقة المحتوى الرئيسية -->
     <main class="flex-grow container mx-auto px-3 py-6 max-w-5xl relative">
-        <div id="customToast" class="hidden fixed top-20 left-1/2 -translate-x-1/2 bg-accentGold text-black px-6 py-3 rounded-xl font-bold shadow-2xl z-50 animate-bounce text-center w-11/12 max-w-sm"></div>
+        <!-- طبقة التنبيه (Toast Notification) المحسنة والمثبتة بنجاح أسفل الشاشة بالكامل وبشكل مريح -->
+        <div id="customToast" class="hidden fixed bottom-10 left-1/2 -translate-x-1/2 bg-accentGold text-black px-6 py-3.5 rounded-xl font-bold shadow-2xl z-[9999] text-center w-11/12 max-w-sm transition-transform duration-300"></div>
         <input type="file" id="fileRestore" class="hidden" accept=".json">
 
         <!-- الواجهة 1: الإعدادات والخطط السابقة (View Setup) -->
@@ -305,14 +306,7 @@
                         </div>
                     </div>
 
-                    <div class="col-span-2 md:col-span-1 float-wrapper">
-                        <input type="text" id="inpStopProfit" inputmode="decimal" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-accentGreen font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
-                        <label class="floating-label font-semibold text-textGray" data-i18n="stopProfit">وقف الربح الكلي</label>
-                    </div>
-                    <div class="col-span-2 md:col-span-1 float-wrapper">
-                        <input type="text" id="inpStopLoss" inputmode="decimal" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-accentRed font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
-                        <label class="floating-label font-semibold text-textGray" data-i18n="stopLoss">وقف الخسارة الكلي</label>
-                    </div>
+                    <!-- تم حذف حقلي وقف الربح الكلي ووقف الخسارة الكلي من الواجهة بناء على طلبك للتنظيف -->
 
                     <div class="col-span-2 md:col-span-1 float-wrapper">
                         <input type="text" id="inpMonthlyTarget" inputmode="decimal" class="floating-input px-4 w-full bg-bgInput border border-borderColor text-accentGold font-inter font-bold rounded-lg outline-none text-left ltr:text-left rtl:text-right" placeholder=" ">
@@ -635,7 +629,9 @@
                 planName: '',
                 safetyMode: 'safety', 
                 riskManagement: false,
-                defaultTrades: 5
+                defaultTrades: 5,
+                stopProfit: Infinity, // تم استبداله بقيمة افتراضية لمنع توقف المحاسبة
+                stopLoss: 0 // تم استبداله بقيمة افتراضية لمنع توقف المحاسبة
             },
             totalEmergency: 0, 
             storedPlans: [], 
@@ -651,6 +647,7 @@
         }
 
         function formatWithCommas(val) {
+            if (val === undefined || val === null) return '';
             let clean = val.toString().replace(/[^0-9.]/g, '');
             let parts = clean.split('.');
             if (parts.length > 2) clean = parts[0] + '.' + parts.slice(1).join('');
@@ -672,8 +669,9 @@
             });
         }
 
+        // تم حذف حقول إيقاف الربح والخسارة من التنسيق بالكومة لعدم تواجدهم بالواجهة
         const commaInputs = [
-            'inpCapital', 'inpStopProfit', 'inpStopLoss', 'inpMonthlyTarget', 
+            'inpCapital', 'inpMonthlyTarget', 
             'inpBinaryAlloc', 'inpBinaryTradeSize', 'inpBinaryTriggerTarget', 
             'inpSalaryAmount', 'inpNextMonthCapital', 'inpBinaryMaxWall', 'inpSafetyOrLoss'
         ];
@@ -801,11 +799,16 @@
             saveToLocal();
         });
 
+        // تحسين مظهر الإشعار وموقعه في الجزء السفلي بوسط الشاشة (Toast Message)
         function showToast(msg) {
             const toast = document.getElementById('customToast');
             toast.innerText = msg;
             toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 4000);
+            toast.style.transform = 'translate(-50%, 0px)';
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
         }
 
         function formatMoney(num) {
@@ -830,6 +833,14 @@
             vSetup.classList.add('hidden-view');
             vActive.classList.remove('hidden-view');
             document.getElementById('activePlanTitle').innerText = App.settings.planName || "الجدول النشط";
+            
+            // مزامنة حالة وعرض التبويبات عند الاستئناف
+            const tabBi = document.getElementById('tabBinary');
+            if(!App.isBinaryEnabled) {
+                tabBi.classList.add('hidden');
+            } else {
+                tabBi.classList.remove('hidden');
+            }
             recalculateEngine();
         });
 
@@ -846,6 +857,20 @@
                     
                     chkRiskManagement.checked = App.settings.riskManagement || false;
                     document.getElementById('inpDefaultTrades').value = App.settings.defaultTrades || 5;
+
+                    // استعادة حالة ومظهر زر تفعيل الخيارات الثنائية من الذاكرة المحلية بنجاح
+                    const chkBinary = document.getElementById('chkBinary');
+                    if (chkBinary) {
+                        chkBinary.checked = App.isBinaryEnabled !== undefined ? App.isBinaryEnabled : true;
+                        const card = document.getElementById('cardBinary');
+                        if (chkBinary.checked) {
+                            card.classList.remove('opacity-50');
+                            document.getElementById('binaryFields').classList.remove('pointer-events-none');
+                        } else {
+                            card.classList.add('opacity-50');
+                            document.getElementById('binaryFields').classList.add('pointer-events-none');
+                        }
+                    }
 
                     applyLanguage();
                     applyTheme();
@@ -931,6 +956,7 @@
             
             App.origDays = parseInt(document.getElementById('inpDays').value) || 0;
             App.settings.defaultTrades = parseInt(document.getElementById('inpDefaultTrades').value) || 5;
+            App.isBinaryEnabled = document.getElementById('chkBinary').checked;
             
             App.settings = {
                 planName: document.getElementById('inpName').value,
@@ -939,8 +965,8 @@
                 safetyMode: App.settings.safetyMode,
                 riskManagement: App.settings.riskManagement,
                 defaultTrades: App.settings.defaultTrades,
-                stopProfit: cleanNum(document.getElementById('inpStopProfit').value) || Infinity,
-                stopLoss: cleanNum(document.getElementById('inpStopLoss').value) || 0,
+                stopProfit: Infinity, // تم وضعه كافتراضي لمنع حدوث كراش رياضي
+                stopLoss: 0, // تم وضعه كافتراضي لمنع حدوث كراش رياضي
                 binAlloc: cleanNum(document.getElementById('inpBinaryAlloc').value) || 0, binAllocPct: document.querySelectorAll('.unit-toggle')[2].innerText === '%',
                 binTradeSize: cleanNum(document.getElementById('inpBinaryTradeSize').value) || 0, binTradePct: document.querySelectorAll('.unit-toggle')[3].innerText === '%',
                 binMaxWall: cleanNum(document.getElementById('inpBinaryMaxWall').value) || 0, 
@@ -998,7 +1024,7 @@
         });
 
         // =======================================================================
-        // المحرك الرياضي والمحاسبي المطور الخالي من التداخل والأخطاء (v3.2)
+        // المحرك الرياضي والمحاسبي المطور الخالي من التداخل والأخطاء (v3.3)
         // =======================================================================
         function recalculateEngine() {
             let s = App.settings;
@@ -1007,9 +1033,18 @@
             App.totalEmergency = 0;
             let fxAccumulatedLoss = 0; 
             let binaryTriggeredDayIdx = -1;
-            let binaryTriggered = false; // تتبع حدوث التفعيل لأول مرة ومنعه من التكرار المفسد للمصفوفات
+            let binaryTriggered = false; 
 
             App.binaryData = App.binaryData || [];
+
+            // إدارة إظهار وتبديل الواجهة المكتملة بناء على الحساب النشط للخيارات الثنائية
+            const tabBiElement = document.getElementById('tabBinary');
+            if(!App.isBinaryEnabled) {
+                tabBiElement.classList.add('hidden');
+                document.getElementById('tableBinaryContainer').classList.add('hidden');
+            } else {
+                tabBiElement.classList.remove('hidden');
+            }
 
             // 1. إعادة توليد متوالية الإيداعات الدورية المتراكمة بالاعتماد على حقل الإدخال الأزرق
             let currentAccumulatedDeposit = 0;
@@ -1029,7 +1064,6 @@
             for (let i = 0; i < App.forexData.length; i++) {
                 let row = App.forexData[i];
                 
-                // توحيد رصيد بداية اليوم ليكون رصيد نهاية اليوم السابق بدقة فائقة دون تكرار المدخلات
                 if (i > 0) {
                     row.start = App.forexData[i-1].end !== null ? App.forexData[i-1].end : currentFx;
                 } else {
@@ -1042,18 +1076,15 @@
                 let goal = row.isGoalPercent ? (baseCapitalForPercent * (row.goalVal / 100)) : row.goalVal;
                 let loss = row.isSafetyPercent ? (baseCapitalForPercent * (row.safetyVal / 100)) : row.safetyVal;
 
-                // تطبيق الأمان وحماية الحساب الفورية
                 if (s.safetyMode === 'safety' && currentFx <= loss) {
                     row.status = 'skip'; 
                 }
 
-                // إدراج مبلغ التراكم الأزرق بالكامل وبشكل مباشر في حسبة الهدف والنهاية اليومية لليوم نفسه
                 let totalGoalForThisDay = goal + (row.fixedDeposit || 0);
                 let theoreticalEnd = row.start + totalGoalForThisDay - row.savingsVal;
 
                 // تفعيل نظام الخصم للخيارات الثنائية التكيفي الأوتوماتيكي عند بلوغ الهدف
                 if (App.isBinaryEnabled && s.binTrigger === 'target') {
-                    // الفحص الفعّال والدقيق لمنع التفعيل والخصم في الأيام اللاحقة لليوم الأول
                     if (!binaryTriggered && theoreticalEnd >= s.binTarget) {
                         row.isTriggerDay = true; 
                         binaryTriggered = true;
@@ -1064,7 +1095,6 @@
                         let adaptiveDaysCount = Math.min(s.binDays, Math.max(1, remainingDays));
                         let binCapital = s.binAllocPct ? (theoreticalEnd * (s.binAlloc / 100)) : s.binAlloc;
                         
-                        // بناء كروت الثنائية التكيفية وحفظ السجل القديم للأيام لتفادي التصفير
                         App.binaryData = [];
                         for(let b = 1; b <= adaptiveDaysCount; b++) {
                             let oldRow = oldBinaryData.find(r => r.day === b);
@@ -1082,7 +1112,7 @@
                     if (row.isTriggerDay) {
                         let binCapital = App.binaryData.length > 0 ? App.binaryData[0].start : (s.binAllocPct ? (theoreticalEnd * (s.binAlloc / 100)) : s.binAlloc);
                         row.binaryDeduction = binCapital;
-                        theoreticalEnd -= binCapital; // السحب المباشر والصحيح لمبلغ الثنائية من رصيد النهاية
+                        theoreticalEnd -= binCapital; 
                     } else {
                         row.binaryDeduction = 0;
                     }
@@ -1106,14 +1136,6 @@
                     row.end = null;
                     currentFx = theoreticalEnd; 
                 }
-            }
-
-            // تنبيهات الخسارة والربح الكلي للفوركس
-            if (currentFx >= s.stopProfit && currentFx !== App.forexData[0]?.start) {
-                showToast(App.lang === 'AR' ? '🎉 مبروك! وصلت لحد وقف الربح الكلي.' : '🎉 Congrats! Reached stop profit.');
-            }
-            if (currentFx <= s.stopLoss && currentFx > 0) {
-                showToast(App.lang === 'AR' ? '⚠️ انتبه! وصلت لحد وقف الخسارة الكلي.' : '⚠️ Warning! Reached stop loss.');
             }
 
             document.getElementById('lblTotalEmergency').innerText = `${App.currency} ${formatMoney(App.totalEmergency)}`;
@@ -1212,9 +1234,8 @@
             saveToLocal(); 
         }
 
-        // تعديل أسلوب الحساب لعموم الأيام والتحديث للنسب المئوية
+        // تم إلغاء استدعاء saveState() من كافة دوال تحديث المدخلات لفصل الأحداث تلبيةً لطلبك
         window.updateRowGoal = function(index, value) {
-            saveState();
             let newValue = parseFloat(value) || 0;
             App.forexData[index].goalVal = newValue;
             
@@ -1235,7 +1256,6 @@
         };
 
         window.updateRowSafety = function(index, value) { 
-            saveState(); 
             let newValue = parseFloat(value) || 0;
             App.forexData[index].safetyVal = newValue;
             for (let i = index + 1; i < App.forexData.length; i++) {
@@ -1250,22 +1270,18 @@
         };
 
         window.updateRowSavings = function(index, value) { 
-            saveState(); 
             let val = parseFloat(value) || 0; 
             for (let i = index; i < App.forexData.length; i++) App.forexData[i].savingsVal = val;
             recalculateEngine(); 
         };
 
         window.updateRowTrades = function(index, value) { 
-            saveState(); 
             let val = parseInt(value) || 0; 
             for (let i = index; i < App.forexData.length; i++) App.forexData[i].trades = val;
             recalculateEngine(); 
         };
 
-        // تحديث وتمرير الإيداع التراكمي للأيام التالية بطريقة متسلسلة ممتازة
         window.updatePeriodicDeposit = function(index, value) {
-            saveState();
             let baseVal = parseFloat(value) || 0;
             
             App.forexData[index].fixedDepositInput = baseVal;
@@ -1295,11 +1311,12 @@
         };
 
         // =======================================================================
-        // بناء وعرض الكروت الأنيقة الموحدة والمطابقة للصور (Render Cards Views v3.2)
+        // بناء وعرض الكروت الأنيقة الموحدة (v3.3)
         // =======================================================================
         function renderCardsViews() {
             let dict = dictionary[App.lang];
             let initialFx = App.forexData[0]?.start || 0;
+            let s = App.settings; // تعريف s هنا يمنع حدوث crash الرسوم تماماً وينقذ التبويب الثنائي!
             
             App.expandedForexDays = App.expandedForexDays || {};
             App.expandedBinaryDays = App.expandedBinaryDays || {};
@@ -1314,7 +1331,6 @@
                 let goal = row.isGoalPercent ? (baseCapitalForPercent * (row.goalVal / 100)) : row.goalVal;
                 let loss = row.isSafetyPercent ? (baseCapitalForPercent * (row.safetyVal / 100)) : row.safetyVal;
                 
-                // تعديل: دمج التراكمي في الهدف الرئيسي وعرضه في ترويسة الكارت تماشياً مع طلبك وصورك
                 let totalGoalHeader = goal + (row.fixedDeposit || 0);
 
                 let calculatedEnd = row.start + totalGoalHeader - row.savingsVal - (row.binaryDeduction || 0);
@@ -1333,10 +1349,26 @@
                     riskText = `<div class="text-[9px] text-accentGold font-bold mt-1">مخاطر 2:1 (ربح الصفقة: ${formatMoney(singleProfit)} | خسارة: ${formatMoney(singleLoss)})</div>`;
                 }
 
+                // الحسبة الذكية للنسبة المئوية لليوم وعرضها بدقة
+                let targetPctDisplay = "";
+                if (row.isGoalPercent && (row.fixedDeposit || 0) === 0) {
+                    targetPctDisplay = `+${row.goalVal}%`;
+                } else {
+                    let calculatedTargetPct = row.start > 0 ? (totalGoalHeader / row.start) * 100 : 0;
+                    targetPctDisplay = `+${formatMoney(totalGoalHeader)} (${calculatedTargetPct.toFixed(1)}%)`;
+                }
+
+                let safetyPctDisplay = "";
+                if (row.isSafetyPercent) {
+                    safetyPctDisplay = `-${row.safetyVal}%`;
+                } else {
+                    let calculatedSafetyPct = row.start > 0 ? (loss / row.start) * 100 : 0;
+                    safetyPctDisplay = `-${formatMoney(loss)} (${calculatedSafetyPct.toFixed(1)}%)`;
+                }
+
                 let cardDiv = document.createElement('div');
                 cardDiv.className = `bg-bgCard border border-borderColor rounded-2xl p-4 shadow-lg transition-all ${row.status==='hit'?'border-accentGreen/40 bg-accentGreen/[0.02]':row.status==='loss'?'border-accentRed/40 bg-accentRed/[0.02]':row.status==='skip'?'opacity-60':''}`;
                 
-                // الحقل الأزرق "مبلغ تراكمي ثابت" يعرض القيمة التراكمية الرياضية لليوم الحالي
                 let currentAccumulatedDisplay = row.fixedDeposit || 0;
 
                 cardDiv.innerHTML = `
@@ -1351,11 +1383,11 @@
                         <div class="grid grid-cols-3 gap-4 text-center flex-grow mx-4">
                             <div>
                                 <span class="text-[10px] text-textGray block" data-i18n="thTarget">الهدف</span>
-                                <span class="text-xs font-bold text-accentGreen font-inter">+${formatMoney(totalGoalHeader)}</span>
+                                <span class="text-xs font-bold text-accentGreen font-inter">${targetPctDisplay}</span>
                             </div>
                             <div>
                                 <span class="text-[10px] text-textGray block">${App.settings.safetyMode === 'loss' ? dict.lossAmount : dict.safetyAmount}</span>
-                                <span class="text-xs font-bold text-accentRed font-inter">-${formatMoney(loss)}</span>
+                                <span class="text-xs font-bold text-accentRed font-inter">${safetyPctDisplay}</span>
                             </div>
                             <div>
                                 <span class="text-[10px] text-textGray block" data-i18n="thEnd">النهاية</span>
@@ -1537,15 +1569,18 @@
             }
         }
 
+        // حفظ الحالة مخصص بالكامل لتقييمات الأيام فقط ويتم استدعاؤه حصرياً في actFx و actBi
         function saveState() { 
             App.historyStack.push({ fx: JSON.parse(JSON.stringify(App.forexData)), bi: JSON.parse(JSON.stringify(App.binaryData)) }); 
             document.getElementById('btnUndo').disabled = false; 
         }
 
-        window.setFxComp = function(idx, val) { saveState(); App.forexData[idx].isCompound = val; updateRowGoal(idx, App.forexData[idx].goalVal); };
+        // تم إلغاء saveState() من النسبة المئوية لفصل الأحداث بالكامل ومنع التداخل
+        window.setFxComp = function(idx, val) { App.forexData[idx].isCompound = val; updateRowGoal(idx, App.forexData[idx].goalVal); };
 
         window.actFx = function(idx, action) {
-            saveState(); let row = App.forexData[idx]; row.status = action;
+            saveState(); // يتم الاستدعاء هنا حصراً عند حدوث التقييم
+            let row = App.forexData[idx]; row.status = action;
             if (action === 'skip') {
                 let last = App.forexData[App.forexData.length - 1];
                 App.forexData.push({...last, day: last.day + 1, status: 'pending', end: null});
@@ -1577,7 +1612,11 @@
             recalculateEngine();
         };
 
-        window.actBi = function(idx, action) { saveState(); App.binaryData[idx].status = action; recalculateEngine(); };
+        window.actBi = function(idx, action) { 
+            saveState(); // يتم الاستدعاء هنا حصراً عند حدوث تقييم خيارات ثنائية
+            App.binaryData[idx].status = action; 
+            recalculateEngine(); 
+        };
 
         document.getElementById('btnSaveData').addEventListener('click', () => {
             saveToLocal();
